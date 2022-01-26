@@ -61,17 +61,17 @@ jobs:
         run: aws s3 cp --region ${{ secrets.AWS_PROD_S3_REGION }} --acl private ./${{ secrets.AWS_PROD_ZIP_NAME }}.zip s3://${{ secrets.AWS_PROD_ZIP_NAME }}/
 
 #       # Deploy
-#       - name: Deploy
-#         env:
-#           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_PROD_ACCESS_KEY_ID }}
-#           AWS_SECRET_ACCESS_KE:Y: ${{ secrets.AWS_PROD_SECRET_KEY_ID }}
-#         run: |
-#           aws deploy create-deployment \
-#           --application-name heart-to-heart-api-codeDeploy-app \
-#           --deployment-group-name heart-to-heart-api-codeDeploy-app-group \
-#           --file-exists-behavior OVERWRITE \
-#           --s3-location bucket=heart-to-heart-api-build,bundleType=zip,key=heart-to-heart-api-build.zip \
-#           --region ${{ secrets.AWS_PROD_REGION }}
+       - name: Deploy
+         env:
+           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_PROD_ACCESS_KEY_ID }}
+           AWS_SECRET_ACCESS_KE:Y: ${{ secrets.AWS_PROD_SECRET_KEY_ID }}
+         run: |
+           aws deploy create-deployment \
+           --application-name heart-to-heart-api-codeDeploy-app \
+           --deployment-group-name heart-to-heart-api-codeDeploy-app-group \
+           --file-exists-behavior OVERWRITE \
+           --s3-location bucket=heart-to-heart-api-build,bundleType=zip,key=heart-to-heart-api-build.zip \
+           --region ${{ secrets.AWS_PROD_REGION }}
 
       # Slack
       - name: build result to slack
