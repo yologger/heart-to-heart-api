@@ -46,11 +46,11 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // Slf4j
-    testImplementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-
     // H2
     testImplementation 'com.h2database:h2'
+
+    // Slf4j
+    testImplementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
 
     // NySQL Driver
     runtimeOnly group: 'mysql', name: 'mysql-connector-java', version: '8.0.26'
