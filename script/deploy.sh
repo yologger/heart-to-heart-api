@@ -1,5 +1,6 @@
 #!/bin/bash
 
-REPOSITORY=/home/
+REPOSITORY=/home/ec2-user/app/heart-to-heart-api
+PROJECT_NAME=heart-to-heart-api
 
-java -Dspring.profiles.active=prod -Dserver.port=$PORT -jar heart-to-heart-api-0.0.1.jar
+cp $REPOSITORY/zip/build/libs/*.jar $REPOSITORY
