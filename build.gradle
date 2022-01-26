@@ -35,9 +35,19 @@ dependencies {
     // Spring Data JPA
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 
+    // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    // Spring Validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // Slf4j
+    testImplementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
 
     // H2
     testImplementation 'com.h2database:h2'
@@ -45,7 +55,7 @@ dependencies {
     // NySQL Driver
     runtimeOnly group: 'mysql', name: 'mysql-connector-java', version: '8.0.26'
 
-    // Maria Drvier
+    // Maria Driver
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 }
 
