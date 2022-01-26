@@ -1,0 +1,54 @@
+// Gradle plugins
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.5.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+group = 'com.yologger'
+version = '0.0.1'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+jar {
+    enabled = false
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    // Spring Boot
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // Spring Data JPA
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // H2
+    testImplementation 'com.h2database:h2'
+
+    // NySQL Driver
+    runtimeOnly group: 'mysql', name: 'mysql-connector-java', version: '8.0.26'
+
+    // Maria Drvier
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+}
+
+test {
+    useJUnitPlatform()
+}
