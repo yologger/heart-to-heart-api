@@ -12,8 +12,7 @@ permissions:
     group: ec2-user
 
 hooks:
-  AfterInstall:
-  # ApplicationStart:
+  ApplicationStart:
     - location: /script/deploy.sh
       timeout: 100
       runas: ec2-user
