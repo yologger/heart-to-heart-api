@@ -19,6 +19,9 @@ fi
 
 JAR_NAME=$(ls -tr $REPOSITORY/ | grep jar | tail -n 1)
 echo "[$(date "+%Y-%m-%d %I:%M:%S")] JAR_NAME: ${JAR_NAME}" >> $REPOSITORY/deploy_log.txt
+
+echo "[$(date "+%Y-%m-%d %I:%M:%S")] Add execution permission to ${JAR_NAME}" >> $REPOSITORY/deploy_log.txt
+chmod +x $JAR_NAME
 echo "[$(date "+%Y-%m-%d %I:%M:%S")] Launch new application." >> $REPOSITORY/deploy_log.txt
 
 # nohup java sudo -Dspring.profiles.active=prod -jar $REPOSITORY/"$JAR_NAME" > /dev/null 2> /dev/null < /dev/null &
