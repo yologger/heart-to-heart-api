@@ -24,12 +24,5 @@ echo ">>> JAR_NAME: ${JAR_NAME}"
 
 nohup java -Dspring.profiles.active=prod -jar $REPOSITORY/"$JAR_NAME" 2>&1
 
-######
-
-java -jar heart-to-heart-api-0.0.1.jar
-nohup java -jar heart-to-heart-api-0.0.1.jar 2>&1 &
-
-java -Dspring.profiles.active=prod -jar heart-to-heart-api-0.0.1.jar
-
-java -Dspring.config.location=classpath:/application.properties,classpath:/application-prod.properties -Dspring.profiles.active=prod -jar heart-to-heart-api-0.0.1.jar
-
+# java -jar heart-to-heart-api-0.0.1.jar
+# nohup java -Dspring.profiles.active=prod -jar heart-to-heart-api-0.0.1.jar 2>&1 &
