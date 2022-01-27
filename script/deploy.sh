@@ -5,11 +5,10 @@ PROJECT_NAME=heart-to-heart-api
 
 echo -e "> ${date}" > $REPOSITORY/deploy_log.txt
 
-echo -e "> Copy jar to project root." > $REPOSITORY/deploy_log.txt
+echo -e "> Copy jar to project root." >> $REPOSITORY/deploy_log.txt
 cp $REPOSITORY/zip/build/libs/*.jar $REPOSITORY
 
 CURRENT_PID=$(pgrep -f ${PROJECT_NAME}.*.jar)
-
 if [ -z "$CURRENT_PID" ]; then
   echo -e "> There is no previously running application.\n" >> $REPOSITORY/deploy_log.txt
 else
