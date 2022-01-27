@@ -24,6 +24,4 @@ echo "[$(date "+%Y-%m-%d %I:%M:%S")] Add execution permission to ${JAR_NAME}" >>
 chmod +x $JAR_NAME
 echo "[$(date "+%Y-%m-%d %I:%M:%S")] Launch new application." >> $REPOSITORY/deploy_log.txt
 
-# nohup java sudo -Dspring.profiles.active=prod -jar $REPOSITORY/"$JAR_NAME" > /dev/null 2> /dev/null < /dev/null &
-# nohup java -Dspring.profiles.active=prod -jar $REPOSITORY/"$JAR_NAME" 2>&1 &
-nohup java -Dspring.profiles.active=prod -jar /home/ec2-user/app/heart-to-heart-api/heart-to-heart-api-0.0.1.jar > /dev/null 2> /dev/null < /dev/null &
+nohup java sudo -Dspring.profiles.active=prod -jar $REPOSITORY/"$JAR_NAME" > /dev/null 2> /dev/null < /dev/null &
