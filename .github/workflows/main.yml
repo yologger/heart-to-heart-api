@@ -52,23 +52,23 @@ jobs:
       - name: Upload to S3 Bucket
         run: aws s3 cp --region ${{ secrets.AWS_PROD_S3_REGION }} ./${{ secrets.AWS_PROD_ZIP_NAME }}.zip s3://${{ secrets.AWS_PROD_S3_BUCKET_NAME }}/${{ secrets.AWS_PROD_ZIP_NAME }}.zip
 
-#       # Deploy
-#       - name: Deploy
-#         run: |
-#           aws deploy create-deployment \
-#           --application-name ${{ secrets.AWS_PROD_CODE_DEPLOY_APP }} \
-#           --deployment-group-name ${{ secrets.AWS_PROD_CODE_DEPLOY_APP_GROUP }} \
-#           --deployment-config-name CodeDeployDefault.AllAtOnce \
-#           --file-exists-behavior OVERWRITE \
-#           --s3-location bucket=${{ secrets.AWS_PROD_S3_BUCKET_NAME }},bundleType=zip,key=${{ secrets.AWS_PROD_ZIP_NAME }}.zip \
-#           --region ${{ secrets.AWS_PROD_S3_REGION }}
+      # Deploy
+      - name: Deploy
+        run: |
+          aws deploy create-deployment \
+          --application-name ${{ secrets.AWS_PROD_CODE_DEPLOY_APP }} \
+          --deployment-group-name ${{ secrets.AWS_PROD_CODE_DEPLOY_APP_GROUP }} \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=${{ secrets.AWS_PROD_S3_BUCKET_NAME }},bundleType=zip,key=${{ secrets.AWS_PROD_ZIP_NAME }}.zip \
+          --region ${{ secrets.AWS_PROD_S3_REGION }}
 
-#       # Slack
-#       - name: build result to slack
-#         uses: 8398a7/action-slack@v3
-#         with:
-#           status: ${{job.status}}
-#           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-#           author_name: Geerio CI
-#         env:
-#           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      # Slack
+      - name: build result to slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{job.status}}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          author_name: Geerio CI
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
