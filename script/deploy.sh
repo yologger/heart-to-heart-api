@@ -25,4 +25,6 @@ chmod +x $REPOSITORY/$JAR_NAME
 echo "[$(date "+%Y-%m-%d %I:%M:%S")] Launch new application." >> $REPOSITORY/deploy_log.txt
 echo "[$(date "+%Y-%m-%d %I:%M:%S")] \$REPOSITORY/\$JAR_NAME: $REPOSITORY/$JAR_NAME" >> $REPOSITORY/deploy_log.txt
 
-nohup java sudo -Dspring.profiles.active=prod -jar $REPOSITORY/$JAR_NAME > /dev/null 2> /dev/null < /dev/null &
+nohup java -Dspring.profiles.active=prod -jar $REPOSITORY/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
+
+echo "[$(date "+%Y-%m-%d %I:%M:%S")] Application started." >> $REPOSITORY/deploy_log.txt
