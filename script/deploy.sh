@@ -26,6 +26,6 @@ echo "[$(date "+%Y-%m-%d %I:%M:%S")] Launch new application." >> $REPOSITORY/dep
 echo "[$(date "+%Y-%m-%d %I:%M:%S")] \$REPOSITORY/\$JAR_NAME: $REPOSITORY/$JAR_NAME" >> $REPOSITORY/deploy_log.txt
 
 # nohup java -Dspring.profiles.active=prod -jar $REPOSITORY/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
-nohup java -Dspring.profiles.active=prod -jar $REPOSITORY/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
+nohup java -Dspring.config.location=classpath:/${REPOSITORY}/application-prod.properties -Dspring.profiles.active=prod -jar $REPOSITORY/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
 
 echo "[$(date "+%Y-%m-%d %I:%M:%S")] Application started." >> $REPOSITORY/deploy_log.txt
