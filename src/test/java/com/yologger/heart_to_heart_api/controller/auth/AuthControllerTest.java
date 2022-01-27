@@ -31,11 +31,11 @@ public class AuthControllerTest {
     private TestRestTemplate restTemplate;
 
     @Nested
-    @DisplayName("회원가입")
+    @DisplayName("회원가입 테스트")
     class SignUp {
 
         @Test
-        @DisplayName("성공 테스트")
+        @DisplayName("회원가입 성공 테스트")
         public void signup_success() throws JSONException {
 
             // Given
@@ -59,7 +59,7 @@ public class AuthControllerTest {
         }
 
         @Test
-        @DisplayName("실패 테스트")
+        @DisplayName("회원가입 실패 테스트")
         public void signup_failure() throws JSONException {
 
             // Given
