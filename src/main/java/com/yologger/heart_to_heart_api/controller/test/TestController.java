@@ -42,9 +42,4 @@ public class TestController {
     public String test7() {
         return "test7";
     }
-
-    @GetMapping("/test8")
-    public String test8() {
-        return "test8";
-    }
 }
