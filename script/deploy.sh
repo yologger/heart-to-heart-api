@@ -18,17 +18,15 @@ else
   sleep 5
 fi
 
-#
-#echo ">>> Launch new application."
-#
+echo ">>> Launch new application."
 
+JAR_NAME=$(ls -tr $REPOSITORY/ | grep jar | tail -n 1)
+echo ">>> JAR_NAME: ${JAR_NAME}"
 
-echo ">>> DONE" > ${REPOSITORY}/test.txt
+echo ">>> JAR_NAME: ${JAR_NAME}" > ${REPOSITORY}/test.txt
 
-#JAR_NAME=$(ls -tr $REPOSITORY/ | grep jar | tail -n 1)
-#echo ">>> JAR_NAME: ${JAR_NAME}"
-#
-#nohup java -Dspring.profiles.active=prod -jar $REPOSITORY/"$JAR_NAME" 2>&1
+# nohup java -Dspring.profiles.active=prod -jar $REPOSITORY/"$JAR_NAME" 2>&1
+
 
 # java -jar heart-to-heart-api-0.0.1.jar
 # nohup java -Dspring.profiles.active=prod -jar heart-to-heart-api-0.0.1.jar 2>&1 &
