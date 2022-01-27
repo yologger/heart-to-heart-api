@@ -8,7 +8,6 @@ cp $REPOSITORY/zip/build/libs/*.jar $REPOSITORY
 
 CURRENT_PID=$(pgrep -f ${PROJECT_NAME}.*.jar)
 
-
 if [ -z "$CURRENT_PID" ]; then
   echo ">>> There is no previously running application."
 else
@@ -19,14 +18,7 @@ else
 fi
 
 echo ">>> Launch new application."
-
 JAR_NAME=$(ls -tr $REPOSITORY/ | grep jar | tail -n 1)
 echo ">>> JAR_NAME: ${JAR_NAME}"
 
-echo ">>> JAR_NAME: ${JAR_NAME}" > ${REPOSITORY}/test.txt
-
-# nohup java -Dspring.profiles.active=prod -jar $REPOSITORY/"$JAR_NAME" 2>&1
-
-
-# java -jar heart-to-heart-api-0.0.1.jar
-# nohup java -Dspring.profiles.active=prod -jar heart-to-heart-api-0.0.1.jar 2>&1 &
+nohup java -Dspring.profiles.active=prod -jar $REPOSITORY/"$JAR_NAME" 2>&1 &
