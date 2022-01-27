@@ -3,7 +3,7 @@
 REPOSITORY=/home/ec2-user/app/heart-to-heart-api
 PROJECT_NAME=heart-to-heart-api
 
-echo -e "> ${date}" > $REPOSITORY/deploy_log.txt
+echo "> $(date)" > $REPOSITORY/deploy_log.txt
 
 echo -e "> Copy jar to project root." >> $REPOSITORY/deploy_log.txt
 cp $REPOSITORY/zip/build/libs/*.jar $REPOSITORY
@@ -24,4 +24,4 @@ echo "> JAR_NAME: ${JAR_NAME}" >> $REPOSITORY/deploy_log.txt
 
 nohup java -Dspring.profiles.active=prod -jar $REPOSITORY/"$JAR_NAME" 2>&1 &
 
-# nohup java -Dspring.profiles.active=prod -jar /home/ec2-user/app/heart-to-heart-api/heart-to-heart-api-0.0.1.jar 2>&1 &
+# java -Dspring.profiles.active=prod -jar /home/ec2-user/app/heart-to-heart-api/heart-to-heart-api-0.0.1.jar 2>&1 &
