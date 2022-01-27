@@ -3,6 +3,8 @@
 REPOSITORY=/home/ec2-user/app/heart-to-heart-api
 PROJECT_NAME=heart-to-heart-api
 
+echo -e "> ${date}" > $REPOSITORY/deploy_log.txt
+
 echo -e "> Copy jar to project root." > $REPOSITORY/deploy_log.txt
 cp $REPOSITORY/zip/build/libs/*.jar $REPOSITORY
 
