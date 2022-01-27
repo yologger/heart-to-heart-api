@@ -2,10 +2,10 @@ package com.yologger.heart_to_heart_api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-// import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
-// @EnableJpaAuditing
+@EnableJpaAuditing
 public class App {
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
