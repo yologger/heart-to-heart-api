@@ -26,6 +26,6 @@ chmod +x $REPOSITORY/$JAR_NAME
 echo "[$(date "+%Y-%m-%d %I:%M:%S")] Launch new application."
 
 # nohup java -Dspring.profiles.active=prod -jar $REPOSITORY/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
-nohup java -Dspring.config.location=classpath:/application-prod.properties -Dspring.profiles.active=prod -jar $REPOSITORY/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
+nohup java -Dspring.config.location=/home/ec2-user/app/heart-to-heart-api/application-prod.properties -Dspring.profiles.active=prod -jar $REPOSITORY/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
 
 echo "[$(date "+%Y-%m-%d %I:%M:%S")] Application started."
