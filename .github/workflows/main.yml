@@ -64,7 +64,7 @@ jobs:
           --region ${{ secrets.AWS_PROD_S3_REGION }}
 
       # Slack
-      - name: build result to slack
+      - name: Send result to slack
         uses: 8398a7/action-slack@v3
         with:
           status: ${{job.status}}
