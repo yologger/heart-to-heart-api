@@ -25,9 +25,7 @@ public class AuthService {
 
         // Check If User already exists.
         Optional<UserEntity> result = userRepository.findByEmail(request.getEmail());
-        if (result.isPresent()) {
-            throw new UserAlreadyExistException("User Already Exists.");
-        }
+        if (result.isPresent()) throw new UserAlreadyExistException("User Already Exists.");
 
         String encryptedPassword = passwordEncoder.encode(request.getPassword());
         UserEntity newUser = UserEntity.builder()
