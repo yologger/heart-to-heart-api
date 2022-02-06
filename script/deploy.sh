@@ -12,7 +12,7 @@ then
   echo "[$(date "+%Y-%m-%d %I:%M:%S")] There is no previously running application."
 else
   echo "[$(date "+%Y-%m-%d %I:%M:%S")] A previously running application exists."
-  echo "[$(date "+%Y-%m-%d %I:%M:%S")] kill -15 $CURRENT_PID" >> $REPOSITORY/deploy_log.txt
+  echo "[$(date "+%Y-%m-%d %I:%M:%S")] kill -15 $CURRENT_PID"
   sudo kill -15 "$CURRENT_PID"
   sleep 5
 fi
