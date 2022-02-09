@@ -50,7 +50,7 @@ jobs:
 
       # Upload to S3 Bucket
       - name: Upload to S3 Bucket
-        run: aws s3 cp --region ${{ secrets.AWS_PROD_S3_REGION }} --acl private ./${{ secrets.AWS_PROD_ZIP_NAME }}.zip s3://${{ secrets.AWS_PROD_ZIP_NAME }}/
+        run: aws s3 cp --region ${{ secrets.AWS_PROD_S3_REGION }} ./${{ secrets.AWS_PROD_ZIP_NAME }}.zip s3://${{ secrets.AWS_PROD_S3_BUCKET_NAME }}/${{ secrets.AWS_PROD_ZIP_NAME }}.zip
 
       # Deploy
       - name: Deploy
@@ -64,11 +64,11 @@ jobs:
           --region ${{ secrets.AWS_PROD_S3_REGION }}
 
       # Slack
-      - name: build result to slack
+      - name: Send result to slack
         uses: 8398a7/action-slack@v3
         with:
           status: ${{job.status}}
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
           author_name: Geerio CI
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

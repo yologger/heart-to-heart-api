@@ -20,6 +20,31 @@ public class TestController {
 
     @GetMapping("/test3")
     public String test3() {
-        return "test2";
+        return "test3";
+    }
+
+    @GetMapping("/test4")
+    public String test4() {
+        return "test4";
+    }
+
+    @GetMapping("/test5")
+    public String test5() {
+        return "test5";
+    }
+
+    @GetMapping("/test6")
+    public String test6() {
+        return "test6";
+    }
+
+    @GetMapping("/test7")
+    public String test7() {
+        return "test7";
+    }
+
+    @GetMapping("/test8")
+    public String test8() {
+        return "test8";
     }
 }

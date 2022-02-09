@@ -23,5 +23,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping(value = "/join", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<JoinResponseDto> join(@Valid @RequestBody JoinRequestDto request) throws UserAlreadyExistException { return authService.join(request); }
+    public ResponseEntity<JoinResponseDto> join(@Valid @RequestBody JoinRequestDto request) throws UserAlreadyExistException {
+        return authService.join(request);
+    }
 }
