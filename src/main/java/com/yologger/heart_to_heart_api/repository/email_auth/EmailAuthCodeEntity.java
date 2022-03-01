@@ -25,4 +25,8 @@ public class EmailAuthCodeEntity extends BaseEntity {
 
     @Column(nullable = true)
     private String code;
+
+    public void updateCode(String code) {
+        this.code = code;
+    }
 }

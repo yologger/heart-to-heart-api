@@ -32,11 +32,16 @@ public class UserService {
             String emailAuthCode = generateEmailAuthCode();
 
             // Save email authentication code.
-            EmailAuthCodeEntity authCodeEntity = EmailAuthCodeEntity.builder()
-                    .code(emailAuthCode)
-                    .email(email)
-                    .build();
-            emailAuthCodeRepository.save(authCodeEntity);
+            Optional<EmailAuthCodeEntity> result = emailAuthCodeRepository.findByEmail(email);
+            if (result.isPresent()) {
+                result.get().updateCode(emailAuthCode);
+            } else {
+                EmailAuthCodeEntity authCodeEntity = EmailAuthCodeEntity.builder()
+                        .code(emailAuthCode)
+                        .email(email)
+                        .build();
+                emailAuthCodeRepository.save(authCodeEntity);
+            }
 
             // Send email asynchronously.
             String title = "Email 인증 요청";
