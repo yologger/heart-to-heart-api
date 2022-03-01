@@ -1,8 +1,10 @@
 package com.yologger.heart_to_heart_api.service.auth;
 
-import com.yologger.heart_to_heart_api.common.exception.business.UserAlreadyExistException;
+import com.yologger.heart_to_heart_api.service.auth.exception.UserAlreadyExistException;
 import com.yologger.heart_to_heart_api.repository.user.UserEntity;
 import com.yologger.heart_to_heart_api.repository.user.UserRepository;
+import com.yologger.heart_to_heart_api.service.auth.model.JoinRequestDto;
+import com.yologger.heart_to_heart_api.service.auth.model.JoinResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

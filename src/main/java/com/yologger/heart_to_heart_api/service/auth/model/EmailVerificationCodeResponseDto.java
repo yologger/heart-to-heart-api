@@ -1,9 +1,9 @@
-package com.yologger.heart_to_heart_api.service.user;
+package com.yologger.heart_to_heart_api.service.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 
 @Builder
-public class SendEmailVerificationResponseDto {
+public class EmailVerificationCodeResponseDto {
     @JsonProperty("message") private String message;
 }

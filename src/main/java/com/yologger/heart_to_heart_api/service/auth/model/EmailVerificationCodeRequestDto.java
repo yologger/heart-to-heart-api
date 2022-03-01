@@ -1,4 +1,4 @@
-package com.yologger.heart_to_heart_api.service.user;
+package com.yologger.heart_to_heart_api.service.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -13,8 +13,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SendEmailVerificationRequestDto {
-
+public class EmailVerificationCodeRequestDto {
     @NotBlank(message = "email must not be empty.")
     @Email(message = "email must be in email format.")
     @JsonProperty(value = "email")

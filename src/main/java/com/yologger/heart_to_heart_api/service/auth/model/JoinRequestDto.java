@@ -1,4 +1,4 @@
-package com.yologger.heart_to_heart_api.service.auth;
+package com.yologger.heart_to_heart_api.service.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yologger.heart_to_heart_api.repository.user.UserEntity;
