@@ -9,8 +9,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@EnableWebSecurity
 @Configuration
+@EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
@@ -25,6 +25,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/test/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
+                .antMatchers("/user/**").permitAll()
                 .anyRequest().authenticated();
     }
 }
