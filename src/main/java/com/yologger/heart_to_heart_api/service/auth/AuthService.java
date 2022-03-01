@@ -80,8 +80,7 @@ public class AuthService {
             throw new InvalidEmailException("Invalid Email.");
         } else {
             if (Objects.equals(request.getVerificationCode(), result.get().getVerificationCode())) {
-                // if (result.get().getUpdatedAt().plusMinutes(5).isBefore(LocalDateTime.now())) {
-                if (result.get().getUpdatedAt().plusMinutes(1).isBefore(LocalDateTime.now())) {
+                if (result.get().getUpdatedAt().plusMinutes(5).isBefore(LocalDateTime.now())) {
                     throw new ExpiredVerificationCodeException("Expired Verification code");
                 } else {
                     ConfirmVerificationCodeResponseDto response = ConfirmVerificationCodeResponseDto.builder()

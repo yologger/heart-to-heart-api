@@ -28,13 +28,13 @@ public class AuthControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Nested
-    @DisplayName("회원가입 테스트")
-    class SignUp {
-
-        @Test
-        @DisplayName("회원가입 성공 테스트")
-        public void signup_success() throws JSONException {
+//    @Nested
+//    @DisplayName("회원가입 테스트")
+//    class SignUp {
+//
+//        @Test
+//        @DisplayName("회원가입 성공 테스트")
+//        public void signup_success() throws JSONException {
 //
 //            // Given
 //            String url = "http://localhost:" + port + "/auth/join";
@@ -54,12 +54,12 @@ public class AuthControllerTest {
 //
 //            // Then
 //            assertNotNull(response.getUserId());
-        }
-
-        @Test
-        @DisplayName("회원가입 실패 테스트")
-        public void signup_failure() throws JSONException {
-
+//        }
+//
+//        @Test
+//        @DisplayName("회원가입 실패 테스트")
+//        public void signup_failure() throws JSONException {
+//
 //            // Given
 //            String url = "http://localhost:" + port + "/auth/join";
 //
@@ -78,6 +78,6 @@ public class AuthControllerTest {
 //            // Then
 //            assertEquals(response.getCode(), "C002");
 //            assertEquals(response.getMessage(), "Invalid Input Value");
-        }
-    }
+//        }
+//    }
 }
