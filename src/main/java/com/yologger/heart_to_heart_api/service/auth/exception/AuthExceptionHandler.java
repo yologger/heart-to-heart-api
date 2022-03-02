@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class AuthExceptionHandler {
 
-    @ExceptionHandler(value = UserAlreadyExistException.class)
-    public ResponseEntity<ErrorResponseDto> handleUserAlreadyExistException(UserAlreadyExistException e) {
+    @ExceptionHandler(value = MemberAlreadyExistException.class)
+    public ResponseEntity<ErrorResponseDto> handleMemberAlreadyExistException(MemberAlreadyExistException e) {
         final ErrorResponseDto response = ErrorResponseDto.builder()
-                .code(AuthErrorCode.USER_ALREADY_EXISTS.getCode())
-                .message(AuthErrorCode.USER_ALREADY_EXISTS.getMessage())
-                .status(AuthErrorCode.USER_ALREADY_EXISTS.getStatus())
+                .code(AuthErrorCode.MEMBER_ALREADY_EXISTS.getCode())
+                .message(AuthErrorCode.MEMBER_ALREADY_EXISTS.getMessage())
+                .status(AuthErrorCode.MEMBER_ALREADY_EXISTS.getStatus())
                 .build();
         // return ResponseEntity.badRequest().body(response);
-        return new ResponseEntity(response, HttpStatus.valueOf(AuthErrorCode.USER_ALREADY_EXISTS.getStatus()));
+        return new ResponseEntity(response, HttpStatus.valueOf(AuthErrorCode.MEMBER_ALREADY_EXISTS.getStatus()));
     }
 
     @ExceptionHandler(value = InvalidEmailException.class)

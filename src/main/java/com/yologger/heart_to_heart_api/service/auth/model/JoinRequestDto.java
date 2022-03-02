@@ -1,7 +1,7 @@
 package com.yologger.heart_to_heart_api.service.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.yologger.heart_to_heart_api.repository.user.UserEntity;
+import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,8 +38,8 @@ public class JoinRequestDto {
     @JsonProperty(value = "password")
     private String password;
 
-    public UserEntity toEntity() {
-        return UserEntity.builder()
+    public MemberEntity toEntity() {
+        return MemberEntity.builder()
                 .email(this.email)
                 .name(this.name)
                 .nickname(this.nickname)

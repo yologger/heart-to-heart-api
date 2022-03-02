@@ -3,10 +3,10 @@ package com.yologger.heart_to_heart_api.service.auth;
 import com.yologger.heart_to_heart_api.service.auth.exception.ExpiredVerificationCodeException;
 import com.yologger.heart_to_heart_api.service.auth.exception.InvalidEmailException;
 import com.yologger.heart_to_heart_api.service.auth.exception.InvalidVerificationCodeException;
-import com.yologger.heart_to_heart_api.service.auth.exception.UserAlreadyExistException;
+import com.yologger.heart_to_heart_api.service.auth.exception.MemberAlreadyExistException;
 import com.yologger.heart_to_heart_api.common.util.MailUtil;
-import com.yologger.heart_to_heart_api.repository.user.UserEntity;
-import com.yologger.heart_to_heart_api.repository.user.UserRepository;
+import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
+import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
 import com.yologger.heart_to_heart_api.repository.verification_code.VerificationCodeEntity;
 import com.yologger.heart_to_heart_api.repository.verification_code.VerificationCodeRepository;
 import com.yologger.heart_to_heart_api.service.auth.model.*;
@@ -29,14 +29,14 @@ public class AuthService {
 
     private final MailUtil mailUtil;
     private final PasswordEncoder passwordEncoder;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final VerificationCodeRepository verificationCodeRepository;
 
     @Transactional
-    public ResponseEntity<EmailVerificationCodeResponseDto> emailVerificationCode(String email) throws UserAlreadyExistException {
+    public ResponseEntity<EmailVerificationCodeResponseDto> emailVerificationCode(String email) throws MemberAlreadyExistException {
 
         if (emailAlreadyExist(email)) {
-            throw new UserAlreadyExistException("User Already Exists.");
+            throw new MemberAlreadyExistException("Member Already Exists.");
         } else {
             // Generate email authentication code.
             String verificationCode = generateVerificationCode();
@@ -95,7 +95,7 @@ public class AuthService {
     }
 
     private boolean emailAlreadyExist(String email) {
-        Optional<UserEntity> result = userRepository.findByEmail(email);
+        Optional<MemberEntity> result = memberRepository.findByEmail(email);
         return result.isPresent();
     }
 
@@ -125,21 +125,21 @@ public class AuthService {
     }
 
     @Transactional
-    public ResponseEntity<JoinResponseDto> join(JoinRequestDto request) throws UserAlreadyExistException {
+    public ResponseEntity<JoinResponseDto> join(JoinRequestDto request) throws MemberAlreadyExistException {
 
         // Check If User already exists.
-        Optional<UserEntity> result = userRepository.findByEmail(request.getEmail());
-        if (result.isPresent()) throw new UserAlreadyExistException("User Already Exists.");
+        Optional<MemberEntity> result = memberRepository.findByEmail(request.getEmail());
+        if (result.isPresent()) throw new MemberAlreadyExistException("Member Already Exists.");
 
         String encryptedPassword = passwordEncoder.encode(request.getPassword());
-        UserEntity newUser = UserEntity.builder()
+        MemberEntity newMember = MemberEntity.builder()
                 .email(request.getEmail())
                 .password(encryptedPassword)
                 .nickname(request.getNickname())
                 .name(request.getName())
                 .build();
 
-        UserEntity created = userRepository.save(newUser);
+        MemberEntity created = memberRepository.save(newMember);
 
         JoinResponseDto response = JoinResponseDto.builder()
                 .userId(created.getId())
@@ -147,4 +147,8 @@ public class AuthService {
 
         return ResponseEntity.created(null).body(response);
     }
+
+//    public ResponseEntity<LoginResponseDto> login(LoginRequestDto request) {
+//        // Todo("wqewqe")
+//    }
 }

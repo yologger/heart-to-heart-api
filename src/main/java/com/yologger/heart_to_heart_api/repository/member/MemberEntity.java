@@ -1,4 +1,4 @@
-package com.yologger.heart_to_heart_api.repository.user;
+package com.yologger.heart_to_heart_api.repository.member;
 
 import com.yologger.heart_to_heart_api.repository.base.BaseEntity;
 import lombok.AllArgsConstructor;
@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name= "user")
+@Table(name= "member")
 @Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserEntity extends BaseEntity {
+public class MemberEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

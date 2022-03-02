@@ -1,10 +1,10 @@
 package com.yologger.heart_to_heart_api.controller.auth;
 
+import com.yologger.heart_to_heart_api.service.auth.AuthService;
 import com.yologger.heart_to_heart_api.service.auth.exception.ExpiredVerificationCodeException;
 import com.yologger.heart_to_heart_api.service.auth.exception.InvalidEmailException;
 import com.yologger.heart_to_heart_api.service.auth.exception.InvalidVerificationCodeException;
-import com.yologger.heart_to_heart_api.service.auth.exception.UserAlreadyExistException;
-import com.yologger.heart_to_heart_api.service.auth.*;
+import com.yologger.heart_to_heart_api.service.auth.exception.MemberAlreadyExistException;
 import com.yologger.heart_to_heart_api.service.auth.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -26,7 +26,7 @@ public class AuthController {
 
     @PostMapping
     @RequestMapping(value = "/emailVerificationCode", consumes = "application/json", produces = "application/json")
-    ResponseEntity<EmailVerificationCodeResponseDto> emailVerificationCode(@Valid @RequestBody EmailVerificationCodeRequestDto request) throws UserAlreadyExistException {
+    ResponseEntity<EmailVerificationCodeResponseDto> emailVerificationCode(@Valid @RequestBody EmailVerificationCodeRequestDto request) throws MemberAlreadyExistException {
         return authService.emailVerificationCode(request.getEmail());
     }
 
@@ -37,7 +37,12 @@ public class AuthController {
     }
 
     @PostMapping(value = "/join", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<JoinResponseDto> join(@Valid @RequestBody JoinRequestDto request) throws UserAlreadyExistException {
+    public ResponseEntity<JoinResponseDto> join(@Valid @RequestBody JoinRequestDto request) throws MemberAlreadyExistException {
         return authService.join(request);
     }
+
+//    @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
+//    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request) {
+//        return authService.login(request);
+//    }
 }

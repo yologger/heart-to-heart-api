@@ -1,4 +1,4 @@
-package com.yologger.heart_to_heart_api.repository.user;
+package com.yologger.heart_to_heart_api.repository.member;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,11 +14,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
-@DisplayName("UserRepository 테스트")
-class UserRepositoryTest {
+@DisplayName("MemberRepository 테스트")
+class MemberRepositoryTest {
 
     @Autowired
-    private UserRepository userRepository;
+    private MemberRepository memberRepository;
 
     @BeforeEach
     void setUp() {
@@ -26,34 +26,34 @@ class UserRepositoryTest {
 
     @AfterEach
     public void tearDown() {
-        userRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 
     @Test
     @DisplayName("사용자 전체 조회하기 테스트")
-    public void test_queryUser() {
+    public void test_queryMember() {
         // Given
         String email = "CR7@gmail.com";
         String name = "Cristiano Ronaldo";
         String password = "12341234";
         String nickname = "CR7";
 
-        UserEntity input = UserEntity.builder()
+        MemberEntity input = MemberEntity.builder()
                 .email(email)
                 .name(name)
                 .password(password)
                 .nickname(nickname)
                 .build();
 
-        userRepository.save(input);
+        memberRepository.save(input);
 
         // When
-        List<UserEntity> users = userRepository.findAll();
-        UserEntity result = users.get(0);
+        List<MemberEntity> members = memberRepository.findAll();
+        MemberEntity member = members.get(0);
 
         // Then
-        assertThat(result.getEmail()).isEqualTo(email);
-        assertThat(result.getName()).isEqualTo(name);
+        assertThat(member.getEmail()).isEqualTo(email);
+        assertThat(member.getName()).isEqualTo(name);
     }
 
     @Test
@@ -65,17 +65,17 @@ class UserRepositoryTest {
         String password = "12341234";
         String nickname = "CR7";
 
-        UserEntity input = UserEntity.builder()
+        MemberEntity input = MemberEntity.builder()
                 .email(email)
                 .name(name)
                 .password(password)
                 .nickname(nickname)
                 .build();
 
-        userRepository.save(input);
+        memberRepository.save(input);
 
         // When
-        Optional<UserEntity> output = userRepository.findByEmail(email);
+        Optional<MemberEntity> output = memberRepository.findByEmail(email);
 
         // Then
         assertTrue(output.isPresent());
