@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
                 .message(GlobalErrorCode.NOT_FOUND.getMessage())
                 .status(GlobalErrorCode.NOT_FOUND.getStatus())
                 .build();
-         return ResponseEntity.badRequest().body(errorBody);
+        return ResponseEntity.badRequest().body(errorBody);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
