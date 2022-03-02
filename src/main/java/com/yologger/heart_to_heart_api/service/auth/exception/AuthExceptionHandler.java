@@ -52,4 +52,26 @@ public class AuthExceptionHandler {
         // return ResponseEntity.badRequest().body(response);
         return new ResponseEntity(response, HttpStatus.valueOf(AuthErrorCode.EXPIRED_VERIFICATION_CODE.getStatus()));
     }
+
+    @ExceptionHandler(value = MemberDoesNotExistException.class)
+    public ResponseEntity<ErrorResponseDto> handleMemberDoesNotExistException(MemberDoesNotExistException e) {
+        final ErrorResponseDto response = ErrorResponseDto.builder()
+                .code(AuthErrorCode.MEMBER_NOT_EXIST.getCode())
+                .message(AuthErrorCode.MEMBER_NOT_EXIST.getMessage())
+                .status(AuthErrorCode.MEMBER_NOT_EXIST.getStatus())
+                .build();
+        // return ResponseEntity.badRequest().body(response);
+        return new ResponseEntity(response, HttpStatus.valueOf(AuthErrorCode.MEMBER_NOT_EXIST.getStatus()));
+    }
+
+    @ExceptionHandler(value = InvalidPasswordException.class)
+    public ResponseEntity<ErrorResponseDto> handleInvalidPasswordException(InvalidPasswordException e) {
+        final ErrorResponseDto response = ErrorResponseDto.builder()
+                .code(AuthErrorCode.INVALID_PASSWORD.getCode())
+                .message(AuthErrorCode.INVALID_PASSWORD.getMessage())
+                .status(AuthErrorCode.INVALID_PASSWORD.getStatus())
+                .build();
+        // return ResponseEntity.badRequest().body(response);
+        return new ResponseEntity(response, HttpStatus.valueOf(AuthErrorCode.INVALID_PASSWORD.getStatus()));
+    }
 }

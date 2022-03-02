@@ -11,6 +11,8 @@ public enum AuthErrorCode {
     INVALID_EMAIL(400, "A002", "Invalid Email"),
     INVALID_VERIFICATION_CODE(400, "A003", "Invalid Verification Code"),
     EXPIRED_VERIFICATION_CODE(400, "A004", "Expired Verification code"),
+    INVALID_PASSWORD(400, "A005", "Invalid Password"),
+    MEMBER_NOT_EXIST(400, "A006", "Member Not Exist."),
     ;
 
     private final int status;

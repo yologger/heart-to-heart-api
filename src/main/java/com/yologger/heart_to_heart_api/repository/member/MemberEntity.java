@@ -31,4 +31,18 @@ public class MemberEntity extends BaseEntity {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = true)
+    private String accessToken;
+
+    @Column(nullable = true)
+    private String refreshToken;
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }

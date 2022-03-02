@@ -1,9 +1,7 @@
 package com.yologger.heart_to_heart_api.service.auth;
 
-import com.yologger.heart_to_heart_api.service.auth.exception.ExpiredVerificationCodeException;
-import com.yologger.heart_to_heart_api.service.auth.exception.InvalidEmailException;
-import com.yologger.heart_to_heart_api.service.auth.exception.InvalidVerificationCodeException;
-import com.yologger.heart_to_heart_api.service.auth.exception.MemberAlreadyExistException;
+import com.yologger.heart_to_heart_api.common.util.JwtUtil;
+import com.yologger.heart_to_heart_api.service.auth.exception.*;
 import com.yologger.heart_to_heart_api.common.util.MailUtil;
 import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
@@ -13,6 +11,10 @@ import com.yologger.heart_to_heart_api.service.auth.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,9 +30,11 @@ import java.util.Random;
 public class AuthService {
 
     private final MailUtil mailUtil;
+    private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final VerificationCodeRepository verificationCodeRepository;
+    private final AuthenticationManager authenticationManager;
 
     @Transactional
     public ResponseEntity<EmailVerificationCodeResponseDto> emailVerificationCode(String email) throws MemberAlreadyExistException {
@@ -148,7 +152,38 @@ public class AuthService {
         return ResponseEntity.created(null).body(response);
     }
 
-//    public ResponseEntity<LoginResponseDto> login(LoginRequestDto request) {
-//        // Todo("wqewqe")
-//    }
+    @Transactional
+    public ResponseEntity<LoginResponseDto> login(LoginRequestDto request) throws MemberDoesNotExistException, InvalidPasswordException {
+
+        // Check if member exists.
+        MemberEntity member = memberRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new MemberDoesNotExistException("Member does not exist."));
+
+        // Check if password correct.
+        if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
+            throw new InvalidPasswordException("Invalid password exception");
+        }
+
+        // 인증 수행
+        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+
+        // Principal(본인)
+        User me = (User) auth.getPrincipal();
+
+        // 토큰 생성
+        String accessToken = jwtUtil.generateAccessToken(member.getId(), member.getEmail(), member.getName(), member.getNickname());
+        String refreshToken = jwtUtil.generateRefreshToken(member.getId(), member.getEmail(), member.getName(), member.getNickname());
+
+        // DB 업데이트
+        member.setAccessToken(accessToken);
+        member.setRefreshToken(refreshToken);
+
+        LoginResponseDto response = LoginResponseDto.builder()
+                .userId(member.getId())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
 }

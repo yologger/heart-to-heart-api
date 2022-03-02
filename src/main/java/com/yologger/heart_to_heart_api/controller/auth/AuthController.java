@@ -1,10 +1,7 @@
 package com.yologger.heart_to_heart_api.controller.auth;
 
 import com.yologger.heart_to_heart_api.service.auth.AuthService;
-import com.yologger.heart_to_heart_api.service.auth.exception.ExpiredVerificationCodeException;
-import com.yologger.heart_to_heart_api.service.auth.exception.InvalidEmailException;
-import com.yologger.heart_to_heart_api.service.auth.exception.InvalidVerificationCodeException;
-import com.yologger.heart_to_heart_api.service.auth.exception.MemberAlreadyExistException;
+import com.yologger.heart_to_heart_api.service.auth.exception.*;
 import com.yologger.heart_to_heart_api.service.auth.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -36,13 +33,14 @@ public class AuthController {
         return authService.confirmVerificationCode(request);
     }
 
-    @PostMapping(value = "/join", consumes = "application/json", produces = "application/json")
+    @PostMapping
+    @RequestMapping(value = "/join", consumes = "application/json", produces = "application/json")
     public ResponseEntity<JoinResponseDto> join(@Valid @RequestBody JoinRequestDto request) throws MemberAlreadyExistException {
         return authService.join(request);
     }
 
-//    @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
-//    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request) {
-//        return authService.login(request);
-//    }
+    @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request) throws InvalidPasswordException, MemberDoesNotExistException {
+        return authService.login(request);
+    }
 }
