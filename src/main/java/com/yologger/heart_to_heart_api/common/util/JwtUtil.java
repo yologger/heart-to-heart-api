@@ -1,10 +1,10 @@
 package com.yologger.heart_to_heart_api.common.util;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.UnsupportedEncodingException;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
@@ -69,5 +69,18 @@ public class JwtUtil {
                 .compact();
 
         return refreshToken;
+    }
+
+
+    public void verifyAccessToken(String accessToken) throws UnsupportedEncodingException {
+        Jwts.parser()
+                .setSigningKey(accessTokenSecret.getBytes("UTF-8"))  // Set Key
+                .parseClaimsJws(accessToken);  // Parsing and verifying. throws error in case of failure.
+    }
+
+    public void verifyRefreshToken(String refreshToken) throws UnsupportedEncodingException, MalformedJwtException, SignatureException, ExpiredJwtException {
+        Jwts.parser()
+                .setSigningKey(refreshTokenSecret.getBytes("UTF-8"))  // Set Key
+                .parseClaimsJws(refreshToken);  // Parsing and verifying. throws error in case of failure.
     }
 }

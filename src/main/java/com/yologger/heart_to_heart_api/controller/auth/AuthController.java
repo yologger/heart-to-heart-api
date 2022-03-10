@@ -43,4 +43,9 @@ public class AuthController {
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request) throws InvalidPasswordException, MemberDoesNotExistException {
         return authService.login(request);
     }
+
+    @PostMapping(value = "/reissueToken", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<ReissueTokenResponseDto> reissueToken(@Valid @RequestBody ReissueTokenRequestDto request) throws ExpiredRefreshTokenException, InvalidRefreshTokenException, MemberDoesNotExistException {
+        return authService.reissueToken(request);
+    }
 }

@@ -74,4 +74,26 @@ public class AuthExceptionHandler {
         // return ResponseEntity.badRequest().body(response);
         return new ResponseEntity(response, HttpStatus.valueOf(AuthErrorCode.INVALID_PASSWORD.getStatus()));
     }
+
+    @ExceptionHandler(value = InvalidRefreshTokenException.class)
+    public ResponseEntity<ErrorResponseDto> handleInvalidRefreshTokenException(InvalidRefreshTokenException e) {
+        final ErrorResponseDto response = ErrorResponseDto.builder()
+                .code(AuthErrorCode.INVALID_REFRESH_TOKEN.getCode())
+                .message(AuthErrorCode.INVALID_REFRESH_TOKEN.getMessage())
+                .status(AuthErrorCode.INVALID_REFRESH_TOKEN.getStatus())
+                .build();
+        // return ResponseEntity.badRequest().body(response);
+        return new ResponseEntity(response, HttpStatus.valueOf(AuthErrorCode.INVALID_REFRESH_TOKEN.getStatus()));
+    }
+
+    @ExceptionHandler(value = ExpiredRefreshTokenException.class)
+    public ResponseEntity<ErrorResponseDto> handleExpiredRefreshTokenException(ExpiredRefreshTokenException e) {
+        final ErrorResponseDto response = ErrorResponseDto.builder()
+                .code(AuthErrorCode.EXPIRED_REFRESH_TOKEN.getCode())
+                .message(AuthErrorCode.EXPIRED_REFRESH_TOKEN.getMessage())
+                .status(AuthErrorCode.EXPIRED_REFRESH_TOKEN.getStatus())
+                .build();
+        // return ResponseEntity.badRequest().body(response);
+        return new ResponseEntity(response, HttpStatus.valueOf(AuthErrorCode.EXPIRED_REFRESH_TOKEN.getStatus()));
+    }
 }

@@ -1,6 +1,8 @@
 package com.yologger.heart_to_heart_api.config;
 
+import com.yologger.heart_to_heart_api.common.util.JwtUtil;
 import com.yologger.heart_to_heart_api.service.auth.MemberDetailsService;
+import com.yologger.heart_to_heart_api.service.auth.filter.ValidateAccessTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,12 +14,24 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final MemberDetailsService memberDetailsService;
+    private final JwtUtil jwtUtil;
+
+    private static final List<String> NOT_FILTERED_URLS = Arrays.asList(
+            "/test/test1",
+            "/test/test2",
+            "/test/test3"
+    );
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -39,6 +53,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    // AccessToken 검증 필터 빈으로 등록
+    @Bean
+    public ValidateAccessTokenFilter validateAccessTokenFilter() {
+        ValidateAccessTokenFilter filter = new ValidateAccessTokenFilter(jwtUtil, NOT_FILTERED_URLS);
+        return filter;
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -47,6 +68,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .cors().disable()
                 .formLogin().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .addFilterBefore(validateAccessTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(authorize -> authorize
                         .antMatchers("/test/**").permitAll()
                         .antMatchers("/auth/**").permitAll()

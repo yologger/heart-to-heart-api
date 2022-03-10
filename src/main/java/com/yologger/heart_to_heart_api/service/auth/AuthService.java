@@ -8,6 +8,9 @@ import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
 import com.yologger.heart_to_heart_api.repository.verification_code.VerificationCodeEntity;
 import com.yologger.heart_to_heart_api.repository.verification_code.VerificationCodeRepository;
 import com.yologger.heart_to_heart_api.service.auth.model.*;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -67,8 +71,7 @@ public class AuthService {
             content.append("<h1>" + verificationCode +"</h1>");
             content.append("</div>");
 
-            String to = "yologger1013@gmail.com";
-            mailUtil.sendEmail(title, content.toString(), to);
+            mailUtil.sendEmail(title, content.toString(), email);
 
             EmailVerificationCodeResponseDto response = EmailVerificationCodeResponseDto.builder()
                     .message("Email sent.")
@@ -182,8 +185,49 @@ public class AuthService {
                 .userId(member.getId())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .name(member.getName())
+                .nickname(member.getNickname())
                 .build();
 
         return ResponseEntity.ok(response);
+    }
+
+    @Transactional
+    public ResponseEntity<ReissueTokenResponseDto> reissueToken(ReissueTokenRequestDto request) throws ExpiredRefreshTokenException, InvalidRefreshTokenException, MemberDoesNotExistException {
+        // Compare with ex-refresh token
+        Optional<MemberEntity> result = memberRepository.findById(request.getId());
+        if (!result.isPresent()) {
+            throw new MemberDoesNotExistException("Member does not exist");
+        }
+        if (!(result.get().getRefreshToken().equals(request.getRefreshToken()))) {
+            throw new InvalidRefreshTokenException("Invalid refresh token");
+        }
+
+        try {
+            // Verify refresh token
+            jwtUtil.verifyRefreshToken(request.getRefreshToken());
+
+            // Reissue access token, refresh token
+            MemberEntity member = result.get();
+            String newAccessToken = member.getAccessToken();
+            String newRefreshToken = member.getRefreshToken();
+            member.setAccessToken(newAccessToken);
+            member.setRefreshToken(newRefreshToken);
+
+            ReissueTokenResponseDto response = ReissueTokenResponseDto.builder()
+                    .accessToken(newAccessToken)
+                    .refreshToken(newRefreshToken)
+                    .name(member.getName())
+                    .nickname(member.getNickname())
+                    .userId(member.getId())
+                    .build();
+
+            return ResponseEntity.ok(response);
+
+        } catch (ExpiredJwtException e) {
+            throw new ExpiredRefreshTokenException("Expired refresh token");
+        } catch (Exception e) {
+            throw new InvalidRefreshTokenException("Invalid refresh token");
+        }
     }
 }
