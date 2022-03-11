@@ -14,6 +14,9 @@ public enum AuthErrorCode {
     MEMBER_NOT_EXIST(400, "A006", "Member Not Exist."),
     INVALID_REFRESH_TOKEN(400, "A007", "Invalid refresh token"),
     EXPIRED_REFRESH_TOKEN(400, "A008", "Expired refresh token"),
+    INVALID_ACCESS_TOKEN(400, "A009", "Invalid access token"),
+    EXPIRED_ACCESS_TOKEN(400, "A010", "expired access token"),
+    BEARER_NOT_INCLUDED(400, "A011", "'Authorization' header must start with 'Bearer"),
     ;
 
     private final int status;

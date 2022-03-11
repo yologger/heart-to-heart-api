@@ -83,4 +83,14 @@ public class JwtUtil {
                 .setSigningKey(refreshTokenSecret.getBytes("UTF-8"))  // Set Key
                 .parseClaimsJws(refreshToken);  // Parsing and verifying. throws error in case of failure.
     }
+
+    public Long verifyAccessTokenAndGetMemberId(String accessToken) throws UnsupportedEncodingException, MalformedJwtException, SignatureException, ExpiredJwtException {
+        Claims claims = Jwts.parser()
+                .setSigningKey(accessTokenSecret.getBytes("UTF-8"))  // Set Key
+                .parseClaimsJws(accessToken)  // Parsing and verifying. throws error in case of failure.
+                .getBody();
+
+        Long id = claims.get("id", Long.class);
+        return id;
+    }
 }

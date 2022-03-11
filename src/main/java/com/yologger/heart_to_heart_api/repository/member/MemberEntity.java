@@ -45,4 +45,12 @@ public class MemberEntity extends BaseEntity {
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
+
+    public void clearAccessToken() {
+        this.accessToken = null;
+    }
+
+    public void clearRefreshToken() {
+        this.refreshToken = null;
+    }
 }

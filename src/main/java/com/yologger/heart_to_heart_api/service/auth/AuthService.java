@@ -1,16 +1,14 @@
 package com.yologger.heart_to_heart_api.service.auth;
 
 import com.yologger.heart_to_heart_api.common.util.JwtUtil;
-import com.yologger.heart_to_heart_api.service.auth.exception.*;
 import com.yologger.heart_to_heart_api.common.util.MailUtil;
 import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
 import com.yologger.heart_to_heart_api.repository.verification_code.VerificationCodeEntity;
 import com.yologger.heart_to_heart_api.repository.verification_code.VerificationCodeRepository;
+import com.yologger.heart_to_heart_api.service.auth.exception.*;
 import com.yologger.heart_to_heart_api.service.auth.model.*;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -228,6 +226,30 @@ public class AuthService {
             throw new ExpiredRefreshTokenException("Expired refresh token");
         } catch (Exception e) {
             throw new InvalidRefreshTokenException("Invalid refresh token");
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<LogoutResponseDto> logout(String authHeader) throws BearerNotIncludedException, ExpiredAccessTokenException, InvalidAccessTokenException {
+        if (!authHeader.startsWith("Bearer")) {
+            throw new BearerNotIncludedException("Authorization does not include 'bearer'.");
+        } else {
+            try {
+                String accessToken = authHeader.substring(7);
+                Long memberId = jwtUtil.verifyAccessTokenAndGetMemberId(accessToken);
+                Optional<MemberEntity> result = memberRepository.findById(memberId);
+                if (!result.isPresent()) {
+                    throw new InvalidAccessTokenException("Invalid refresh token.");
+                }
+                MemberEntity member = result.get();
+                member.clearAccessToken();
+                member.clearRefreshToken();
+                return ResponseEntity.ok(LogoutResponseDto.builder().message("Logged out ").build());
+            } catch (ExpiredJwtException e) {
+                throw new ExpiredAccessTokenException("Expired access token");
+            } catch (Exception e) {
+                throw new InvalidAccessTokenException("Invalid refresh token.");
+            }
         }
     }
 }

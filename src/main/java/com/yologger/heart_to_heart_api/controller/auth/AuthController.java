@@ -6,10 +6,7 @@ import com.yologger.heart_to_heart_api.service.auth.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -47,5 +44,10 @@ public class AuthController {
     @PostMapping(value = "/reissueToken", consumes = "application/json", produces = "application/json")
     public ResponseEntity<ReissueTokenResponseDto> reissueToken(@Valid @RequestBody ReissueTokenRequestDto request) throws ExpiredRefreshTokenException, InvalidRefreshTokenException, MemberDoesNotExistException {
         return authService.reissueToken(request);
+    }
+
+    @PostMapping(value = "/logout")
+    public  ResponseEntity<LogoutResponseDto> logout(@Valid @RequestHeader(value="Authorization", required = true) String authHeader) throws InvalidAccessTokenException, ExpiredAccessTokenException, BearerNotIncludedException {
+        return authService.logout(authHeader);
     }
 }
