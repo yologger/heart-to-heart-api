@@ -47,7 +47,15 @@ public class AuthController {
     }
 
     @PostMapping(value = "/logout")
-    public  ResponseEntity<LogoutResponseDto> logout(@Valid @RequestHeader(value="Authorization", required = true) String authHeader) throws InvalidAccessTokenException, ExpiredAccessTokenException, BearerNotIncludedException {
+    public ResponseEntity<LogoutResponseDto> logout(@Valid @RequestHeader(value = "Authorization", required = true) String authHeader) throws InvalidAccessTokenException, ExpiredAccessTokenException, BearerNotIncludedException {
         return authService.logout(authHeader);
+    }
+
+    @GetMapping(value = "/verifyAccessToken")
+    public ResponseEntity<VerifyAccessTokenResponse> verifyAccessToken() {
+        VerifyAccessTokenResponse response = VerifyAccessTokenResponse.builder()
+                .message("verified")
+                .build();
+        return ResponseEntity.ok(response);
     }
 }

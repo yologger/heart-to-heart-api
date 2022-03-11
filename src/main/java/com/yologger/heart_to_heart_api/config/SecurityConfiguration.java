@@ -1,6 +1,7 @@
 package com.yologger.heart_to_heart_api.config;
 
 import com.yologger.heart_to_heart_api.common.util.JwtUtil;
+import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
 import com.yologger.heart_to_heart_api.service.auth.MemberDetailsService;
 import com.yologger.heart_to_heart_api.service.auth.filter.ValidateAccessTokenFilter;
 import lombok.RequiredArgsConstructor;
@@ -26,11 +27,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final MemberDetailsService memberDetailsService;
     private final JwtUtil jwtUtil;
+    private final MemberRepository memberRepository;
 
     private static final List<String> NOT_FILTERED_URLS = Arrays.asList(
-            "/test/test1",
-            "/test/test2",
-            "/test/test3"
+            "/auth/join",
+            "/auth/login"
     );
 
     @Bean
@@ -56,7 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     // AccessToken 검증 필터 빈으로 등록
     @Bean
     public ValidateAccessTokenFilter validateAccessTokenFilter() {
-        ValidateAccessTokenFilter filter = new ValidateAccessTokenFilter(jwtUtil, NOT_FILTERED_URLS);
+        ValidateAccessTokenFilter filter = new ValidateAccessTokenFilter(jwtUtil, NOT_FILTERED_URLS, memberRepository);
         return filter;
     }
 
@@ -72,7 +73,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests(authorize -> authorize
                         .antMatchers("/test/**").permitAll()
                         .antMatchers("/auth/**").permitAll()
-                        .antMatchers("/user/**").permitAll()
                         .anyRequest().authenticated()
                 );
     }
