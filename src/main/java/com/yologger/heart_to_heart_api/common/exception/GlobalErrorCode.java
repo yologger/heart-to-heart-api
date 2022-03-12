@@ -12,11 +12,14 @@ public enum GlobalErrorCode {
     INVALID_INPUT_VALUE(400, "GLOBAL002", "Invalid input"),
     HTTP_REQUEST_METHOD_NOT_SUPPORTED(405, "GLOBAL003", "HTTP request not supported"),
     HTTP_MESSAGE_NOT_READABLE(400, "GLOBAL004", "HTTP message not readable"),
-    MISSING_REQUEST_HEADER(400, "G004", "Missing Request Header"),
-    MISSING_AUTHORIZATION_HEADER(400, "G005", "'Authorization' header must not be empty"),
-    NOT_STARTED_WITH_BEARER(400, "G006", "'Authorization' header must start with 'Bearer'"),
-    ACCESS_TOKEN_EMPTY(400, "G007", "'Authorization' header does not include access token."),
-    INVALID_ACCESS_TOKEN(400, "G008", "Invalid access token"),
+    MISSING_REQUEST_HEADER(400, "GLOBAL005", "Missing Request Header"),
+    ILLEGAL_STATE(400, "GLOBAL006", "Illegal State"),
+
+    // Auth
+    MISSING_AUTHORIZATION_HEADER(400, "GLOBAL100", "'Authorization' header must not be empty"),
+    BEARER_NOT_INCLUDED(400, "GLOBAL101", "'Authorization' header must start with 'Bearer'"),
+    ACCESS_TOKEN_EMPTY(400, "GLOBAL102", "'Authorization' header does not include access token"),
+    INVALID_ACCESS_TOKEN(400, "GLOBAL103", "Invalid Access Token"),
     EXPIRED_ACCESS_TOKEN(400, "G009", "Expired access token"),
     ;
 

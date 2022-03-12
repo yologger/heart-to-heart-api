@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class JoinResponseDto {
-    @JsonProperty("user_id") private Long userId;
+    @JsonProperty("member_id") private Long memberId;
 }

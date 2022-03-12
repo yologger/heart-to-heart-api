@@ -17,7 +17,7 @@ public class ReissueTokenRequestDto {
 
     @JsonProperty(value = "member_id")
     @NotNull(message = "email must not be empty.")
-    private Long id;
+    private Long memberId;
 
     @JsonProperty(value = "refresh_token")
     @NotBlank(message = "email must not be empty.")

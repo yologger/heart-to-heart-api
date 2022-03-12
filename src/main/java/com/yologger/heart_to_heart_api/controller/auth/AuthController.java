@@ -1,10 +1,8 @@
 package com.yologger.heart_to_heart_api.controller.auth;
 
 import com.yologger.heart_to_heart_api.common.base.ErrorResponseDto;
-import com.yologger.heart_to_heart_api.controller.auth.exception.AuthErrorCode;
-import com.yologger.heart_to_heart_api.controller.auth.exception.MemberAlreadyExistException;
+import com.yologger.heart_to_heart_api.controller.auth.exception.*;
 import com.yologger.heart_to_heart_api.service.auth.AuthService;
-import com.yologger.heart_to_heart_api.service.auth.exception.*;
 import com.yologger.heart_to_heart_api.service.auth.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -54,17 +52,17 @@ public class AuthController {
         return authService.logout(authHeader);
     }
 
+    @PostMapping(value = "/reissueToken", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<ReissueTokenResponseDto> reissueToken(@Valid @RequestBody ReissueTokenRequestDto request) throws ExpiredRefreshTokenException, InvalidRefreshTokenException, MemberNotExistException {
+        return authService.reissueToken(request);
+    }
+
     @GetMapping(value = "/verifyAccessToken")
     public ResponseEntity<VerifyAccessTokenResponse> verifyAccessToken() {
         VerifyAccessTokenResponse response = VerifyAccessTokenResponse.builder()
                 .message("verified")
                 .build();
         return ResponseEntity.ok(response);
-    }
-
-    @PostMapping(value = "/reissueToken", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<ReissueTokenResponseDto> reissueToken(@Valid @RequestBody ReissueTokenRequestDto request) throws ExpiredRefreshTokenException, InvalidRefreshTokenException, MemberNotExistException {
-        return authService.reissueToken(request);
     }
 
     @ExceptionHandler({MessagingException.class, MailAuthenticationException.class, MailSendException.class, MailException.class})
@@ -140,5 +138,60 @@ public class AuthController {
                 .build();
         // return ResponseEntity.badRequest().body(response);
         return new ResponseEntity(response, HttpStatus.valueOf(AuthErrorCode.INVALID_PASSWORD.getStatus()));
+    }
+
+    @ExceptionHandler(value = InvalidAccessTokenException.class)
+    public ResponseEntity<ErrorResponseDto> handleInvalidAccessTokenException(InvalidAccessTokenException e) {
+        final ErrorResponseDto response = ErrorResponseDto.builder()
+                .code(AuthErrorCode.INVALID_ACCESS_TOKEN.getCode())
+                .message(AuthErrorCode.INVALID_ACCESS_TOKEN.getMessage())
+                .status(AuthErrorCode.INVALID_ACCESS_TOKEN.getStatus())
+                .build();
+        // return ResponseEntity.badRequest().body(response);
+        return new ResponseEntity(response, HttpStatus.valueOf(AuthErrorCode.INVALID_ACCESS_TOKEN.getStatus()));
+    }
+
+    @ExceptionHandler(value = ExpiredAccessTokenException.class)
+    public ResponseEntity<ErrorResponseDto> handleExpiredAccessTokenException(ExpiredAccessTokenException e) {
+        final ErrorResponseDto response = ErrorResponseDto.builder()
+                .code(AuthErrorCode.EXPIRED_ACCESS_TOKEN.getCode())
+                .message(AuthErrorCode.EXPIRED_ACCESS_TOKEN.getMessage())
+                .status(AuthErrorCode.EXPIRED_ACCESS_TOKEN.getStatus())
+                .build();
+        // return ResponseEntity.badRequest().body(response);
+        return new ResponseEntity(response, HttpStatus.valueOf(AuthErrorCode.EXPIRED_ACCESS_TOKEN.getStatus()));
+    }
+
+    @ExceptionHandler(value = BearerNotIncludedException.class)
+    public ResponseEntity<ErrorResponseDto> handleBearerNotIncludedException(BearerNotIncludedException e) {
+        final ErrorResponseDto response = ErrorResponseDto.builder()
+                .code(AuthErrorCode.BEARER_NOT_INCLUDED.getCode())
+                .message(AuthErrorCode.BEARER_NOT_INCLUDED.getMessage())
+                .status(AuthErrorCode.BEARER_NOT_INCLUDED.getStatus())
+                .build();
+        // return ResponseEntity.badRequest().body(response);
+        return new ResponseEntity(response, HttpStatus.valueOf(AuthErrorCode.BEARER_NOT_INCLUDED.getStatus()));
+    }
+
+    @ExceptionHandler(value = InvalidRefreshTokenException.class)
+    public ResponseEntity<ErrorResponseDto> handleInvalidRefreshTokenException(InvalidRefreshTokenException e) {
+        final ErrorResponseDto response = ErrorResponseDto.builder()
+                .code(AuthErrorCode.INVALID_REFRESH_TOKEN.getCode())
+                .message(AuthErrorCode.INVALID_REFRESH_TOKEN.getMessage())
+                .status(AuthErrorCode.INVALID_REFRESH_TOKEN.getStatus())
+                .build();
+        // return ResponseEntity.badRequest().body(response);
+        return new ResponseEntity(response, HttpStatus.valueOf(AuthErrorCode.INVALID_REFRESH_TOKEN.getStatus()));
+    }
+
+    @ExceptionHandler(value = ExpiredRefreshTokenException.class)
+    public ResponseEntity<ErrorResponseDto> handleExpiredRefreshTokenException(ExpiredRefreshTokenException e) {
+        final ErrorResponseDto response = ErrorResponseDto.builder()
+                .code(AuthErrorCode.EXPIRED_REFRESH_TOKEN.getCode())
+                .message(AuthErrorCode.EXPIRED_REFRESH_TOKEN.getMessage())
+                .status(AuthErrorCode.EXPIRED_REFRESH_TOKEN.getStatus())
+                .build();
+        // return ResponseEntity.badRequest().body(response);
+        return new ResponseEntity(response, HttpStatus.valueOf(AuthErrorCode.EXPIRED_REFRESH_TOKEN.getStatus()));
     }
 }

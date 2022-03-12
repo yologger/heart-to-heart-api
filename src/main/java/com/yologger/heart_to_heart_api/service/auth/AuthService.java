@@ -2,12 +2,11 @@ package com.yologger.heart_to_heart_api.service.auth;
 
 import com.yologger.heart_to_heart_api.common.util.JwtUtil;
 import com.yologger.heart_to_heart_api.common.util.MailUtil;
-import com.yologger.heart_to_heart_api.controller.auth.exception.MemberAlreadyExistException;
+import com.yologger.heart_to_heart_api.controller.auth.exception.*;
 import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
 import com.yologger.heart_to_heart_api.repository.verification_code.VerificationCodeEntity;
 import com.yologger.heart_to_heart_api.repository.verification_code.VerificationCodeRepository;
-import com.yologger.heart_to_heart_api.service.auth.exception.*;
 import com.yologger.heart_to_heart_api.service.auth.model.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
@@ -150,7 +149,7 @@ public class AuthService {
         MemberEntity created = memberRepository.save(newMember);
 
         JoinResponseDto response = JoinResponseDto.builder()
-                .userId(created.getId())
+                .memberId(created.getId())
                 .build();
 
         return ResponseEntity.created(null).body(response);
@@ -196,7 +195,7 @@ public class AuthService {
     @Transactional
     public ResponseEntity<ReissueTokenResponseDto> reissueToken(ReissueTokenRequestDto request) throws ExpiredRefreshTokenException, InvalidRefreshTokenException, MemberNotExistException {
         // Compare with ex-refresh token
-        Optional<MemberEntity> result = memberRepository.findById(request.getId());
+        Optional<MemberEntity> result = memberRepository.findById(request.getMemberId());
         if (!result.isPresent()) {
             throw new MemberNotExistException("Member does not exist");
         }

@@ -13,11 +13,11 @@ public enum AuthErrorCode {
     EXPIRED_VERIFICATION_CODE(400, "AUTH004", "Expired Verification code"),
     INVALID_PASSWORD(400, "AUTH005", "Invalid Password"),
     MEMBER_NOT_EXIST(400, "AUTH006", "Member Not Exist."),
-    INVALID_REFRESH_TOKEN(400, "A007", "Invalid refresh token"),
-    EXPIRED_REFRESH_TOKEN(400, "A008", "Expired refresh token"),
-    INVALID_ACCESS_TOKEN(400, "A009", "Invalid access token"),
-    EXPIRED_ACCESS_TOKEN(400, "A010", "expired access token"),
-    BEARER_NOT_INCLUDED(400, "A011", "'Authorization' header must start with 'Bearer"),
+    INVALID_REFRESH_TOKEN(400, "AUTH007", "Invalid refresh token"),
+    EXPIRED_REFRESH_TOKEN(400, "AUTH008", "Expired refresh token"),
+    INVALID_ACCESS_TOKEN(400, "AUTH009", "Invalid access token"),
+    EXPIRED_ACCESS_TOKEN(400, "AUTH010", "Expired access token"),
+    BEARER_NOT_INCLUDED(400, "AUTH011", "'Authorization' header must start with 'Bearer"),
     ;
 
     private final int status;

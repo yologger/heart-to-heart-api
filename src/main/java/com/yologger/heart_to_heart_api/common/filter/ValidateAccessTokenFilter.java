@@ -1,4 +1,4 @@
-package com.yologger.heart_to_heart_api.service.auth.filter;
+package com.yologger.heart_to_heart_api.common.filter;
 
 import com.yologger.heart_to_heart_api.common.exception.GlobalErrorCode;
 import com.yologger.heart_to_heart_api.common.util.JwtUtil;
@@ -55,21 +55,21 @@ public class ValidateAccessTokenFilter extends OncePerRequestFilter {
         // Check if 'Authorization' header starts with 'Bearer'
         if (!authHeader.startsWith("Bearer")) {
             // Header
-            response.setStatus(GlobalErrorCode.NOT_STARTED_WITH_BEARER.getStatus());
+            response.setStatus(GlobalErrorCode.BEARER_NOT_INCLUDED.getStatus());
             response.setContentType("application/json;charset=utf-8");
 
             // Body
             JSONObject body = new JSONObject();
-            body.put("status", GlobalErrorCode.NOT_STARTED_WITH_BEARER.getStatus());
-            body.put("code", GlobalErrorCode.NOT_STARTED_WITH_BEARER.getCode());
-            body.put("message", GlobalErrorCode.NOT_STARTED_WITH_BEARER.getMessage());
+            body.put("status", GlobalErrorCode.BEARER_NOT_INCLUDED.getStatus());
+            body.put("code", GlobalErrorCode.BEARER_NOT_INCLUDED.getCode());
+            body.put("message", GlobalErrorCode.BEARER_NOT_INCLUDED.getMessage());
             response.getWriter().print(body);
-            log.info("INVALID REQUEST: " + GlobalErrorCode.NOT_STARTED_WITH_BEARER.getMessage());
+            log.info("INVALID REQUEST: " + GlobalErrorCode.BEARER_NOT_INCLUDED.getMessage());
             return;
         }
 
+        // Check if access token exists.
         String accessToken = authHeader.substring(7);
-
         if (accessToken == null || accessToken.trim().isEmpty()) {
             // Header
             response.setStatus(GlobalErrorCode.ACCESS_TOKEN_EMPTY.getStatus());
@@ -86,10 +86,10 @@ public class ValidateAccessTokenFilter extends OncePerRequestFilter {
         }
 
         try {
+            // Compare with ex-access token
+
             Long memberId = jwtUtil.verifyAccessTokenAndGetMemberId(accessToken);
             Optional<MemberEntity> result = memberRepository.findById(memberId);
-
-            // Compare with ex-access token
             if (!result.isPresent()) {
                 // Header
                 response.setStatus(GlobalErrorCode.INVALID_ACCESS_TOKEN.getStatus());
