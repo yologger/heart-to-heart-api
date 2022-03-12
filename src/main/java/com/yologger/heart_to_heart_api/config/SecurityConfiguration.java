@@ -30,8 +30,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final MemberRepository memberRepository;
 
     private static final List<String> NOT_FILTERED_URLS = Arrays.asList(
+            "/auth/emailVerificationCode",
+            "/auth/confirmVerificationCode",
             "/auth/join",
-            "/auth/login"
+            "/auth/login",
+            "/auth/reissueToken",
+            "/test/test1"
     );
 
     @Bean

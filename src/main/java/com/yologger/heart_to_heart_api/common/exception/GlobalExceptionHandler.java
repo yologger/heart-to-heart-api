@@ -1,10 +1,10 @@
 package com.yologger.heart_to_heart_api.common.exception;
 
 import com.yologger.heart_to_heart_api.common.base.ErrorResponseDto;
-import com.yologger.heart_to_heart_api.service.auth.exception.AuthErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
@@ -15,6 +15,17 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponseDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        final ErrorResponseDto response = ErrorResponseDto.builder()
+                .code(GlobalErrorCode.INVALID_INPUT_VALUE.getCode())
+                .message(GlobalErrorCode.INVALID_INPUT_VALUE.getMessage())
+                .status(GlobalErrorCode.INVALID_INPUT_VALUE.getStatus())
+                .build();
+        // return ResponseEntity.badRequest().body(response);
+        return new ResponseEntity(response, HttpStatus.valueOf(GlobalErrorCode.INVALID_INPUT_VALUE.getStatus()));
+    }
 
     @ExceptionHandler(value = NoHandlerFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleNoHandlerFoundException(NoHandlerFoundException e) {
@@ -27,18 +38,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity(response, HttpStatus.valueOf(GlobalErrorCode.NOT_FOUND.getStatus()));
     }
 
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponseDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-
-        final ErrorResponseDto response = ErrorResponseDto.builder()
-                .code(GlobalErrorCode.INVALID_INPUT_VALUE.getCode())
-                .message(GlobalErrorCode.INVALID_INPUT_VALUE.getMessage())
-                .status(GlobalErrorCode.INVALID_INPUT_VALUE.getStatus())
-                .build();
-        // return ResponseEntity.badRequest().body(response);
-        return new ResponseEntity(response, HttpStatus.valueOf(GlobalErrorCode.INVALID_INPUT_VALUE.getStatus()));
-    }
-
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorResponseDto> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         final ErrorResponseDto response = ErrorResponseDto.builder()
@@ -47,6 +46,19 @@ public class GlobalExceptionHandler {
                 .status(GlobalErrorCode.HTTP_REQUEST_METHOD_NOT_SUPPORTED.getStatus())
                 .build();
         return new ResponseEntity(response, HttpStatus.valueOf(GlobalErrorCode.HTTP_REQUEST_METHOD_NOT_SUPPORTED.getStatus()));
+    }
+
+
+
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponseDto> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        final ErrorResponseDto response = ErrorResponseDto.builder()
+                .code(GlobalErrorCode.HTTP_MESSAGE_NOT_READABLE.getCode())
+                .message(GlobalErrorCode.HTTP_MESSAGE_NOT_READABLE.getMessage())
+                .status(GlobalErrorCode.HTTP_MESSAGE_NOT_READABLE.getStatus())
+                .build();
+        // return ResponseEntity.badRequest().body(errorBody);
+        return new ResponseEntity(response, HttpStatus.valueOf(GlobalErrorCode.HTTP_MESSAGE_NOT_READABLE.getStatus()));
     }
 
     @ExceptionHandler(value = MissingRequestHeaderException.class)

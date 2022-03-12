@@ -2,6 +2,7 @@ package com.yologger.heart_to_heart_api.service.auth;
 
 import com.yologger.heart_to_heart_api.common.util.JwtUtil;
 import com.yologger.heart_to_heart_api.common.util.MailUtil;
+import com.yologger.heart_to_heart_api.controller.auth.exception.MemberAlreadyExistException;
 import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
 import com.yologger.heart_to_heart_api.repository.verification_code.VerificationCodeEntity;
@@ -12,6 +13,9 @@ import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.mail.MailException;
+import org.springframework.mail.MailSendException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,7 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.UnsupportedEncodingException;
+import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -39,7 +43,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     @Transactional
-    public ResponseEntity<EmailVerificationCodeResponseDto> emailVerificationCode(String email) throws MemberAlreadyExistException {
+    public ResponseEntity<EmailVerificationCodeResponseDto> emailVerificationCode(String email) throws MemberAlreadyExistException, MessagingException, MailAuthenticationException, MailSendException, MailException {
 
         if (emailAlreadyExist(email)) {
             throw new MemberAlreadyExistException("Member Already Exists.");
@@ -61,7 +65,6 @@ public class AuthService {
 
             // Send email asynchronously.
             String title = "Email 인증 요청";
-
             StringBuilder content = new StringBuilder();
             content.append("<div align='center' style='border:1px solid; padding: 50px; black; font-family:verdana';>");
             content.append("<div>Heart to Heart 에서 이메일 인증을 요청합니다</div>");
@@ -154,11 +157,11 @@ public class AuthService {
     }
 
     @Transactional
-    public ResponseEntity<LoginResponseDto> login(LoginRequestDto request) throws MemberDoesNotExistException, InvalidPasswordException {
+    public ResponseEntity<LoginResponseDto> login(LoginRequestDto request) throws MemberNotExistException, InvalidPasswordException {
 
         // Check if member exists.
         MemberEntity member = memberRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new MemberDoesNotExistException("Member does not exist."));
+                .orElseThrow(() -> new MemberNotExistException("Member does not exist."));
 
         // Check if password correct.
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
@@ -180,7 +183,7 @@ public class AuthService {
         member.setRefreshToken(refreshToken);
 
         LoginResponseDto response = LoginResponseDto.builder()
-                .userId(member.getId())
+                .memberId(member.getId())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .name(member.getName())
@@ -191,11 +194,11 @@ public class AuthService {
     }
 
     @Transactional
-    public ResponseEntity<ReissueTokenResponseDto> reissueToken(ReissueTokenRequestDto request) throws ExpiredRefreshTokenException, InvalidRefreshTokenException, MemberDoesNotExistException {
+    public ResponseEntity<ReissueTokenResponseDto> reissueToken(ReissueTokenRequestDto request) throws ExpiredRefreshTokenException, InvalidRefreshTokenException, MemberNotExistException {
         // Compare with ex-refresh token
         Optional<MemberEntity> result = memberRepository.findById(request.getId());
         if (!result.isPresent()) {
-            throw new MemberDoesNotExistException("Member does not exist");
+            throw new MemberNotExistException("Member does not exist");
         }
         if (!(result.get().getRefreshToken().equals(request.getRefreshToken()))) {
             throw new InvalidRefreshTokenException("Invalid refresh token");

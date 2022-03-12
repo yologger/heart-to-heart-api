@@ -1,6 +1,9 @@
 package com.yologger.heart_to_heart_api.common.util;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.mail.MailException;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -19,15 +22,11 @@ public class MailUtil {
     private final JavaMailSender mailSender;
 
     @Async
-    public void sendEmail(String subject, String content, String to) {
+    public void sendEmail(String subject, String content, String to) throws MessagingException, MailAuthenticationException, MailSendException, MailException {
         MimeMessage mail = mailSender.createMimeMessage();
-        try {
-            mail.setSubject(subject, "utf-8");
-            mail.setText(content.toString(), "utf-8", "html");
-            mail.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-            mailSender.send(mail);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        mail.setSubject(subject, "utf-8");
+        mail.setText(content.toString(), "utf-8", "html");
+        mail.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+        mailSender.send(mail);
     }
 }
