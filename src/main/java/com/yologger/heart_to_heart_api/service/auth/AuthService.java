@@ -220,6 +220,7 @@ public class AuthService {
                     .name(member.getName())
                     .nickname(member.getNickname())
                     .userId(member.getId())
+                    .email(member.getEmail())
                     .build();
 
             return ResponseEntity.ok(response);

@@ -48,7 +48,7 @@ public class ValidateAccessTokenFilter extends OncePerRequestFilter {
             body.put("code", GlobalErrorCode.MISSING_AUTHORIZATION_HEADER.getCode());
             body.put("message", GlobalErrorCode.MISSING_AUTHORIZATION_HEADER.getMessage());
             response.getWriter().print(body);
-            log.info("INVALID REQUEST: " + GlobalErrorCode.MISSING_AUTHORIZATION_HEADER.getMessage());
+            log.info("INVALID ACCESS TOKEN: " + GlobalErrorCode.MISSING_AUTHORIZATION_HEADER.getMessage());
             return;
         }
 
@@ -64,7 +64,7 @@ public class ValidateAccessTokenFilter extends OncePerRequestFilter {
             body.put("code", GlobalErrorCode.BEARER_NOT_INCLUDED.getCode());
             body.put("message", GlobalErrorCode.BEARER_NOT_INCLUDED.getMessage());
             response.getWriter().print(body);
-            log.info("INVALID REQUEST: " + GlobalErrorCode.BEARER_NOT_INCLUDED.getMessage());
+            log.info("INVALID ACCESS TOKEN: " + GlobalErrorCode.BEARER_NOT_INCLUDED.getMessage());
             return;
         }
 
@@ -81,7 +81,7 @@ public class ValidateAccessTokenFilter extends OncePerRequestFilter {
             body.put("code", GlobalErrorCode.ACCESS_TOKEN_EMPTY.getCode());
             body.put("message", GlobalErrorCode.ACCESS_TOKEN_EMPTY.getMessage());
             response.getWriter().print(body);
-            log.info("INVALID REQUEST: " + GlobalErrorCode.ACCESS_TOKEN_EMPTY.getMessage());
+            log.info("INVALID ACCESS TOKEN: " + GlobalErrorCode.ACCESS_TOKEN_EMPTY.getMessage());
             return;
         }
 
@@ -101,7 +101,7 @@ public class ValidateAccessTokenFilter extends OncePerRequestFilter {
                 body.put("code", GlobalErrorCode.INVALID_ACCESS_TOKEN.getCode());
                 body.put("message", GlobalErrorCode.INVALID_ACCESS_TOKEN.getMessage());
 
-                log.info("INVALID REQUEST: " + GlobalErrorCode.INVALID_ACCESS_TOKEN.getMessage());
+                log.info("INVALID ACCESS TOKEN: " + GlobalErrorCode.INVALID_ACCESS_TOKEN.getMessage());
                 response.getWriter().print(body);
                 return;
             }
@@ -117,14 +117,14 @@ public class ValidateAccessTokenFilter extends OncePerRequestFilter {
                 body.put("code", GlobalErrorCode.INVALID_ACCESS_TOKEN.getCode());
                 body.put("message", GlobalErrorCode.INVALID_ACCESS_TOKEN.getMessage());
 
-                log.info("INVALID REQUEST: " + GlobalErrorCode.INVALID_ACCESS_TOKEN.getMessage());
+                log.info("INVALID ACCESS TOKEN: " + GlobalErrorCode.INVALID_ACCESS_TOKEN.getMessage());
                 response.getWriter().print(body);
                 return;
             }
 
             // Validate Access token
             jwtUtil.verifyAccessToken(accessToken);
-            log.info("VALID REQUEST: ");
+            log.info("VALID ACCESS TOKEN");
             filterChain.doFilter(request, response);
             return;
         } catch (ExpiredJwtException e) {
@@ -138,7 +138,7 @@ public class ValidateAccessTokenFilter extends OncePerRequestFilter {
             body.put("code", GlobalErrorCode.EXPIRED_ACCESS_TOKEN.getCode());
             body.put("message", GlobalErrorCode.EXPIRED_ACCESS_TOKEN.getMessage());
 
-            log.info("INVALID REQUEST: " + GlobalErrorCode.EXPIRED_ACCESS_TOKEN.getMessage());
+            log.info("INVALID ACCESS TOKEN: " + GlobalErrorCode.EXPIRED_ACCESS_TOKEN.getMessage());
             response.getWriter().print(body);
             return;
         } catch (Exception e) {
@@ -152,7 +152,7 @@ public class ValidateAccessTokenFilter extends OncePerRequestFilter {
             body.put("code", GlobalErrorCode.INVALID_ACCESS_TOKEN.getCode());
             body.put("message", GlobalErrorCode.INVALID_ACCESS_TOKEN.getMessage());
             response.getWriter().print(body);
-            log.info("INVALID REQUEST: " + GlobalErrorCode.INVALID_ACCESS_TOKEN.getMessage());
+            log.info("INVALID ACCESS TOKEN: " + GlobalErrorCode.INVALID_ACCESS_TOKEN.getMessage());
             return;
         }
     }

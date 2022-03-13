@@ -10,4 +10,5 @@ public class ReissueTokenResponseDto {
     @JsonProperty("refresh_token") private String refreshToken;
     @JsonProperty("name") private String name;
     @JsonProperty("nickname") private String nickname;
+    @JsonProperty("email") private String email;
 }

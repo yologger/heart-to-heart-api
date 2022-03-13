@@ -8,6 +8,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -69,5 +70,15 @@ public class GlobalExceptionHandler {
                 .status(GlobalErrorCode.MISSING_REQUEST_HEADER.getStatus())
                 .build();
         return new ResponseEntity(response, HttpStatus.valueOf(GlobalErrorCode.MISSING_REQUEST_HEADER.getStatus()));
+    }
+
+    @ExceptionHandler(value = MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponseDto> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+        final ErrorResponseDto response = ErrorResponseDto.builder()
+                .code(GlobalErrorCode.MISSING_REQUEST_PARAMETER.getCode())
+                .message(e.getMessage())
+                .status(GlobalErrorCode.MISSING_REQUEST_PARAMETER.getStatus())
+                .build();
+        return new ResponseEntity(response, HttpStatus.valueOf(GlobalErrorCode.MISSING_REQUEST_PARAMETER.getStatus()));
     }
 }
