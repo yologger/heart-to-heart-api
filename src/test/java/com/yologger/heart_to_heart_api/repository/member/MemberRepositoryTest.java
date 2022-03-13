@@ -83,33 +83,4 @@ class MemberRepositoryTest {
         assertTrue(output.isPresent());
         assertThat(output.get().getEmail()).isEqualTo(email);
     }
-
-    @Test
-    @DisplayName("id로 사용자 조회 테스트")
-
-    public void test_findById() {
-        // Given
-        Long id = 1L;
-        String email = "CR7@gmail.com";
-        String name = "Cristiano Ronaldo";
-        String password = "12341234";
-        String nickname = "CR7";
-
-        MemberEntity input = MemberEntity.builder()
-                .id(id)
-                .email(email)
-                .name(name)
-                .password(password)
-                .nickname(nickname)
-                .build();
-
-        memberRepository.save(input);
-
-        // When
-        Optional<MemberEntity> result = memberRepository.findById(1L);
-
-        // Then
-        assertThat(result.isPresent()).isTrue();
-        assertThat(result.get().getId()).isEqualTo(id);
-    }
 }
