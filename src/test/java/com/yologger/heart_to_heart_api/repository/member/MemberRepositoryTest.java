@@ -29,6 +29,8 @@ class MemberRepositoryTest {
         memberRepository.deleteAll();
     }
 
+
+
     @Test
     @DisplayName("사용자 전체 조회하기 테스트")
     public void test_queryMember() {
@@ -84,6 +86,7 @@ class MemberRepositoryTest {
 
     @Test
     @DisplayName("id로 사용자 조회 테스트")
+
     public void test_findById() {
         // Given
         Long id = 1L;
@@ -106,7 +109,7 @@ class MemberRepositoryTest {
         Optional<MemberEntity> result = memberRepository.findById(1L);
 
         // Then
-        assertThat(result.isPresent());
+        assertThat(result.isPresent()).isTrue();
         assertThat(result.get().getId()).isEqualTo(id);
     }
 }
