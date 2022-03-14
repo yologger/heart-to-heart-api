@@ -46,13 +46,13 @@ jobs:
 #          heroku_api_key: ${{ secrets.HEROKU_DEV_API_KEY }}
 #          heroku_email: ${{ secrets.HEROKU_DEV_EMAIL }}
 #          heroku_app_name: ${{ secrets.HEROKU_DEV_APP_NAME }}
-#
-#      # Slack
-#      - name: build result to slack
-#        uses: 8398a7/action-slack@v3
-#        with:
-#          status: ${{job.status}}
-#          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-#          author_name: Geerio CI
-#        env:
-#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
+
+      # Slack
+      - name: build result to slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{job.status}}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          author_name: Geerio CI
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.DEV_SLACK_WEBHOOK_URL }}
