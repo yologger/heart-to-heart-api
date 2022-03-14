@@ -81,6 +81,14 @@ jobs:
 #          --region ${{ secrets.AWS_PROD_S3_REGION }}
 
       # Slack
+      - name: Send result to slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{job.status}}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          author_name: Geerio CI
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.PROD_SLACK_WEBHOOK_URL }}
 #      - name: Send result to slack
 #        uses: 8398a7/action-slack@v3
 #        with:
