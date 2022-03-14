@@ -67,7 +67,6 @@ jobs:
           --application-name ${{ secrets.PROD_AWS_CODEDEPLOY_APP_NAME }} \
           --deployment-group-name ${{ secrets.PROD_AWS_CODEDEPLOY_APP_GROUP_NAME }} \
           --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --file-exists-behavior OVERWRITE \
           --s3-location bucket=${{ secrets.PROD_AWS_S3_BUCKET_NAME }},bundleType=zip,key=${{ secrets.PROD_ZIP_NAME }}.zip \
           --region ${{ secrets.PROD_AWS_S3_REGION }}
 #      - name: Deploy
