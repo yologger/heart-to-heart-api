@@ -26,9 +26,10 @@ chmod +x $REPOSITORY/$JAR_NAME
 echo "[$(date "+%Y-%m-%d %I:%M:%S")] Launch new application."
 
 # nohup java -Dspring.config.location=/home/ec2-user/app/heart-to-heart-api/application-prod.properties -Dspring.profiles.active=prod -jar $REPOSITORY/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
+
 if [ "$DEPLOYMENT_GROUP_NAME" == "h2h-code-deploy-group-dev" ]
 then
-    nohup java -Dspring.config.location=/home/ec2-user/app/heart-to-heart-api/application-prod.properties -Dspring.profiles.active=dev -jar $REPOSITORY/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
+    nohup java -Dspring.config.location=/home/ec2-user/app/heart-to-heart-api/application-dev.properties -Dspring.profiles.active=dev -jar $REPOSITORY/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
 fi
 
 if [ "$DEPLOYMENT_GROUP_NAME" == "h2h-code-deploy-group-prod" ]
