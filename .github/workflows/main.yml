@@ -22,7 +22,6 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
       - name: Set up JDK 1.8
@@ -38,7 +37,8 @@ jobs:
 
       # Make zip file
       - name: Make zip file
-        run: zip -r ./${{ secrets.AWS_PROD_ZIP_NAME }}.zip .
+        # run: zip -r ./${{ secrets.AWS_PROD_ZIP_NAME }}.zip .
+        run: zip -r ./${{ secrets.PROD_ZIP_NAME }}.zip .
 
       # Configure AWS credentials
       - name: Configure AWS credentials
@@ -50,7 +50,7 @@ jobs:
 
       # Upload to S3 Bucket
       - name: Upload to S3 Bucket
-        run: aws s3 cp --region ${{ secrets.AWS_PROD_S3_REGION }} ./${{ secrets.AWS_PROD_ZIP_NAME }}.zip s3://${{ secrets.AWS_PROD_S3_BUCKET_NAME }}/${{ secrets.AWS_PROD_ZIP_NAME }}.zip
+        run: aws s3 cp --region ${{ secrets.AWS_PROD_S3_REGION }} ./${{ secrets.PROD_ZIP_NAME }}.zip s3://${{ secrets.AWS_PROD_S3_BUCKET_NAME }}/${{ secrets.PROD_ZIP_NAME }}.zip
 
       # Deploy
       - name: Deploy
@@ -60,7 +60,7 @@ jobs:
           --deployment-group-name ${{ secrets.AWS_PROD_CODE_DEPLOY_APP_GROUP }} \
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=${{ secrets.AWS_PROD_S3_BUCKET_NAME }},bundleType=zip,key=${{ secrets.AWS_PROD_ZIP_NAME }}.zip \
+          --s3-location bucket=${{ secrets.AWS_PROD_S3_BUCKET_NAME }},bundleType=zip,key=${{ secrets.PROD_ZIP_NAME }}.zip \
           --region ${{ secrets.AWS_PROD_S3_REGION }}
 
       # Slack
