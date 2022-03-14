@@ -61,6 +61,15 @@ jobs:
 #        run: aws s3 cp --region ${{ secrets.AWS_PROD_S3_REGION }} ./${{ secrets.PROD_ZIP_NAME }}.zip s3://${{ secrets.AWS_PROD_S3_BUCKET_NAME }}/${{ secrets.PROD_ZIP_NAME }}.zip
 
       # Deploy
+      - name: Deploy
+        run: |
+          aws deploy create-deployment \
+          --application-name ${{ secrets.PROD_AWS_CODEDEPLOY_APP_NAME }} \
+          --deployment-group-name ${{ secrets.PROD_AWS_CODEDEPLOY_APP_GROUP_NAME }} \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=${{ secrets.PROD_AWS_S3_BUCKET_NAME }},bundleType=zip,key=${{ secrets.PROD_ZIP_NAME }}.zip \
+          --region ${{ secrets.PROD_AWS_S3_REGION }}
 #      - name: Deploy
 #        run: |
 #          aws deploy create-deployment \
