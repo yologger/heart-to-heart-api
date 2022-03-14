@@ -2,9 +2,11 @@ package com.yologger.heart_to_heart_api.repository.post;
 
 import com.yologger.heart_to_heart_api.repository.base.BaseEntity;
 import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
+import com.yologger.heart_to_heart_api.repository.post_image.PostImageEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name= "post")
@@ -24,4 +26,8 @@ public class PostEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private MemberEntity writer;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "post_id")
+    private List<PostImageEntity> imageUrls;
 }

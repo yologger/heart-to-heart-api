@@ -45,6 +45,9 @@ dependencies {
     // Spring Mail
     implementation 'org.springframework.boot:spring-boot-starter-mail:2.6.3'
 
+    // AWS S3
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.5.RELEASE'
+
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

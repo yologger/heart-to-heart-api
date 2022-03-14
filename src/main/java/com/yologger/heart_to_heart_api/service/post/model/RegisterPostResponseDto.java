@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @Getter
 @AllArgsConstructor
@@ -14,4 +16,5 @@ public class RegisterPostResponseDto {
     @JsonProperty("writer_id") private Long writerId;
     @JsonProperty("post_id") private Long postId;
     @JsonProperty("content") private String content;
+    @JsonProperty("imageUrls") private List<String> imageUrls;
 }
