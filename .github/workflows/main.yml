@@ -1,26 +1,17 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2
 
@@ -35,18 +26,9 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build
 
-      # Make zip file
       - name: Make zip file
-        # run: zip -r ./${{ secrets.AWS_PROD_ZIP_NAME }}.zip .
         run: zip -r ./${{ secrets.PROD_ZIP_NAME }}.zip .
 
-      # Configure AWS credentials
-#      - name: Configure AWS credentials
-#        uses: aws-actions/configure-aws-credentials@v1
-#        with:
-#          aws-access-key-id: ${{ secrets.AWS_PROD_S3_ACCESS_KEY_ID }}
-#          aws-secret-access-key: ${{ secrets.AWS_PROD_S3_SECRET_KEY }}
-#          aws-region: ${{ secrets.AWS_PROD_S3_REGION }}
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -54,40 +36,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.PROD_AWS_S3_SECRET_KEY }}
           aws-region: ${{ secrets.PROD_AWS_S3_REGION }}
 
-      # Upload to S3 Bucket
       - name: Upload to S3 Bucket
         run: aws s3 cp --region ${{ secrets.PROD_AWS_S3_REGION }} ./${{ secrets.PROD_ZIP_NAME }}.zip s3://${{ secrets.PROD_AWS_S3_BUCKET_NAME }}/${{ secrets.PROD_ZIP_NAME }}.zip
-#      - name: Upload to S3 Bucket
-#        run: aws s3 cp --region ${{ secrets.AWS_PROD_S3_REGION }} ./${{ secrets.PROD_ZIP_NAME }}.zip s3://${{ secrets.AWS_PROD_S3_BUCKET_NAME }}/${{ secrets.PROD_ZIP_NAME }}.zip
 
-      # Deploy
-      - name: Deploy
-        run: |
-          aws deploy create-deployment \
-          --application-name ${{ secrets.PROD_AWS_CODEDEPLOY_APP_NAME }} \
-          --deployment-group-name ${{ secrets.PROD_AWS_CODEDEPLOY_APP_GROUP_NAME }} \
-          --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --s3-location bucket=${{ secrets.PROD_AWS_S3_BUCKET_NAME }},bundleType=zip,key=${{ secrets.PROD_ZIP_NAME }}.zip \
-          --region ${{ secrets.PROD_AWS_S3_REGION }}
 #      - name: Deploy
 #        run: |
 #          aws deploy create-deployment \
-#          --application-name ${{ secrets.AWS_PROD_CODE_DEPLOY_APP }} \
-#          --deployment-group-name ${{ secrets.AWS_PROD_CODE_DEPLOY_APP_GROUP }} \
+#          --application-name ${{ secrets.PROD_AWS_CODEDEPLOY_APP_NAME }} \
+#          --deployment-group-name ${{ secrets.PROD_AWS_CODEDEPLOY_APP_GROUP_NAME }} \
 #          --deployment-config-name CodeDeployDefault.AllAtOnce \
-#          --file-exists-behavior OVERWRITE \
-#          --s3-location bucket=${{ secrets.AWS_PROD_S3_BUCKET_NAME }},bundleType=zip,key=${{ secrets.PROD_ZIP_NAME }}.zip \
-#          --region ${{ secrets.AWS_PROD_S3_REGION }}
-
-      # Slack
-      - name: Send result to slack
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{job.status}}
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-          author_name: Geerio CI
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.PROD_SLACK_WEBHOOK_URL }}
+#          --s3-location bucket=${{ secrets.PROD_AWS_S3_BUCKET_NAME }},bundleType=zip,key=${{ secrets.PROD_ZIP_NAME }}.zip \
+#          --region ${{ secrets.PROD_AWS_S3_REGION }}
+#
 #      - name: Send result to slack
 #        uses: 8398a7/action-slack@v3
 #        with:
@@ -95,4 +55,4 @@ jobs:
 #          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
 #          author_name: Geerio CI
 #        env:
-#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_PROD }}
+#          SLACK_WEBHOOK_URL: ${{ secrets.PROD_SLACK_WEBHOOK_URL }}
