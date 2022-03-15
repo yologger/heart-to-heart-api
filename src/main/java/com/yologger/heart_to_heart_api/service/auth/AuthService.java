@@ -11,6 +11,7 @@ import com.yologger.heart_to_heart_api.service.auth.model.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.MailException;
@@ -81,7 +82,7 @@ public class AuthService {
         }
     }
 
-    public ResponseEntity<ConfirmVerificationCodeResponseDto> confirmVerificationCode(ConfirmVerificationCodeRequestDto request) throws InvalidEmailException, InvalidVerificationCodeException, ExpiredVerificationCodeException {
+    public ResponseEntity<ConfirmVerificationCodeResponseDto> confirmVerificationCode(@NotNull ConfirmVerificationCodeRequestDto request) throws InvalidEmailException, InvalidVerificationCodeException, ExpiredVerificationCodeException {
         Optional<VerificationCodeEntity> result = verificationCodeRepository.findByEmail(request.getEmail());
         if (!result.isPresent()) {
             throw new InvalidEmailException("Invalid Email.");

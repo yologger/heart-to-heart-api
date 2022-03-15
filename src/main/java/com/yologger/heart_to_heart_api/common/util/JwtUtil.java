@@ -23,8 +23,7 @@ public class JwtUtil {
 //    private long refreshTokenExpire = 60 * 24 * 7;  // 7 days
 
     private long accessTokenExpire = 1;   // 1 minute
-    private long refreshTokenExpire = 2;  // 10 minutes
-    // private long refreshTokenExpire = 1 * 60;  // 60 minutes
+    private long refreshTokenExpire = 2;  // 2 minutes
 
     public String generateAccessToken(Long id, String email, String name, String nickname) {
 

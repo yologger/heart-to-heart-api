@@ -26,7 +26,7 @@ public class AuthController {
 
     @PostMapping
     @RequestMapping(value = "/emailVerificationCode", consumes = "application/json", produces = "application/json")
-    ResponseEntity<EmailVerificationCodeResponseDto> emailVerificationCode(@Valid @RequestBody EmailVerificationCodeRequestDto request) throws MemberAlreadyExistException, MessagingException, MailAuthenticationException, MailSendException, MailException {
+    ResponseEntity<EmailVerificationCodeResponseDto> emailVerificationCode(@Valid @RequestBody EmailVerificationCodeRequestDto request) throws MemberAlreadyExistException, MessagingException, MailException {
         return authService.emailVerificationCode(request.getEmail());
     }
 
