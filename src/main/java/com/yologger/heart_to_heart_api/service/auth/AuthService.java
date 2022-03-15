@@ -209,8 +209,9 @@ public class AuthService {
 
             // Reissue access token, refresh token
             MemberEntity member = result.get();
-            String newAccessToken = member.getAccessToken();
-            String newRefreshToken = member.getRefreshToken();
+            String newAccessToken = jwtUtil.generateAccessToken(member.getId(), member.getEmail(), member.getName(), member.getNickname());
+            String newRefreshToken = jwtUtil.generateRefreshToken(member.getId(), member.getEmail(), member.getName(), member.getNickname());
+
             member.setAccessToken(newAccessToken);
             member.setRefreshToken(newRefreshToken);
 
@@ -219,7 +220,7 @@ public class AuthService {
                     .refreshToken(newRefreshToken)
                     .name(member.getName())
                     .nickname(member.getNickname())
-                    .userId(member.getId())
+                    .memberId(member.getId())
                     .email(member.getEmail())
                     .build();
 

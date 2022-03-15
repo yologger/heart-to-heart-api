@@ -19,8 +19,12 @@ public class JwtUtil {
     @Value("${jwt.secret.refresh-token}")
     private String refreshTokenSecret;
 
-    private long accessTokenExpire = 60 * 24 * 1;   // 1 day
-    private long refreshTokenExpire = 60 * 24 * 7;  // 7 days
+//    private long accessTokenExpire = 60 * 24 * 1;   // 1 day
+//    private long refreshTokenExpire = 60 * 24 * 7;  // 7 days
+
+    private long accessTokenExpire = 1;   // 1 minute
+    private long refreshTokenExpire = 2;  // 10 minutes
+    // private long refreshTokenExpire = 1 * 60;  // 60 minutes
 
     public String generateAccessToken(Long id, String email, String name, String nickname) {
 

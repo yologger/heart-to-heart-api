@@ -16,5 +16,5 @@ public class RegisterPostResponseDto {
     @JsonProperty("writer_id") private Long writerId;
     @JsonProperty("post_id") private Long postId;
     @JsonProperty("content") private String content;
-    @JsonProperty("imageUrls") private List<String> imageUrls;
+    @JsonProperty("image_urls") private List<String> imageUrls;
 }
