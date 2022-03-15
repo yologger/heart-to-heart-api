@@ -38,6 +38,9 @@ public class MemberEntity extends BaseEntity {
     @Column(nullable = true)
     private String refreshToken;
 
+    @Column(nullable = true)
+    private String avatarUrl;
+
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
@@ -45,6 +48,8 @@ public class MemberEntity extends BaseEntity {
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
+
+    public void setAvatarUrl(String url) { this.avatarUrl = url; }
 
     public void clearAccessToken() {
         this.accessToken = null;

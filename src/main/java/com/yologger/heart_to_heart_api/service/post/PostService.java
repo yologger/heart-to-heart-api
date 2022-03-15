@@ -11,10 +11,16 @@ import com.yologger.heart_to_heart_api.repository.post_image.PostImageEntity;
 import com.yologger.heart_to_heart_api.service.post.exception.FileUploadException;
 import com.yologger.heart_to_heart_api.service.post.exception.InvalidContentTypeException;
 import com.yologger.heart_to_heart_api.service.post.exception.InvalidWriterIdException;
+import com.yologger.heart_to_heart_api.service.post.exception.NoPostsExistException;
+import com.yologger.heart_to_heart_api.service.post.model.GetPostsResponseDto;
+import com.yologger.heart_to_heart_api.service.post.model.Post;
 import com.yologger.heart_to_heart_api.service.post.model.RegisterPostRequestDto;
 import com.yologger.heart_to_heart_api.service.post.model.RegisterPostResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -109,5 +115,42 @@ public class PostService {
 
             return ResponseEntity.created(null).body(response);
         }
+    }
+
+    public ResponseEntity<GetPostsResponseDto> getPosts(Integer page, Integer size) throws NoPostsExistException {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<PostEntity> result = postRepository.findAll(pageRequest);
+
+        if (result.isEmpty()) {
+            throw new NoPostsExistException("No posts");
+        }
+
+        List<Post> posts = new ArrayList<Post>();
+
+        for (PostEntity postEntity: result) {
+            List<String> postImageUris = new ArrayList<String>();
+            for (PostImageEntity postImageEntity: postEntity.getImageUrls()) {
+                postImageUris.add(postImageEntity.getImageUrl());
+            }
+            Post post = Post.builder()
+                    .id(postEntity.getId())
+                    .writerId(postEntity.getWriter().getId())
+                    .writerEmail(postEntity.getWriter().getEmail())
+                    .writerNickname(postEntity.getWriter().getNickname())
+                    .avatarUrl(postEntity.getWriter().getAvatarUrl())
+                    .content(postEntity.getContent())
+                    .imageUris(postImageUris)
+                    .createdAt(postEntity.getCreatedAt())
+                    .updatedAt(postEntity.getUpdatedAt())
+                    .build();
+            posts.add(post);
+        }
+
+        GetPostsResponseDto response = GetPostsResponseDto.builder()
+                .size(posts.size())
+                .posts(posts)
+                .build();
+
+        return ResponseEntity.created(null).body(response);
     }
 }

@@ -4,10 +4,8 @@ package com.yologger.heart_to_heart_api.controller.post;
 import com.yologger.heart_to_heart_api.common.base.ErrorResponseDto;
 import com.yologger.heart_to_heart_api.controller.auth.exception.AuthErrorCode;
 import com.yologger.heart_to_heart_api.service.post.PostService;
-import com.yologger.heart_to_heart_api.service.post.exception.FileUploadException;
-import com.yologger.heart_to_heart_api.service.post.exception.InvalidContentTypeException;
-import com.yologger.heart_to_heart_api.service.post.exception.InvalidWriterIdException;
-import com.yologger.heart_to_heart_api.service.post.exception.PostErrorCode;
+import com.yologger.heart_to_heart_api.service.post.exception.*;
+import com.yologger.heart_to_heart_api.service.post.model.GetPostsResponseDto;
 import com.yologger.heart_to_heart_api.service.post.model.RegisterPostRequestDto;
 import com.yologger.heart_to_heart_api.service.post.model.RegisterPostResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -39,6 +38,14 @@ public class PostController {
                 .content(content)
                 .build();
         return postService.registerPost(request);
+    }
+
+    @GetMapping("/posts")
+    public ResponseEntity<GetPostsResponseDto> getPosts(
+            @Valid @NotNull @RequestParam(value = "page", required = true) Integer page,
+            @Valid @NotNull @RequestParam(value = "size", required = true) Integer size
+    ) throws NoPostsExistException {
+        return postService.getPosts(page, size);
     }
 
     @ExceptionHandler(value = InvalidWriterIdException.class)
@@ -69,5 +76,15 @@ public class PostController {
                 .status(PostErrorCode.FILE_UPLOAD_ERROR.getStatus())
                 .build();
         return new ResponseEntity(response, HttpStatus.valueOf(PostErrorCode.FILE_UPLOAD_ERROR.getStatus()));
+    }
+
+    @ExceptionHandler(value = NoPostsExistException.class)
+    public ResponseEntity<ErrorResponseDto> handleNoPostsExistException(NoPostsExistException e) {
+        final ErrorResponseDto response = ErrorResponseDto.builder()
+                .code(PostErrorCode.NO_POSTS_EXIST.getCode())
+                .message(PostErrorCode.NO_POSTS_EXIST.getMessage())
+                .status(PostErrorCode.NO_POSTS_EXIST.getStatus())
+                .build();
+        return new ResponseEntity(response, HttpStatus.valueOf(PostErrorCode.NO_POSTS_EXIST.getStatus()));
     }
 }

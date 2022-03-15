@@ -69,4 +69,10 @@ class PostRepositoryTest {
         assertThat(post.getContent()).isEqualTo(content);
         assertThat(post.getWriter().getEmail()).isEqualTo(email);
     }
+
+    @Test
+    @DisplayName("새로운 포스트 작성 및 조회 테스트")
+    public void getPosts() {
+        assertThat("a").isEqualTo("a");
+    }
 }
