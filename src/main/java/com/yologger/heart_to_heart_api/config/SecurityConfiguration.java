@@ -37,8 +37,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/auth/logout",
             "/auth/reissueToken",
             "/test/test1",
-            "/post/registerPost",
-            "/post/posts"
+            "/member/uploadAvatar"
     );
 
     @Bean
@@ -78,10 +77,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilterBefore(validateAccessTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(authorize -> authorize
-                                .antMatchers("/test/**").permitAll()
-                                .antMatchers("/auth/**").permitAll()
-                                .antMatchers("/post/**").permitAll()
-                                .anyRequest().authenticated()
+                        .antMatchers("/test/**").permitAll()
+                        .antMatchers("/auth/**").permitAll()
+                        .antMatchers("/post/**").permitAll()
+                        .antMatchers("/member/**").permitAll()
+                        .anyRequest().authenticated()
                 );
     }
 }
