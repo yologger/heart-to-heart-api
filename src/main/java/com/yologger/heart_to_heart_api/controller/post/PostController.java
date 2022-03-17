@@ -2,7 +2,6 @@ package com.yologger.heart_to_heart_api.controller.post;
 
 
 import com.yologger.heart_to_heart_api.common.base.ErrorResponseDto;
-import com.yologger.heart_to_heart_api.controller.auth.exception.AuthErrorCode;
 import com.yologger.heart_to_heart_api.service.post.PostService;
 import com.yologger.heart_to_heart_api.service.post.exception.*;
 import com.yologger.heart_to_heart_api.service.post.model.GetPostsResponseDto;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 

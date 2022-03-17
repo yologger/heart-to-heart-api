@@ -11,6 +11,7 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 @RestControllerAdvice
@@ -81,4 +82,15 @@ public class GlobalExceptionHandler {
                 .build();
         return new ResponseEntity(response, HttpStatus.valueOf(GlobalErrorCode.MISSING_REQUEST_PARAMETER.getStatus()));
     }
+
+    @ExceptionHandler(value = MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponseDto> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
+        final ErrorResponseDto response = ErrorResponseDto.builder()
+                .code(GlobalErrorCode.FILE_SIZE_LIMIT_EXCEEDED.getCode())
+                .message(GlobalErrorCode.FILE_SIZE_LIMIT_EXCEEDED.getMessage())
+                .status(GlobalErrorCode.FILE_SIZE_LIMIT_EXCEEDED.getStatus())
+                .build();
+        return new ResponseEntity(response, HttpStatus.valueOf(GlobalErrorCode.FILE_SIZE_LIMIT_EXCEEDED.getStatus()));
+    }
+
 }

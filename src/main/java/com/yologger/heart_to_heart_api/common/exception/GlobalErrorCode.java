@@ -15,6 +15,7 @@ public enum GlobalErrorCode {
     MISSING_REQUEST_HEADER(400, "GLOBAL005", "Missing Request Header"),
     ILLEGAL_STATE(400, "GLOBAL006", "Illegal State"),
     MISSING_REQUEST_PARAMETER(400, "GLOBAL007", "Missing Request Parameter"),
+    FILE_SIZE_LIMIT_EXCEEDED(400, "GLOBAL008", "File size limit exceeded. File size must be less than 100 MB."),
 
     // Auth
     MISSING_AUTHORIZATION_HEADER(400, "GLOBAL100", "'Authorization' header must not be empty"),

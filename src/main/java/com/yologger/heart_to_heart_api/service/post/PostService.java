@@ -1,6 +1,5 @@
 package com.yologger.heart_to_heart_api.service.post;
 
-import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.yologger.heart_to_heart_api.common.util.AwsS3Uploader;
 import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
@@ -59,13 +58,19 @@ public class PostService {
 
             PostEntity saved = postRepository.save(newPost);
 
-            RegisterPostResponseDto responseDto = RegisterPostResponseDto.builder()
+            RegisterPostResponseDto response = RegisterPostResponseDto.builder()
                     .postId(saved.getId())
-                    .content(saved.getContent())
                     .writerId(writer.getId())
+                    .writerEmail(writer.getEmail())
+                    .writerNickname(writer.getNickname())
+                    .avatarUrl(writer.getAvatarUrl())
+                    .content(saved.getContent())
+                    .imageUrls(null)
+                    .createdAt(writer.getCreatedAt())
+                    .updatedAt(writer.getUpdatedAt())
                     .build();
 
-            return ResponseEntity.created(null).body(responseDto);
+            return ResponseEntity.created(null).body(response);
 
         // In case files exist.
         } else {
@@ -107,10 +112,15 @@ public class PostService {
             PostEntity created = postRepository.save(newPost);
 
             RegisterPostResponseDto response = RegisterPostResponseDto.builder()
-                    .writerId(request.getMemberId())
                     .postId(created.getId())
+                    .writerId(member.getId())
+                    .writerEmail(member.getEmail())
+                    .writerNickname(member.getNickname())
+                    .avatarUrl(member.getAvatarUrl())
                     .content(created.getContent())
                     .imageUrls(imageUrls)
+                    .createdAt(created.getCreatedAt())
+                    .updatedAt(created.getUpdatedAt())
                     .build();
 
             return ResponseEntity.created(null).body(response);
@@ -139,7 +149,7 @@ public class PostService {
                     .writerNickname(postEntity.getWriter().getNickname())
                     .avatarUrl(postEntity.getWriter().getAvatarUrl())
                     .content(postEntity.getContent())
-                    .imageUris(postImageUris)
+                    .imageUrls(postImageUris)
                     .createdAt(postEntity.getCreatedAt())
                     .updatedAt(postEntity.getUpdatedAt())
                     .build();

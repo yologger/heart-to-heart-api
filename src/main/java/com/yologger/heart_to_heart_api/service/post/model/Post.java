@@ -1,5 +1,6 @@
 package com.yologger.heart_to_heart_api.service.post.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,13 +14,13 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class Post {
-    private Long id;
-    private Long writerId;
-    private String writerEmail;
-    private String writerNickname;
-    private String avatarUrl;
-    private String content;
-    private List<String> imageUris;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    @JsonProperty("id") private Long id;
+    @JsonProperty("writer_id") private Long writerId;
+    @JsonProperty("writer_email") private String writerEmail;
+    @JsonProperty("writer_nickname") private String writerNickname;
+    @JsonProperty("avatar_url") private String avatarUrl;
+    @JsonProperty("content") private String content;
+    @JsonProperty("image_urls") private List<String> imageUrls;
+    @JsonProperty("created_at") private LocalDateTime createdAt;
+    @JsonProperty("updated_at") private LocalDateTime updatedAt;
 }

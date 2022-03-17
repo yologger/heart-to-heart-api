@@ -1,26 +1,22 @@
 package com.yologger.heart_to_heart_api.config;
 
+import com.yologger.heart_to_heart_api.common.filter.ValidateAccessTokenFilter;
 import com.yologger.heart_to_heart_api.common.util.JwtUtil;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
 import com.yologger.heart_to_heart_api.service.auth.MemberDetailsService;
-import com.yologger.heart_to_heart_api.common.filter.ValidateAccessTokenFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,7 +36,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/auth/login",
             "/auth/logout",
             "/auth/reissueToken",
-            "/test/test1"
+            "/test/test1",
+            "/post/registerPost",
+            "/post/posts"
     );
 
     @Bean
