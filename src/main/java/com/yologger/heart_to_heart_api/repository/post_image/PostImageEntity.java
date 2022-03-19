@@ -18,6 +18,6 @@ public class PostImageEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = true)
+    @Column(length = 1000, nullable = true)
     private String imageUrl;
 }

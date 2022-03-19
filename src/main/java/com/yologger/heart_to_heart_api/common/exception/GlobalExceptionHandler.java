@@ -51,8 +51,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity(response, HttpStatus.valueOf(GlobalErrorCode.HTTP_REQUEST_METHOD_NOT_SUPPORTED.getStatus()));
     }
 
-
-
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponseDto> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         final ErrorResponseDto response = ErrorResponseDto.builder()

@@ -32,13 +32,13 @@ public class MemberEntity extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = true)
+    @Column(length = 500, nullable = true)
     private String accessToken;
 
-    @Column(nullable = true)
+    @Column(length = 500, nullable = true)
     private String refreshToken;
 
-    @Column(nullable = true)
+    @Column(length = 1000, nullable = true)
     private String avatarUrl;
 
     public void setAccessToken(String accessToken) {

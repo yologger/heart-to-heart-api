@@ -198,9 +198,12 @@ public class AuthService {
         // Compare with ex-refresh token
         Optional<MemberEntity> result = memberRepository.findById(request.getMemberId());
         if (!result.isPresent()) {
-            throw new MemberNotExistException("Member does not exist");
+            log.info("Reissuing token fails.");
+            throw new InvalidRefreshTokenException("Member does not exist");
+            // throw new MemberNotExistException("Member does not exist");
         }
         if (!(result.get().getRefreshToken().equals(request.getRefreshToken()))) {
+            log.info("Reissuing token fails.");
             throw new InvalidRefreshTokenException("Invalid refresh token");
         }
 
@@ -228,8 +231,10 @@ public class AuthService {
             return ResponseEntity.ok(response);
 
         } catch (ExpiredJwtException e) {
+            log.info("Reissuing token fails.");
             throw new ExpiredRefreshTokenException("Expired refresh token");
         } catch (Exception e) {
+            log.info("Reissuing token fails.");
             throw new InvalidRefreshTokenException("Invalid refresh token");
         }
     }
@@ -243,17 +248,15 @@ public class AuthService {
                 String accessToken = authHeader.substring(7);
                 Long memberId = jwtUtil.verifyAccessTokenAndGetMemberId(accessToken);
                 Optional<MemberEntity> result = memberRepository.findById(memberId);
-                if (!result.isPresent()) {
-                    throw new InvalidAccessTokenException("Invalid refresh token.");
-                }
+                if (!result.isPresent()) throw new InvalidAccessTokenException("Invalid refresh token.");
                 MemberEntity member = result.get();
                 member.clearAccessToken();
                 member.clearRefreshToken();
                 return ResponseEntity.ok(LogoutResponseDto.builder().message("Logged out ").build());
             } catch (ExpiredJwtException e) {
-                throw new ExpiredAccessTokenException("Expired access token");
+                throw new ExpiredAccessTokenException("Expired Access token");
             } catch (Exception e) {
-                throw new InvalidAccessTokenException("Invalid refresh token.");
+                throw new InvalidAccessTokenException("Invalid Refresh token.");
             }
         }
     }

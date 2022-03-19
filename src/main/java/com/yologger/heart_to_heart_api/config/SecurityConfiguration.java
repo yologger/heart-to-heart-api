@@ -36,8 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/auth/login",
             "/auth/logout",
             "/auth/reissueToken",
-            "/test/test1",
-            "/member/uploadAvatar"
+            "/test/test1"
     );
 
     @Bean

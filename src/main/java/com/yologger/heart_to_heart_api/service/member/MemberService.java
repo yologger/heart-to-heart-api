@@ -2,6 +2,7 @@ package com.yologger.heart_to_heart_api.service.member;
 
 import com.amazonaws.SdkClientException;
 import com.yologger.heart_to_heart_api.common.util.AwsS3Uploader;
+import com.yologger.heart_to_heart_api.controller.member.exception.InvalidContentTypeException;
 import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
 import com.yologger.heart_to_heart_api.service.member.model.UploadAvatarRequestDTO;
@@ -23,14 +24,12 @@ public class MemberService {
     private final AwsS3Uploader awsS3Uploader;
 
     @Transactional
-    public ResponseEntity<UploadAvatarResponseDTO> uploadAvatar(UploadAvatarRequestDTO request) throws IOException, SdkClientException, EntityNotFoundException {
+    public ResponseEntity<UploadAvatarResponseDTO> uploadAvatar(UploadAvatarRequestDTO request) throws IOException, SdkClientException, EntityNotFoundException, InvalidContentTypeException {
 
         Long memberId = request.getMemberId();
         MultipartFile file = request.getFile();
 
-        if (!file.getContentType().startsWith("image")) {
-            // Invalid Content Type
-        }
+        if (!file.getContentType().startsWith("image")) throw new InvalidContentTypeException("content type must start with image");
 
         MemberEntity member = memberRepository.getById(memberId);
 

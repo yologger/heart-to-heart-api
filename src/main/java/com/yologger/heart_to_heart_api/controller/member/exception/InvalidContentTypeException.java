@@ -1,4 +1,4 @@
-package com.yologger.heart_to_heart_api.service.post.exception;
+package com.yologger.heart_to_heart_api.controller.member.exception;
 
 import com.yologger.heart_to_heart_api.common.base.BusinessException;
 
