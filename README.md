@@ -16,6 +16,8 @@ Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://git
 - CI/CD pipeline (GitHub Actions/AWS CodeDeploy)
 
 ### 테스트 환경
+- ~~Heroku SaaS~~ (Deprecated)
+- ~~Heroku MySQL~~ (Deprecated)
 - AWS EC2
 - AWS S3
 - AWS RDS (Maria DB)
