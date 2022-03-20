@@ -1,6 +1,9 @@
 # Heart to Heart API Server
 이 프로젝트는 `Heart to Heart` 어플리케이션을 위한 API 서버입니다. `Heart to Heart` 안드로이드 어플리케이션은 [이 곳](https://github.com/yologger/heart-to-heart-android)에서 확인할 수 있습니다.
 
+## Legacy
+Nodejs 기반의 레거시 프로젝트는 [이 곳](https://github.com/yologger/heart-to-heart-nodejs)에서 확인할 수 있습니다.
+
 ## 기술 스택
 
 ### 공통
