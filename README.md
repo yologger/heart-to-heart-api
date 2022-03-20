@@ -28,12 +28,12 @@ Nodejs 기반의 레거시 프로젝트는 [이 곳](https://github.com/yologger
 # Todo List
 - [x] 회원가입 시 이메일 인증 구현
 - [x] `JWT` 기반 `OAuth2` 인증 구현
-- [ ] 이미지 업로드 최적화
+- [ ] 업로드 이미지 최적화
 - [x] `Refresh Token`을 통한 토큰 갱신 구현
 - [ ] `Gradle 멀티 모듈`기능을 사용하여 `Clean Architecture`로 리팩토링
 - [ ] `Domain Layer`를 추가하고 `비즈니스 로직`을 `Service Layer`로부터 분리하여 `Layered Architecuture`로 리팩토링
 - [ ] 팔로우, 팔로잉 기능 구현
-- [ ] 비밀번호 변경 구현
+- [ ] 비밀번호 찾기, 변경 구현
 - [ ] 글 삭제 구현
 - [x] CI/CD pipeline 구축
 - [ ] 깃 브랜치 전략 도입(`git-flow`)
