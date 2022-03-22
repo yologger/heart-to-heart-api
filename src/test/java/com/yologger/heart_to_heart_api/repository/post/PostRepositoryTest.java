@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -51,23 +51,21 @@ class PostRepositoryTest {
                 .password(password)
                 .build();
 
-        memberRepository.save(writer);
+        MemberEntity savedWriter = memberRepository.save(writer);
 
         String content = "content";
 
         PostEntity newPost = PostEntity.builder()
                 .content(content)
-                .writer(writer)
+                .writer(savedWriter)
                 .build();
 
         // When
         postRepository.save(newPost);
-        List<PostEntity> posts = postRepository.findAll();
-        PostEntity post = posts.get(0);
+        Optional<PostEntity> savedPost = postRepository.findById(savedWriter.getId());
 
-        // Then
-        assertThat(post.getContent()).isEqualTo(content);
-        assertThat(post.getWriter().getEmail()).isEqualTo(email);
+        assertThat(savedPost.isPresent()).isTrue();
+        assertThat(savedPost.get().getContent()).isEqualTo(content);
     }
 
     @Test

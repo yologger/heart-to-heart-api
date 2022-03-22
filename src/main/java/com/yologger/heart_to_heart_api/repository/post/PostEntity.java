@@ -25,9 +25,9 @@ public class PostEntity extends BaseEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "writer_id")
     private MemberEntity writer;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "post_id")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostImageEntity> imageUrls;
 }

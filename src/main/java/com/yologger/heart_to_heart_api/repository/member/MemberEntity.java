@@ -1,12 +1,14 @@
 package com.yologger.heart_to_heart_api.repository.member;
 
 import com.yologger.heart_to_heart_api.repository.base.BaseEntity;
+import com.yologger.heart_to_heart_api.repository.post.PostEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name= "member")
@@ -17,6 +19,7 @@ import javax.persistence.*;
 public class MemberEntity extends BaseEntity {
 
     @Id
+    @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -40,6 +43,9 @@ public class MemberEntity extends BaseEntity {
 
     @Column(length = 1000, nullable = true)
     private String avatarUrl;
+
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
+    private List<PostEntity> posts;
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;

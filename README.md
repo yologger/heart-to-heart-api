@@ -30,7 +30,7 @@ Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://git
 # Todo List
 - [x] 회원가입 시 이메일 인증 구현
 - [x] `JWT` 기반 `OAuth2` 인증 구현
-- [ ] 업로드 이미지 최적화
+- [ ] 업로드 이미지 리사이징 (AWS Lambda)
 - [x] `Refresh Token`을 통한 토큰 갱신 구현
 - [ ] `Gradle 멀티 모듈`기능을 사용하여 `Clean Architecture`로 리팩토링
 - [ ] `Domain Layer`를 추가하고 `비즈니스 로직`을 `Service Layer`로부터 분리하여 `Layered Architecuture`로 리팩토링

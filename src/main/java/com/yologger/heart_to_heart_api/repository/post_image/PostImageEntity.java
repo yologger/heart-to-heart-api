@@ -1,6 +1,7 @@
 package com.yologger.heart_to_heart_api.repository.post_image;
 
 import com.yologger.heart_to_heart_api.repository.base.BaseEntity;
+import com.yologger.heart_to_heart_api.repository.post.PostEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,4 +21,8 @@ public class PostImageEntity extends BaseEntity {
 
     @Column(length = 1000, nullable = true)
     private String imageUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private PostEntity post;
 }

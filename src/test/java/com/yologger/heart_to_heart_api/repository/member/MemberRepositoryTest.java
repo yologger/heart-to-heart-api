@@ -21,19 +21,17 @@ class MemberRepositoryTest {
     private MemberRepository memberRepository;
 
     @BeforeEach
-    void setUp() {
-    }
+    void setUp() {}
 
     @AfterEach
     public void tearDown() {
         memberRepository.deleteAll();
     }
 
-
-
     @Test
-    @DisplayName("사용자 전체 조회하기 테스트")
+    @DisplayName("사용자 추가 및 전체 조회하기 테스트")
     public void test_queryMember() {
+
         // Given
         String email = "CR7@gmail.com";
         String name = "Cristiano Ronaldo";
@@ -51,11 +49,9 @@ class MemberRepositoryTest {
 
         // When
         List<MemberEntity> members = memberRepository.findAll();
-        MemberEntity member = members.get(0);
 
         // Then
-        assertThat(member.getEmail()).isEqualTo(email);
-        assertThat(member.getName()).isEqualTo(name);
+        assertThat(members.size()).isEqualTo(1);
     }
 
     @Test
