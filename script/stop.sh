@@ -3,7 +3,7 @@
 ## 개발 환경인 경우
 if [ "$DEPLOYMENT_GROUP_NAME" == "h2h-code-deploy-group-dev" ]
 then
-    echo " - 개발 환경에 배포를 시도합니다."
+    echo " - 개발 환경입니다."
     RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/profile)
 
     if [ ${RESPONSE_CODE} -ge 400 ] # 400 ~ 500 에러
@@ -24,7 +24,7 @@ fi
 ## 운영 환경인 경우
 if [ "$DEPLOYMENT_GROUP_NAME" == "h2h-code-deploy-group-prod" ]
 then
-    echo " - 운영 환경에 배포를 시도합니다."
+    echo " - 운영 환경입니다."
     RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/profile)
 
     if [ ${RESPONSE_CODE} -ge 400 ] # 400 ~ 500 에러

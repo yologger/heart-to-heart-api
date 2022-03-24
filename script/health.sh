@@ -67,8 +67,8 @@ do
   if [ ${UP_COUNT} -ge 1 ]
   then # $up_count >= 1 ("real" 문자열이 있는지 검증)
       echo " - Health check 성공"
+      echo " - Port를 전환합니다."
       echo " - 전환할 Port: $IDLE_PORT"
-      echo " - Port 전환"
       echo " - set \$service_url http://127.0.0.1:${IDLE_PORT};" | sudo tee /etc/nginx/conf.d/service-url.inc
 
       echo " - Reload nginx"
