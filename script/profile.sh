@@ -52,7 +52,7 @@ function find_idle_port()
 {
     IDLE_PROFILE=$(find_idle_profile)
 
-    if [ ${IDLE_PROFILE} == dev1 -o ${IDLE_PROFILE} == prod1 ]; then
+    if [ "${IDLE_PROFILE}" == dev1 ] || [ "${IDLE_PROFILE}" == prod1 ]; then
       echo "8081"
     else
       echo "8082"
