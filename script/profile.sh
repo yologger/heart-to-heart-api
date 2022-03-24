@@ -1,6 +1,7 @@
 # 쉬고있는 Profile 찾기
 function find_idle_profile()
 {
+    echo "2: $DEPLOYMENT_GROUP_NAME"
     ## 개발 환경일 경우
     if [ "$DEPLOYMENT_GROUP_NAME" == "h2h-code-deploy-group-dev" ]
     then

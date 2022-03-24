@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo " ################# 배포를 시작합니다 ##################"
-
+echo "1: $DEPLOYMENT_GROUP_NAME"
 echo " stop.sh 실행"
 ABSPATH=$(readlink -f $0)
 ABSDIR=$(dirname $ABSPATH)
