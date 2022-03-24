@@ -6,7 +6,7 @@ ABSDIR=$(dirname $ABSPATH)
 source ${ABSDIR}/profile.sh
 
 IDLE_PORT=$(find_idle_port)
-echo "- Idle port: $IDLE_PORT"
+echo "- IDLE PORT: $IDLE_PORT"
 
 IDLE_PID=$(lsof -ti tcp:${IDLE_PORT})
 echo "- PID of idle port: $IDLE_PID"
