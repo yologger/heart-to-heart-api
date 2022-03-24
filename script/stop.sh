@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-echo "Execute stop.sh"
+echo "###################################"
+echo "####       배포를 시작합니다       ####"
+echo "###################################"
+
+echo "stop.sh 실행"
 ABSPATH=$(readlink -f $0)
 ABSDIR=$(dirname $ABSPATH)
 source ${ABSDIR}/profile.sh
@@ -15,6 +19,7 @@ if [ -z ${IDLE_PID} ]
 then
   echo "- No running application."
 else
+  echo "- Application is already running."
   echo "- kill application with pid: $IDLE_PID"
   kill -15 ${IDLE_PID}
   sleep 5
