@@ -3,16 +3,20 @@
 REPOSITORY=/home/ec2-user/app/heart-to-heart-api
 PROJECT_NAME=heart-to-heart-api
 
-echo -e "[$(date "+%Y-%m-%d %I:%M:%S")] Copy jar to project root."
+# Jar 복사
 cp $REPOSITORY/zip/build/libs/*.jar $REPOSITORY
 
-CURRENT_PID=$(pgrep -f ${PROJECT_NAME}.*.jar)
+# 현재 구동 중인 앱의 PID 확인
+CURRENT_PID=$(pgrep -fl heart-to-heart-api.*.jar | awk '{print $1}')
 if [ -z $CURRENT_PID ]
 then
-  echo "[$(date "+%Y-%m-%d %I:%M:%S")] There is no previously running application."
+  # 현재 구동 중인 앱이 없을 때
+  echo "[$(date "+%Y-%m-%d %I:%M:%S")] No running application."
 else
-  echo "[$(date "+%Y-%m-%d %I:%M:%S")] A previously running application exists."
+  # 현재 구동 중인 앱이 있 때
+  echo "[$(date "+%Y-%m-%d %I:%M:%S")] Application is running."
   echo "[$(date "+%Y-%m-%d %I:%M:%S")] kill -15 $CURRENT_PID"
+  # 구동 중인 앱 종료
   sudo kill -15 "$CURRENT_PID"
   sleep 5
 fi

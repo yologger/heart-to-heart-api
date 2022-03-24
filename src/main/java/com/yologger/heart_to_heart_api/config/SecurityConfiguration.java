@@ -30,6 +30,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final MemberRepository memberRepository;
 
     private static final List<String> NOT_FILTERED_URLS = Arrays.asList(
+            "/profile",
             "/auth/emailVerificationCode",
             "/auth/confirmVerificationCode",
             "/auth/join",
@@ -80,6 +81,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .antMatchers("/auth/**").permitAll()
                         .antMatchers("/post/**").permitAll()
                         .antMatchers("/member/**").permitAll()
+                        .antMatchers("/profile").permitAll()
                         .anyRequest().authenticated()
                 );
     }
