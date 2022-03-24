@@ -69,7 +69,7 @@ do
       echo " - Health check 성공"
       echo " - Port를 전환합니다."
       echo " - 전환할 Port: $IDLE_PORT"
-      echo " - set \$service_url http://127.0.0.1:${IDLE_PORT};" | sudo tee /etc/nginx/conf.d/service-url.inc
+      echo "set \$service_url http://127.0.0.1:${IDLE_PORT};" | sudo tee /etc/nginx/conf.d/service-url.inc
 
       echo " - Reload nginx"
       sudo service nginx reload
