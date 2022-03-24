@@ -25,6 +25,11 @@ public class TestController {
         return "test2";
     }
 
+    @GetMapping("/test3")
+    public String test3() {
+        return "test3";
+    }
+
     @GetMapping("/port")
     public String getPort() {
         String port = environment.getProperty("local.server.port");
