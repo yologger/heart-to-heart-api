@@ -11,11 +11,11 @@ CURRENT_PID=$(pgrep -fl heart-to-heart-api.*.jar | awk '{print $1}')
 if [ -z $CURRENT_PID ]
 then
   # 현재 구동 중인 앱이 없을 때
-  echo "[$(date "+%Y-%m-%d %I:%M:%S")] No running application."
+  echo "> No running application."
 else
   # 현재 구동 중인 앱이 있 때
-  echo "[$(date "+%Y-%m-%d %I:%M:%S")] Application is running."
-  echo "[$(date "+%Y-%m-%d %I:%M:%S")] kill -15 $CURRENT_PID"
+  echo "> Application is running."
+  echo "> kill pid $CURRENT_PID."
   # 구동 중인 앱 종료
   sudo kill -15 "$CURRENT_PID"
   sleep 5
@@ -35,4 +35,4 @@ then
     nohup java -Dspring.config.location=/home/ec2-user/app/heart-to-heart-api/application-prod.properties -Dspring.profiles.active=prod -jar $REPOSITORY/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
 fi
 
-echo "[$(date "+%Y-%m-%d %I:%M:%S")] Application started."
+echo "> Application launched."
