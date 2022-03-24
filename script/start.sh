@@ -65,3 +65,4 @@ echo " - JAR 권한 부여"
 chmod +x $REPOSITORY/$JAR_NAME
 
 nohup java -Dspring.config.location=/home/ec2-user/app/heart-to-heart-api/application-$IDLE_PROFILE.properties -Dspring.profiles.active=$IDLE_PROFILE -jar $REPOSITORY/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
+echo " - 앱 실행 완료"
