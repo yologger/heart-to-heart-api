@@ -47,10 +47,11 @@ public class PostService {
             throw new InvalidWriterIdException("Invalid Member Id.");
         }
 
+        MemberEntity writer = result.get();
+
         // In case files do not exist.
         if (request.getFiles() == null || request.getFiles().length == 0) {
             // Save post.
-            MemberEntity writer = result.get();
             PostEntity newPost = PostEntity.builder()
                     .writer(writer)
                     .content(request.getContent())
@@ -94,8 +95,8 @@ public class PostService {
                     throw new FileUploadException(e.getMessage());
                 }
             }
+
             // Save post.
-            MemberEntity member = result.get();
             List<PostImageEntity> postImages = new ArrayList<PostImageEntity>();
             for (String imageUrl : imageUrls) {
                 PostImageEntity postImage = PostImageEntity.builder()
@@ -104,19 +105,21 @@ public class PostService {
 
                 postImages.add(postImage);
             }
+
             PostEntity newPost = PostEntity.builder()
                     .content(request.getContent())
-                    .writer(member)
+                    .writer(writer)
                     .imageUrls(postImages)
                     .build();
+
             PostEntity created = postRepository.save(newPost);
 
             RegisterPostResponseDto response = RegisterPostResponseDto.builder()
                     .postId(created.getId())
-                    .writerId(member.getId())
-                    .writerEmail(member.getEmail())
-                    .writerNickname(member.getNickname())
-                    .avatarUrl(member.getAvatarUrl())
+                    .writerId(created.getWriter().getId())
+                    .writerEmail(created.getWriter().getEmail())
+                    .writerNickname(created.getWriter().getNickname())
+                    .avatarUrl(created.getWriter().getAvatarUrl())
                     .content(created.getContent())
                     .imageUrls(imageUrls)
                     .createdAt(created.getCreatedAt())
@@ -131,12 +134,9 @@ public class PostService {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<PostEntity> result = postRepository.findAll(pageRequest);
 
-        if (result.isEmpty()) {
-            throw new NoPostsExistException("No posts");
-        }
+        if (result.isEmpty()) throw new NoPostsExistException("No posts");
 
         List<Post> posts = new ArrayList<Post>();
-
         for (PostEntity postEntity: result) {
             List<String> postImageUris = new ArrayList<String>();
             for (PostImageEntity postImageEntity: postEntity.getImageUrls()) {

@@ -8,10 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name= "post_image")
-@ToString
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class PostImageEntity extends BaseEntity {
 
@@ -22,7 +19,18 @@ public class PostImageEntity extends BaseEntity {
     @Column(length = 1000, nullable = true)
     private String imageUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "post_id")
     private PostEntity post;
+
+    @Builder
+    public PostImageEntity(Long id, String imageUrl, PostEntity post) {
+        this.id = id;
+        this.imageUrl = imageUrl;
+        this.post = post;
+    }
+
+    public void setPost(PostEntity post) {
+        this.post = post;
+    }
 }

@@ -1,5 +1,6 @@
 package com.yologger.heart_to_heart_api.repository.member;
 
+import com.yologger.heart_to_heart_api.repository.post.PostRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,8 +21,12 @@ class MemberRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private PostRepository postRepository;
+
     @BeforeEach
-    void setUp() {}
+    void setUp() {
+    }
 
     @AfterEach
     public void tearDown() {
