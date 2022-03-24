@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "> execute 'stop.sh'"
+echo "Execute start.sh"
 
 ABSPATH=$(readlink -f $0)
 ABSDIR=$(dirname $ABSPATH)

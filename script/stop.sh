@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 
-echo "> execute stop.sh."
+echo "Execute stop.sh"
 ABSPATH=$(readlink -f $0)
 ABSDIR=$(dirname $ABSPATH)
 source ${ABSDIR}/profile.sh
 
 IDLE_PORT=$(find_idle_port)
-echo "> IDLE PORT: $IDLE_PORT"
+echo "- Idle port: $IDLE_PORT"
 
 IDLE_PID=$(lsof -ti tcp:${IDLE_PORT})
-echo "> IDLE PORT로 확인한 pid: $IDLE_PID"
+echo "- PID of idle port: $IDLE_PID"
 
 if [ -z ${IDLE_PID} ]
 then
-  echo "> 현재 구동중인 애플리케이션이 없으므로 종료하지 않습니다."
+  echo "- No running application."
 else
-  echo "> kill -15 $IDLE_PID"
+  echo "- kill application with pid: $IDLE_PID"
   kill -15 ${IDLE_PID}
   sleep 5
 fi
