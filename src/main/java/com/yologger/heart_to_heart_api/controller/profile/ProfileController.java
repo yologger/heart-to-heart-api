@@ -17,12 +17,19 @@ public class ProfileController {
     @GetMapping("/profile")
     public String profile() {
         List<String> profiles = Arrays.asList(env.getActiveProfiles());
-        List<String> devProfiles = Arrays.asList("dev", "dev1");
-        String defaultProfile = profiles.isEmpty() ? "default" : profiles.get(0);
 
-        return profiles.stream()
-                .filter(defaultProfile::contains)
-                .findAny()
-                .orElse(defaultProfile);
+        if (profiles.contains("dev1")) {
+            return "dev1";
+        } else if (profiles.contains("dev2")) {
+            return "dev2";
+        } else if (profiles.contains("prod1")) {
+            return "prod1";
+        } else if (profiles.contains("prod2")) {
+            return "prod2";
+        } else if (profiles.contains("local")) {
+            return "local";
+        } else {
+            return "default";
+        }
     }
 }
