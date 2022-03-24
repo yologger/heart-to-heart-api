@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-echo " #### start.sh 실행"
-
 ## 개발 환경인 경우
 if [ "$DEPLOYMENT_GROUP_NAME" == "h2h-code-deploy-group-dev" ]
 then
