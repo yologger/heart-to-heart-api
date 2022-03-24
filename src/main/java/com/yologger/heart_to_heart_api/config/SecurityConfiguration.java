@@ -39,6 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/auth/reissueToken",
             "/test/test1",
             "/test/test2",
+            "/test/test3",
             "/test/port"
     );
 
