@@ -59,11 +59,9 @@ cp $REPOSITORY/zip/build/libs/*.jar $REPOSITORY
 
 JAR_NAME=$(ls -tr $REPOSITORY/ | grep jar | tail -n 1)
 
-echo " - JAR_NAME: JAR_NAME"
+echo " - JAR_NAME: ${JAR_NAME}"
 
 echo " - JAR 권한 부여"
 chmod +x $REPOSITORY/$JAR_NAME
 
-nohup java
-    -Dspring.config.location=/home/ec2-user/app/heart-to-heart-api/application-$IDLE_PROFILE.properties
-    -Dspring.profiles.active=dev -jar $REPOSITORY/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
+nohup java -Dspring.config.location=/home/ec2-user/app/heart-to-heart-api/application-$IDLE_PROFILE.properties -Dspring.profiles.active=$IDLE_PROFILE -jar $REPOSITORY/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
