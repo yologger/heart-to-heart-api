@@ -6,6 +6,9 @@ Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://git
 
 ## 기술 스택
 
+### 시스템 아키텍처
+![](imgs/architecture.png)
+
 ### 공통
 - Spring Boot
 - Spring MVC
@@ -14,6 +17,7 @@ Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://git
 - Spring Validation
 - Spring Mail
 - CI/CD pipeline (GitHub Actions/AWS CodeDeploy)
+- 무중단배포 (NGINX)
 
 ### 테스트 환경
 - ~~Heroku SaaS~~ (Deprecated)
@@ -40,5 +44,6 @@ Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://git
 - [x] CI/CD pipeline 구축
 - [ ] 깃 브랜치 전략 도입(`git-flow`)
 - [x] 테스트 환경 - `Heroku`, `Jaws DB(MySQL)` 환경에서 `AWS EC2`, `AWS RDS(Maria DB)`로 마이그레이션
-- [ ] 테스트 환경 - `Nginx`를 통한 무중단 배포 구현
+- [x] 테스트 환경 - `NGINX`를 통한 무중단 배포 구현
+- [x] 운영 환경 - `NGINX`를 통한 무중단 배포 구현
 - [ ] 운영 환경 - 컨테이너 오케스트레이션를 위해 `Docker`, `Kubernetes` 환경으로 마이그레이션

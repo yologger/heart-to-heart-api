@@ -11,6 +11,7 @@ import com.yologger.heart_to_heart_api.controller.post.exception.FileUploadExcep
 import com.yologger.heart_to_heart_api.controller.post.exception.InvalidContentTypeException;
 import com.yologger.heart_to_heart_api.controller.post.exception.InvalidWriterIdException;
 import com.yologger.heart_to_heart_api.controller.post.exception.NoPostsExistException;
+import com.yologger.heart_to_heart_api.repository.post_image.PostImageRepository;
 import com.yologger.heart_to_heart_api.service.post.model.GetPostsResponseDto;
 import com.yologger.heart_to_heart_api.service.post.model.Post;
 import com.yologger.heart_to_heart_api.service.post.model.RegisterPostRequestDto;
@@ -37,6 +38,7 @@ public class PostService {
 
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
+    private final PostImageRepository postImageRepository;
     private final AwsS3Uploader awsS3Uploader;
 
     @Transactional
@@ -75,6 +77,14 @@ public class PostService {
 
         // In case files exist.
         } else {
+
+            PostEntity newPost = PostEntity.builder()
+                    .content(request.getContent())
+                    .writer(writer)
+                    .build();
+
+            PostEntity savedPost = postRepository.save(newPost);
+
             List<String> imageUrls = new ArrayList<String>();
             MultipartFile[] files = request.getFiles();
             for (MultipartFile file: files) {
@@ -86,7 +96,15 @@ public class PostService {
                 try {
                     // Upload file
                     String imageUrl = awsS3Uploader.upload(file);
+
+                    // Save to persistence context
+                    postImageRepository.save(PostImageEntity.builder()
+                            .imageUrl(imageUrl)
+                            .post(savedPost)
+                            .build());
+
                     imageUrls.add(imageUrl);
+
                 } catch (IOException e) {
                     log.error(e.getMessage());
                     throw new FileUploadException(e.getMessage());
@@ -96,34 +114,16 @@ public class PostService {
                 }
             }
 
-            // Save post.
-            List<PostImageEntity> postImages = new ArrayList<PostImageEntity>();
-            for (String imageUrl : imageUrls) {
-                PostImageEntity postImage = PostImageEntity.builder()
-                        .imageUrl(imageUrl)
-                        .build();
-
-                postImages.add(postImage);
-            }
-
-            PostEntity newPost = PostEntity.builder()
-                    .content(request.getContent())
-                    .writer(writer)
-                    .imageUrls(postImages)
-                    .build();
-
-            PostEntity created = postRepository.save(newPost);
-
             RegisterPostResponseDto response = RegisterPostResponseDto.builder()
-                    .postId(created.getId())
-                    .writerId(created.getWriter().getId())
-                    .writerEmail(created.getWriter().getEmail())
-                    .writerNickname(created.getWriter().getNickname())
-                    .avatarUrl(created.getWriter().getAvatarUrl())
-                    .content(created.getContent())
+                    .postId(savedPost.getId())
+                    .writerId(savedPost.getWriter().getId())
+                    .writerEmail(savedPost.getWriter().getEmail())
+                    .writerNickname(savedPost.getWriter().getNickname())
+                    .avatarUrl(savedPost.getWriter().getAvatarUrl())
+                    .content(savedPost.getContent())
                     .imageUrls(imageUrls)
-                    .createdAt(created.getCreatedAt())
-                    .updatedAt(created.getUpdatedAt())
+                    .createdAt(savedPost.getCreatedAt())
+                    .updatedAt(savedPost.getUpdatedAt())
                     .build();
 
             return ResponseEntity.created(null).body(response);
