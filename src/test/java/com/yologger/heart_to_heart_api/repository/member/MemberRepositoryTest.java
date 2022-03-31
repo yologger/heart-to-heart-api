@@ -84,4 +84,10 @@ class MemberRepositoryTest {
         assertTrue(output.isPresent());
         assertThat(output.get().getEmail()).isEqualTo(email);
     }
+
+    @Test
+    @DisplayName("사용자 차단 테스트")
+    public void test_blockUser() {
+
+    }
 }

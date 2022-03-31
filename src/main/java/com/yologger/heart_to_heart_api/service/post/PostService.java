@@ -163,4 +163,14 @@ public class PostService {
 
         return ResponseEntity.created(null).body(response);
     }
+
+//    public ResponseEntity<GetPostsResponseDto> getPosts(Integer page, Integer size, Long memberId) throws NoPostsExistException {
+//        Optional<MemberEntity> result = memberRepository.findById(memberId);
+//        if (!result.isPresent()) {
+//            // Member does not exist.
+//        }
+//
+//        List<PostEntity> posts = postRepository.findAllByWriter(result.get());
+//
+//    }
 }

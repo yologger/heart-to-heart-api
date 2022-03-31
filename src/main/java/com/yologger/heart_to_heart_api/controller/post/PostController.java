@@ -47,4 +47,11 @@ public class PostController {
     ) throws NoPostsExistException {
         return postService.getPosts(page, size);
     }
+
+    @GetMapping("/posts/{id}")
+    public String getPostsById(
+            @Valid @NotNull @PathVariable(required = true) Long id
+    ) {
+        return "Hello World";
+    }
 }
