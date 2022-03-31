@@ -2,15 +2,15 @@ package com.yologger.heart_to_heart_api.service.post;
 
 import com.amazonaws.SdkClientException;
 import com.yologger.heart_to_heart_api.common.util.AwsS3Uploader;
+import com.yologger.heart_to_heart_api.controller.post.exception.FileUploadException;
+import com.yologger.heart_to_heart_api.controller.post.exception.InvalidContentTypeException;
+import com.yologger.heart_to_heart_api.controller.post.exception.InvalidWriterIdException;
+import com.yologger.heart_to_heart_api.controller.post.exception.NoPostsExistException;
 import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
 import com.yologger.heart_to_heart_api.repository.post.PostEntity;
 import com.yologger.heart_to_heart_api.repository.post.PostRepository;
 import com.yologger.heart_to_heart_api.repository.post_image.PostImageEntity;
-import com.yologger.heart_to_heart_api.controller.post.exception.FileUploadException;
-import com.yologger.heart_to_heart_api.controller.post.exception.InvalidContentTypeException;
-import com.yologger.heart_to_heart_api.controller.post.exception.InvalidWriterIdException;
-import com.yologger.heart_to_heart_api.controller.post.exception.NoPostsExistException;
 import com.yologger.heart_to_heart_api.repository.post_image.PostImageRepository;
 import com.yologger.heart_to_heart_api.service.post.model.GetPostsResponseDto;
 import com.yologger.heart_to_heart_api.service.post.model.Post;
@@ -18,9 +18,6 @@ import com.yologger.heart_to_heart_api.service.post.model.RegisterPostRequestDto
 import com.yologger.heart_to_heart_api.service.post.model.RegisterPostResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -130,14 +127,13 @@ public class PostService {
         }
     }
 
-    public ResponseEntity<GetPostsResponseDto> getPosts(Integer page, Integer size) throws NoPostsExistException {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<PostEntity> result = postRepository.findAll(pageRequest);
+    public ResponseEntity<GetPostsResponseDto> getPosts(Long memberId, Integer page, Integer size) throws NoPostsExistException {
 
-        if (result.isEmpty()) throw new NoPostsExistException("No posts");
+        List<PostEntity> postEntities = postRepository.findAllPostsOrderByCreatedAtDescExceptBlocking(memberId, page, size);
 
         List<Post> posts = new ArrayList<Post>();
-        for (PostEntity postEntity: result) {
+
+        for (PostEntity postEntity: postEntities) {
             List<String> postImageUris = new ArrayList<String>();
             for (PostImageEntity postImageEntity: postEntity.getImageUrls()) {
                 postImageUris.add(postImageEntity.getImageUrl());
@@ -163,14 +159,4 @@ public class PostService {
 
         return ResponseEntity.created(null).body(response);
     }
-
-//    public ResponseEntity<GetPostsResponseDto> getPosts(Integer page, Integer size, Long memberId) throws NoPostsExistException {
-//        Optional<MemberEntity> result = memberRepository.findById(memberId);
-//        if (!result.isPresent()) {
-//            // Member does not exist.
-//        }
-//
-//        List<PostEntity> posts = postRepository.findAllByWriter(result.get());
-//
-//    }
 }

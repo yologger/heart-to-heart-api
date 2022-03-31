@@ -42,10 +42,11 @@ public class PostController {
 
     @GetMapping("/posts")
     public ResponseEntity<GetPostsResponseDto> getPosts(
+            @Valid @NotNull @RequestParam(value = "member_id", required = true) Long memberId,
             @Valid @NotNull @RequestParam(value = "page", required = true) Integer page,
             @Valid @NotNull @RequestParam(value = "size", required = true) Integer size
     ) throws NoPostsExistException {
-        return postService.getPosts(page, size);
+        return postService.getPosts(memberId, page, size);
     }
 
     @GetMapping("/posts/{id}")

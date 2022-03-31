@@ -75,8 +75,8 @@ dependencies {
     // JSONObject
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 
-    // Query DSL
-    implementation 'com.querydsl:querydsl-jpa'
+    // QueryDSL
+    implementation "com.querydsl:querydsl-jpa"
 }
 
 test {
@@ -89,10 +89,15 @@ querydsl {
     jpa = true
     querydslSourcesDir = querydslDir
 }
+
 sourceSets {
     main.java.srcDir querydslDir
 }
+
 configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
     querydsl.extendsFrom compileClasspath
 }
 

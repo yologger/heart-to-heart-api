@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -82,6 +84,25 @@ public class MemberService {
         UnblockMemberResponseDTO response = UnblockMemberResponseDTO.builder()
                 .memberId(member.getId())
                 .targetId(target.getId())
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Transactional
+    public ResponseEntity<GetBlockingMembersResponseDTO> getBlockingMember(Long memberId) throws InvalidMemberIdException {
+        MemberEntity member = memberRepository.findById(memberId).orElseThrow(() -> new InvalidMemberIdException("Invalid 'member_id'"));
+        List<Member> blockingMembers = member.getBlocking().stream().map((blockEntity) -> Member.builder()
+                .id(blockEntity.getId())
+                .email(blockEntity.getBlocking().getEmail())
+                .name(blockEntity.getBlocking().getName())
+                .nickname(blockEntity.getBlocking().getNickname())
+                .avatarUrl(blockEntity.getBlocking().getAvatarUrl())
+                .build()).collect(Collectors.toList());
+
+        GetBlockingMembersResponseDTO response = GetBlockingMembersResponseDTO.builder()
+                .size(blockingMembers.size())
+                .members(blockingMembers)
                 .build();
 
         return ResponseEntity.ok(response);

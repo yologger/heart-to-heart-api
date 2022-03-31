@@ -46,4 +46,11 @@ public class MemberController {
     public ResponseEntity<UnblockMemberResponseDTO> unblockMember(@Valid @RequestBody UnblockMemberRequestDTO request) throws InvalidMemberIdException {
         return memberService.unblock(request);
     }
+
+    @GetMapping(value = "/getBlockingMembers")
+    public ResponseEntity<GetBlockingMembersResponseDTO> getBlockingMembers(
+            @Valid @NotNull @RequestParam(value = "member_id", required = true) Long memberId
+    ) throws InvalidMemberIdException {
+        return memberService.getBlockingMember(memberId);
+    }
 }

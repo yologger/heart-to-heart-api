@@ -13,6 +13,7 @@ Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://git
 - Spring Boot
 - Spring MVC
 - Spring Data JPA
+- Query DSL
 - Spring Security
 - Spring Validation
 - Spring Mail
