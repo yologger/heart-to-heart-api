@@ -14,7 +14,8 @@ import javax.persistence.*;
         @UniqueConstraint(
             columnNames = {"member_id", "blocking"}
         )
-    })
+    }
+)
 @Getter
 @NoArgsConstructor
 public class BlockEntity {

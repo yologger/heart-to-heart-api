@@ -5,6 +5,8 @@ import com.yologger.heart_to_heart_api.controller.member.exception.InvalidConten
 import com.yologger.heart_to_heart_api.controller.member.exception.InvalidMemberIdException;
 import com.yologger.heart_to_heart_api.service.member.MemberService;
 import com.yologger.heart_to_heart_api.service.member.model.*;
+import com.yologger.heart_to_heart_api.service.post.model.ReportRequestDTO;
+import com.yologger.heart_to_heart_api.service.post.model.ReportResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -52,5 +54,21 @@ public class MemberController {
             @Valid @NotNull @RequestParam(value = "member_id", required = true) Long memberId
     ) throws InvalidMemberIdException {
         return memberService.getBlockingMember(memberId);
+    }
+
+    @GetMapping(value = "/profile")
+    public ResponseEntity<GetMemberInfoResponseDTO> getProfile(
+            @Valid @NotNull @RequestParam(value = "member_id", required = true) Long memberId
+    ) throws InvalidMemberIdException {
+        return memberService.getMemberInfo(memberId);
+    }
+
+    @PostMapping(value = "/report")
+    public ResponseEntity<ReportResponseDTO> report(@Valid @RequestBody ReportRequestDTO request) {
+        ReportResponseDTO response = ReportResponseDTO.builder()
+                .memberId(request.getMemberId())
+                .targetId(request.getTargetId())
+                .build();
+        return ResponseEntity.ok(response);
     }
 }

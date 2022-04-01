@@ -2,6 +2,7 @@ package com.yologger.heart_to_heart_api.repository.member;
 
 import com.yologger.heart_to_heart_api.repository.base.BaseEntity;
 import com.yologger.heart_to_heart_api.repository.block.BlockEntity;
+import com.yologger.heart_to_heart_api.repository.follow.FollowEntity;
 import com.yologger.heart_to_heart_api.repository.post.PostEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,11 +47,17 @@ public class MemberEntity extends BaseEntity {
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PostEntity> posts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "blocking")
+    @OneToMany(mappedBy = "blocking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BlockEntity> blockedBy = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BlockEntity> blocking = new ArrayList<>();
+
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<FollowEntity> following = new ArrayList<>();
+
+    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<FollowEntity> followedBy = new ArrayList<>();
 
     @Builder
     public MemberEntity(String email, String name, String nickname, String password) {

@@ -93,7 +93,7 @@ public class MemberService {
     public ResponseEntity<GetBlockingMembersResponseDTO> getBlockingMember(Long memberId) throws InvalidMemberIdException {
         MemberEntity member = memberRepository.findById(memberId).orElseThrow(() -> new InvalidMemberIdException("Invalid 'member_id'"));
         List<Member> blockingMembers = member.getBlocking().stream().map((blockEntity) -> Member.builder()
-                .id(blockEntity.getId())
+                .id(blockEntity.getBlocking().getId())
                 .email(blockEntity.getBlocking().getEmail())
                 .name(blockEntity.getBlocking().getName())
                 .nickname(blockEntity.getBlocking().getNickname())
@@ -103,6 +103,25 @@ public class MemberService {
         GetBlockingMembersResponseDTO response = GetBlockingMembersResponseDTO.builder()
                 .size(blockingMembers.size())
                 .members(blockingMembers)
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Transactional
+    public ResponseEntity<GetMemberInfoResponseDTO> getMemberInfo(Long memberId) throws InvalidMemberIdException {
+
+        MemberEntity member = memberRepository.findById(memberId).orElseThrow(() -> new InvalidMemberIdException("Invalid 'member_id'"));
+
+        GetMemberInfoResponseDTO response = GetMemberInfoResponseDTO.builder()
+                .memberId(member.getId())
+                .email(member.getEmail())
+                .name(member.getName())
+                .nickname(member.getNickname())
+                .avatarUrl(member.getAvatarUrl())
+                .postSize(member.getPosts().size())
+                .followerSize(member.getFollowedBy().size())
+                .followingSize(member.getFollowing().size())
                 .build();
 
         return ResponseEntity.ok(response);
