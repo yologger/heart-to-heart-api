@@ -15,6 +15,7 @@ public class PostExceptionHandler {
 
     @ExceptionHandler(value = InvalidWriterIdException.class)
     public ResponseEntity<ErrorResponseDto> handleInvalidMemberIdException(InvalidWriterIdException e) {
+        e.printStackTrace();
         final ErrorResponseDto response = ErrorResponseDto.builder()
                 .code(PostErrorCode.INVALID_WRITER_ID.getCode())
                 .message(PostErrorCode.INVALID_WRITER_ID.getMessage())
@@ -25,6 +26,7 @@ public class PostExceptionHandler {
 
     @ExceptionHandler(value = InvalidContentTypeException.class)
     public ResponseEntity<ErrorResponseDto> handleInvalidContentTypeException(InvalidContentTypeException e) {
+        e.printStackTrace();
         final ErrorResponseDto response = ErrorResponseDto.builder()
                 .code(PostErrorCode.INVALID_CONTENT_TYPE.getCode())
                 .message(PostErrorCode.INVALID_CONTENT_TYPE.getMessage())
@@ -35,6 +37,7 @@ public class PostExceptionHandler {
 
     @ExceptionHandler(value = FileUploadException.class)
     public ResponseEntity<ErrorResponseDto> handleFileUploadException(FileUploadException e) {
+        e.printStackTrace();
         final ErrorResponseDto response = ErrorResponseDto.builder()
                 .code(PostErrorCode.FILE_UPLOAD_ERROR.getCode())
                 .message(PostErrorCode.FILE_UPLOAD_ERROR.getMessage())
