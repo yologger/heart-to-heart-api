@@ -17,9 +17,9 @@ class MemberRepositoryTest {
     @Autowired
     private PostRepository postRepository;
 
-    @BeforeEach
-    void setUp() {
-    }
+//    @BeforeEach
+//    void setUp() {
+//    }
 
     @AfterEach
     public void tearDown() {
