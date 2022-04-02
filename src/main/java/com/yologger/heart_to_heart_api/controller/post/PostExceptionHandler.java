@@ -1,10 +1,7 @@
 package com.yologger.heart_to_heart_api.controller.post;
 
 import com.yologger.heart_to_heart_api.common.base.ErrorResponseDto;
-import com.yologger.heart_to_heart_api.controller.post.exception.FileUploadException;
-import com.yologger.heart_to_heart_api.controller.post.exception.InvalidContentTypeException;
-import com.yologger.heart_to_heart_api.controller.post.exception.InvalidWriterIdException;
-import com.yologger.heart_to_heart_api.controller.post.exception.NoPostsExistException;
+import com.yologger.heart_to_heart_api.controller.post.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -49,6 +46,16 @@ public class PostExceptionHandler {
 
     @ExceptionHandler(value = NoPostsExistException.class)
     public ResponseEntity<ErrorResponseDto> handleNoPostsExistException(NoPostsExistException e) {
+        final ErrorResponseDto response = ErrorResponseDto.builder()
+                .code(PostErrorCode.NO_POSTS_EXIST.getCode())
+                .message(PostErrorCode.NO_POSTS_EXIST.getMessage())
+                .status(PostErrorCode.NO_POSTS_EXIST.getStatus())
+                .build();
+        return new ResponseEntity(response, HttpStatus.valueOf(PostErrorCode.NO_POSTS_EXIST.getStatus()));
+    }
+
+    @ExceptionHandler(value = NoPostExistException.class)
+    public ResponseEntity<ErrorResponseDto> handleNoPostExistException(NoPostExistException e) {
         final ErrorResponseDto response = ErrorResponseDto.builder()
                 .code(PostErrorCode.NO_POST_EXIST.getCode())
                 .message(PostErrorCode.NO_POST_EXIST.getMessage())

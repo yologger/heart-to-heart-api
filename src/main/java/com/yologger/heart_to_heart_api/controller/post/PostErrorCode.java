@@ -10,7 +10,9 @@ public enum PostErrorCode {
     INVALID_CONTENT_TYPE(400, "POST_001", "Content type must be image"),
     FILE_UPLOAD_ERROR(400, "POST_002", "File upload error"),
 
-    NO_POST_EXIST(400, "POST_003", "No posts exist."),
+    NO_POSTS_EXIST(400, "POST_003", "No posts exist."),
+    NO_POST_EXIST(400, "POST_004", "No post exist."),
+
     ;
 
     private final int status;

@@ -1,9 +1,9 @@
 package com.yologger.heart_to_heart_api.common.util;
 
-import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -20,7 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Component
 @Log4j2
-public class AwsS3Uploader {
+public class AwsS3Util {
 
     private final AmazonS3 amazonS3;
 
@@ -45,10 +47,15 @@ public class AwsS3Uploader {
         return amazonS3.getUrl(bucket, filePath).toString();
     }
 
-    public void delete(String filePath) throws SdkClientException, AmazonServiceException {
-        boolean isExistingObject = amazonS3.doesObjectExist(bucket, filePath);
-        if (isExistingObject) {
-            amazonS3.deleteObject(bucket, filePath);
+    public void delete(String filePath) throws SdkClientException {
+        try {
+            URL url = new URL(filePath);
+            String fileName = url.getPath().substring(1);
+            boolean isExistingObject = amazonS3.doesObjectExist(bucket, fileName);
+            if (isExistingObject) amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            throw new SdkClientException(e.getMessage());
         }
     }
 }

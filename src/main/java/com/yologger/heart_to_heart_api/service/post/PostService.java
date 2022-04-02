@@ -1,21 +1,15 @@
 package com.yologger.heart_to_heart_api.service.post;
 
 import com.amazonaws.SdkClientException;
-import com.yologger.heart_to_heart_api.common.util.AwsS3Uploader;
-import com.yologger.heart_to_heart_api.controller.post.exception.FileUploadException;
-import com.yologger.heart_to_heart_api.controller.post.exception.InvalidContentTypeException;
-import com.yologger.heart_to_heart_api.controller.post.exception.InvalidWriterIdException;
-import com.yologger.heart_to_heart_api.controller.post.exception.NoPostsExistException;
+import com.yologger.heart_to_heart_api.common.util.AwsS3Util;
+import com.yologger.heart_to_heart_api.controller.post.exception.*;
 import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
 import com.yologger.heart_to_heart_api.repository.post.PostEntity;
 import com.yologger.heart_to_heart_api.repository.post.PostRepository;
 import com.yologger.heart_to_heart_api.repository.post_image.PostImageEntity;
 import com.yologger.heart_to_heart_api.repository.post_image.PostImageRepository;
-import com.yologger.heart_to_heart_api.service.post.model.GetPostsResponseDto;
-import com.yologger.heart_to_heart_api.service.post.model.Post;
-import com.yologger.heart_to_heart_api.service.post.model.RegisterPostRequestDto;
-import com.yologger.heart_to_heart_api.service.post.model.RegisterPostResponseDto;
+import com.yologger.heart_to_heart_api.service.post.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +30,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final PostImageRepository postImageRepository;
-    private final AwsS3Uploader awsS3Uploader;
+    private final AwsS3Util awsS3Uploader;
 
     @Transactional
     public ResponseEntity<RegisterPostResponseDto> registerPost(RegisterPostRequestDto request) throws InvalidWriterIdException, InvalidContentTypeException, FileUploadException {
@@ -158,5 +152,23 @@ public class PostService {
                 .build();
 
         return ResponseEntity.created(null).body(response);
+    }
+
+    @Transactional
+    public ResponseEntity<DeletePostResponseDTO> deletePost(Long id) throws NoPostExistException, FileUploadException {
+
+        PostEntity post = postRepository.findById(id).orElseThrow(() -> new NoPostExistException("Invalid 'post_id'"));
+
+        try {
+            post.getImageUrls().forEach((imageUrl) -> awsS3Uploader.delete(imageUrl.getImageUrl()));
+            postRepository.delete(post);
+            DeletePostResponseDTO response = DeletePostResponseDTO.builder()
+                    .message("deleted")
+                    .build();
+            return ResponseEntity.ok(response);
+        } catch (SdkClientException e) {
+            log.error(e.getMessage());
+            throw new FileUploadException(e.getMessage());
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.yologger.heart_to_heart_api.controller.member;
 
 import com.amazonaws.SdkClientException;
+import com.yologger.heart_to_heart_api.controller.member.exception.AwsS3Exception;
 import com.yologger.heart_to_heart_api.controller.member.exception.InvalidContentTypeException;
 import com.yologger.heart_to_heart_api.controller.member.exception.InvalidMemberIdException;
 import com.yologger.heart_to_heart_api.service.member.MemberService;
@@ -70,5 +71,10 @@ public class MemberController {
                 .targetId(request.getTargetId())
                 .build();
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity<DeleteAccountResponseDTO> report (@Valid @NotNull @PathVariable Long id) throws InvalidMemberIdException, AwsS3Exception {
+        return memberService.deleteAccount(id);
     }
 }

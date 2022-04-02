@@ -1,11 +1,9 @@
 package com.yologger.heart_to_heart_api.controller.post;
 
 
-import com.yologger.heart_to_heart_api.controller.post.exception.FileUploadException;
-import com.yologger.heart_to_heart_api.controller.post.exception.InvalidContentTypeException;
-import com.yologger.heart_to_heart_api.controller.post.exception.InvalidWriterIdException;
-import com.yologger.heart_to_heart_api.controller.post.exception.NoPostsExistException;
+import com.yologger.heart_to_heart_api.controller.post.exception.*;
 import com.yologger.heart_to_heart_api.service.post.PostService;
+import com.yologger.heart_to_heart_api.service.post.model.DeletePostResponseDTO;
 import com.yologger.heart_to_heart_api.service.post.model.GetPostsResponseDto;
 import com.yologger.heart_to_heart_api.service.post.model.RegisterPostRequestDto;
 import com.yologger.heart_to_heart_api.service.post.model.RegisterPostResponseDto;
@@ -49,10 +47,8 @@ public class PostController {
         return postService.getPosts(memberId, page, size);
     }
 
-    @GetMapping("/posts/{id}")
-    public String getPostsById(
-            @Valid @NotNull @PathVariable(required = true) Long id
-    ) {
-        return "Hello World";
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<DeletePostResponseDTO> deletePost(@Valid @NotNull @PathVariable(required = true) Long id) throws NoPostExistException, FileUploadException {
+        return postService.deletePost(id);
     }
 }

@@ -2,6 +2,7 @@ package com.yologger.heart_to_heart_api.controller.member;
 
 import com.amazonaws.SdkClientException;
 import com.yologger.heart_to_heart_api.common.base.ErrorResponseDto;
+import com.yologger.heart_to_heart_api.controller.member.exception.AwsS3Exception;
 import com.yologger.heart_to_heart_api.controller.member.exception.InvalidContentTypeException;
 import com.yologger.heart_to_heart_api.controller.member.exception.InvalidMemberIdException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -75,4 +76,15 @@ public class MemberExceptionHandler {
                 .build();
         return new ResponseEntity(response, HttpStatus.valueOf(MemberErrorCode.ALREADY_BLOCKING.getStatus()));
     }
+
+    @ExceptionHandler(AwsS3Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleAwsS3Exception(AwsS3Exception e) {
+        final ErrorResponseDto response = ErrorResponseDto.builder()
+                .code(MemberErrorCode.AWS_S3_ERROR.getCode())
+                .message(e.getMessage())
+                .status(MemberErrorCode.AWS_S3_ERROR.getStatus())
+                .build();
+        return new ResponseEntity(response, HttpStatus.valueOf(MemberErrorCode.AWS_S3_ERROR.getStatus()));
+    }
+
 }

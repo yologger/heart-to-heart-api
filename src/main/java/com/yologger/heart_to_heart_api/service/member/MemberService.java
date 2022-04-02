@@ -1,7 +1,8 @@
 package com.yologger.heart_to_heart_api.service.member;
 
 import com.amazonaws.SdkClientException;
-import com.yologger.heart_to_heart_api.common.util.AwsS3Uploader;
+import com.yologger.heart_to_heart_api.common.util.AwsS3Util;
+import com.yologger.heart_to_heart_api.controller.member.exception.AwsS3Exception;
 import com.yologger.heart_to_heart_api.controller.member.exception.InvalidContentTypeException;
 import com.yologger.heart_to_heart_api.controller.member.exception.InvalidMemberIdException;
 import com.yologger.heart_to_heart_api.repository.block.BlockEntity;
@@ -10,6 +11,7 @@ import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
 import com.yologger.heart_to_heart_api.service.member.model.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +26,12 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
     private final BlockRepository blockRepository;
-    private final AwsS3Uploader awsS3Uploader;
+    private final AwsS3Util awsS3Uploader;
 
     @Transactional
     public ResponseEntity<UploadAvatarResponseDTO> uploadAvatar(UploadAvatarRequestDTO request) throws IOException, SdkClientException, EntityNotFoundException, InvalidContentTypeException {
@@ -125,5 +128,30 @@ public class MemberService {
                 .build();
 
         return ResponseEntity.ok(response);
+    }
+
+    @Transactional
+    public ResponseEntity<DeleteAccountResponseDTO> deleteAccount(Long memberId) throws InvalidMemberIdException, AwsS3Exception {
+
+        MemberEntity member = memberRepository.findById(memberId).orElseThrow(() -> new InvalidMemberIdException("Invalid 'member_id'"));
+
+        try {
+            member.getPosts().forEach((post) -> {
+                post.getImageUrls().forEach((imageUrl) -> {
+                    awsS3Uploader.delete(imageUrl.getImageUrl());
+                });
+            });
+
+            memberRepository.delete(member);
+
+            DeleteAccountResponseDTO response = DeleteAccountResponseDTO.builder()
+                    .message("deleted.")
+                    .build();
+
+            return ResponseEntity.ok(response);
+        } catch (SdkClientException e) {
+            log.error(e.getMessage());
+            throw new AwsS3Exception(e.getMessage());
+        }
     }
 }

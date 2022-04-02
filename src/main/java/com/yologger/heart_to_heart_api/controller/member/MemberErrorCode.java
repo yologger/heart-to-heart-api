@@ -12,6 +12,7 @@ public enum MemberErrorCode {
     INVALID_CONTENT_TYPE(400, "MEMBER_004", "Content type must be image"),
     INVALID_MEMBER_ID(400, "MEMBER_005", "Invalid member_id"),
     ALREADY_BLOCKING(400, "MEMBER_006", "Already blocking"),
+    AWS_S3_ERROR(400, "MEMBER_007", "Aws S3 error"),
     ;
 
     private final int status;
