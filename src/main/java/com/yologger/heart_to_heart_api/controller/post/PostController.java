@@ -39,12 +39,21 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<GetPostsResponseDto> getPosts(
+    public ResponseEntity<GetPostsResponseDto> getAllPosts(
             @Valid @NotNull @RequestParam(value = "member_id", required = true) Long memberId,
             @Valid @NotNull @RequestParam(value = "page", required = true) Integer page,
             @Valid @NotNull @RequestParam(value = "size", required = true) Integer size
     ) throws NoPostsExistException {
-        return postService.getPosts(memberId, page, size);
+        return postService.getAllPosts(memberId, page, size);
+    }
+
+    @GetMapping("/posts/{id}")
+    public ResponseEntity<GetPostsResponseDto>  getPosts(
+            @Valid @NotNull @PathVariable(required = true) Long id,
+            @Valid @NotNull @RequestParam(value = "page", required = true) Integer page,
+            @Valid @NotNull @RequestParam(value = "size", required = true) Integer size
+    ) throws NoPostsExistException {
+        return postService.getPosts(id, page, size);
     }
 
     @DeleteMapping("/delete/{id}")

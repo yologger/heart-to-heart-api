@@ -41,7 +41,8 @@ Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://git
 - [ ] `Domain Layer`를 추가하고 `비즈니스 로직`을 `Service Layer`로부터 분리하여 `Layered Architecuture`로 리팩토링
 - [ ] 팔로우, 팔로잉 기능 구현
 - [ ] 비밀번호 찾기, 변경 구현
-- [ ] 글 삭제 구현
+- [x] 글 삭제 구현
+- [x] 내 글 보기 구현
 - [x] CI/CD pipeline 구축
 - [ ] 깃 브랜치 전략 도입(`git-flow`)
 - [x] 테스트 환경 - `Heroku`, `Jaws DB(MySQL)` 환경에서 `AWS EC2`, `AWS RDS(Maria DB)`로 마이그레이션

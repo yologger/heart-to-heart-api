@@ -121,9 +121,42 @@ public class PostService {
         }
     }
 
-    public ResponseEntity<GetPostsResponseDto> getPosts(Long memberId, Integer page, Integer size) throws NoPostsExistException {
+    public ResponseEntity<GetPostsResponseDto> getAllPosts(Long memberId, Integer page, Integer size) throws NoPostsExistException {
 
         List<PostEntity> postEntities = postRepository.findAllPostsOrderByCreatedAtDescExceptBlocking(memberId, page, size);
+
+        List<Post> posts = new ArrayList<Post>();
+
+        for (PostEntity postEntity: postEntities) {
+            List<String> postImageUris = new ArrayList<String>();
+            for (PostImageEntity postImageEntity: postEntity.getImageUrls()) {
+                postImageUris.add(postImageEntity.getImageUrl());
+            }
+            Post post = Post.builder()
+                    .id(postEntity.getId())
+                    .writerId(postEntity.getWriter().getId())
+                    .writerEmail(postEntity.getWriter().getEmail())
+                    .writerNickname(postEntity.getWriter().getNickname())
+                    .avatarUrl(postEntity.getWriter().getAvatarUrl())
+                    .content(postEntity.getContent())
+                    .imageUrls(postImageUris)
+                    .createdAt(postEntity.getCreatedAt())
+                    .updatedAt(postEntity.getUpdatedAt())
+                    .build();
+            posts.add(post);
+        }
+
+        GetPostsResponseDto response = GetPostsResponseDto.builder()
+                .size(posts.size())
+                .posts(posts)
+                .build();
+
+        return ResponseEntity.created(null).body(response);
+    }
+
+    public ResponseEntity<GetPostsResponseDto> getPosts(Long memberId, Integer page, Integer size) {
+
+        List<PostEntity> postEntities = postRepository.findAllByWriterId(memberId, page, size);
 
         List<Post> posts = new ArrayList<Post>();
 

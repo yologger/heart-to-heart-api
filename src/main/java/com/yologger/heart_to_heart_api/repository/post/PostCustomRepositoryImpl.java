@@ -15,7 +15,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<PostEntity> findAllPostsOrderByCreatedAtDescExceptBlocking(Long memberId, int offset, int limit) {
+    public List<PostEntity> findAllPostsOrderByCreatedAtDescExceptBlocking(Long memberId, int page, int size) {
         return jpaQueryFactory.selectFrom(postEntity)
                 .where(postEntity.writer.id.notIn(
                         JPAExpressions
@@ -23,8 +23,18 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                                 .from(blockEntity)
                                 .where(blockEntity.member.id.eq(memberId))
                 ))
-                .offset(offset)
-                .limit(limit)
+                .offset(page*size)
+                .limit(size)
+                .orderBy(postEntity.createdAt.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<PostEntity> findAllByWriterId(Long memberId, int page, int size) {
+        return jpaQueryFactory.selectFrom(postEntity)
+                .where(postEntity.writer.id.eq(memberId))
+                .offset(page*size)
+                .limit(size)
                 .orderBy(postEntity.createdAt.desc())
                 .fetch();
     }

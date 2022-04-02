@@ -74,7 +74,7 @@ public class MemberController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<DeleteAccountResponseDTO> report (@Valid @NotNull @PathVariable Long id) throws InvalidMemberIdException, AwsS3Exception {
+    public ResponseEntity<DeleteAccountResponseDTO> deleteMember(@Valid @NotNull @PathVariable Long id) throws InvalidMemberIdException, AwsS3Exception {
         return memberService.deleteAccount(id);
     }
 }
