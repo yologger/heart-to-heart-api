@@ -90,3 +90,12 @@ jobs:
           git config --global user.name "yologger1013"
           git commit -am "Update image tag"
           git push -u origin main
+
+      - name: Send result to slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{job.status}}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          author_name: Geerio CI
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.PROD_SLACK_WEBHOOK_URL }}
