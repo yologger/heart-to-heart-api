@@ -39,7 +39,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/auth/reissueToken",
             "/test/test1",
             "/test/test2",
-            "/test/test3"
+            "/test/test3",
+            "/test/test4",
     );
 
     @Bean
