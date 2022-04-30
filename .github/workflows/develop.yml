@@ -47,13 +47,6 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --s3-location bucket=${{ secrets.DEV_AWS_S3_BUCKET_NAME }},bundleType=zip,key=${{ secrets.DEV_ZIP_NAME }}.zip \
           --region ${{ secrets.DEV_AWS_S3_REGION }}
-#      # Heroku
-#      - name: Deploy to Heroku
-#        uses: AkhileshNS/heroku-deploy@v3.12.12
-#        with:
-#          heroku_api_key: ${{ secrets.HEROKU_DEV_API_KEY }}
-#          heroku_email: ${{ secrets.HEROKU_DEV_EMAIL }}
-#          heroku_app_name: ${{ secrets.HEROKU_DEV_APP_NAME }}
 
       # Slack
       - name: build result to slack
