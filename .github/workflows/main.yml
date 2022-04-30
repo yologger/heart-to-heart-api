@@ -44,7 +44,7 @@ jobs:
 
       - name: Get ECR login password
         id: get-ecr-password
-        run |
+        run: |
           ECR_PASSWORD=$(aws ecr get-login-password --region ap-northeast-2)
           echo $ECR_PASSWORD
           echo "::set-output name=ecr_password::$ECR_PASSWORD"
