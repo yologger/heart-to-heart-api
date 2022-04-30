@@ -42,6 +42,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      # ECR IAM 비밀번호 획득
       - name: Get ECR login password
         id: get-ecr-password
         run: |
