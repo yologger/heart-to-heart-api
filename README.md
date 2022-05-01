@@ -6,9 +6,6 @@ Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://git
 
 ## 기술 스택
 
-### 시스템 아키텍처
-![](imgs/architecture.png)
-
 ### 공통
 - Spring Boot
 - Spring MVC
@@ -17,8 +14,6 @@ Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://git
 - Spring Security
 - Spring Validation
 - Spring Mail
-- CI/CD pipeline (GitHub Actions/AWS CodeDeploy)
-- 무중단배포 (NGINX)
 
 ### 테스트 환경
 - ~~Heroku SaaS~~ (Deprecated)
@@ -26,13 +21,26 @@ Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://git
 - AWS EC2
 - AWS S3
 - AWS RDS (Maria DB)
+- AWS CodeDeploy
+- Github Actions
+- CI/CD pipeline (GitHub Actions/AWS CodeDeploy)
+- Nginx
+
+![](imgs/architecture.png)
 
 ### 운영 환경
 - AWS EC2
 - AWS S3
 - AWS RDS (Maria DB)
+- AWS ECR
+- Github Actions
+- Kustomize
+- Argo CD
+- Kubernetes (No EKS)
 
-# Todo List
+![](imgs/2.png)
+
+## Todo List
 - [x] 회원가입 시 이메일 인증 구현
 - [x] `JWT` 기반 `OAuth2` 인증 구현
 - [ ] 업로드 이미지 리사이징 (AWS Lambda)
@@ -44,8 +52,8 @@ Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://git
 - [x] 글 삭제 구현
 - [x] 내 글 보기 구현
 - [x] CI/CD pipeline 구축
-- [ ] 깃 브랜치 전략 도입(`git-flow`)
+- [x] 깃 브랜치 전략 도입(`git-flow`)
 - [x] 테스트 환경 - `Heroku`, `Jaws DB(MySQL)` 환경에서 `AWS EC2`, `AWS RDS(Maria DB)`로 마이그레이션
 - [x] 테스트 환경 - `NGINX`를 통한 무중단 배포 구현
 - [x] 운영 환경 - `NGINX`를 통한 무중단 배포 구현
-- [ ] 운영 환경 - 컨테이너 오케스트레이션를 위해 `Docker`, `Kubernetes` 환경으로 마이그레이션
+- [x] 운영 환경 - Pull-based GitOps 적용
