@@ -1,9 +1,6 @@
 # Heart to Heart API Server
 이 프로젝트는 `Heart to Heart` 어플리케이션을 위한 API 서버입니다. `Heart to Heart` 안드로이드 어플리케이션은 [이 곳](https://github.com/yologger/heart-to-heart-android)에서 확인할 수 있습니다.
 
-## Legacy
-Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://github.com/yologger/heart-to-heart-nodejs)에서 확인할 수 있습니다.
-
 ## 기술 스택
 
 ### 공통
@@ -23,7 +20,6 @@ Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://git
 - AWS RDS (Maria DB)
 - AWS CodeDeploy
 - Github Actions
-- CI/CD pipeline (GitHub Actions/AWS CodeDeploy)
 - Nginx
 
 ![](imgs/architecture.png)
@@ -36,9 +32,13 @@ Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://git
 - Github Actions
 - Kustomize
 - Argo CD
+- Docker
 - Kubernetes (No EKS)
 
 ![](imgs/2.png)
+
+## Legacy
+Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://github.com/yologger/heart-to-heart-nodejs)에서 확인할 수 있습니다.
 
 ## Todo List
 - [x] 회원가입 시 이메일 인증 구현
@@ -55,5 +55,4 @@ Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://git
 - [x] 깃 브랜치 전략 도입(`git-flow`)
 - [x] 테스트 환경 - `Heroku`, `Jaws DB(MySQL)` 환경에서 `AWS EC2`, `AWS RDS(Maria DB)`로 마이그레이션
 - [x] 테스트 환경 - `NGINX`를 통한 무중단 배포 구현
-- [x] 운영 환경 - `NGINX`를 통한 무중단 배포 구현
 - [x] 운영 환경 - Pull-based GitOps 적용
