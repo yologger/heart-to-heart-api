@@ -12,18 +12,6 @@
 - Spring Validation
 - Spring Mail
 
-### 테스트 환경
-- ~~Heroku SaaS~~ (Deprecated)
-- ~~Heroku MySQL~~ (Deprecated)
-- AWS EC2
-- AWS S3
-- AWS RDS (Maria DB)
-- AWS CodeDeploy
-- Github Actions
-- Nginx
-
-![](imgs/architecture.png)
-
 ### 운영 환경
 - AWS EC2
 - AWS S3
@@ -36,6 +24,18 @@
 - Kubernetes (No EKS)
 
 ![](imgs/2.png)
+
+### 테스트 환경
+- ~~Heroku SaaS~~ (Deprecated)
+- ~~Heroku MySQL~~ (Deprecated)
+- AWS EC2
+- AWS S3
+- AWS RDS (Maria DB)
+- AWS CodeDeploy
+- Github Actions
+- Nginx
+
+![](imgs/architecture.png)
 
 ## Legacy
 Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://github.com/yologger/heart-to-heart-nodejs)에서 확인할 수 있습니다.
