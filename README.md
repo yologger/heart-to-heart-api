@@ -18,10 +18,10 @@
 - AWS RDS (Maria DB)
 - AWS ECR
 - Github Actions
+- Docker
+- Kubernetes Cluster (with 3 EC2 instances, No EKS)
 - Kustomize
 - Argo CD
-- Docker
-- Kubernetes (No EKS)
 
 ![](imgs/2.png)
 
