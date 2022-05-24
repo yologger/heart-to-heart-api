@@ -3,7 +3,7 @@ package com.yologger.heart_to_heart_api.config;
 import com.yologger.heart_to_heart_api.common.filter.ValidateAccessTokenFilter;
 import com.yologger.heart_to_heart_api.common.util.JwtUtil;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
-import com.yologger.heart_to_heart_api.service.auth.MemberDetailsService;
+import com.yologger.heart_to_heart_api.service.member.MemberDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +23,7 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Slf4j
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final MemberDetailsService memberDetailsService;
     private final JwtUtil jwtUtil;
@@ -81,12 +81,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilterBefore(validateAccessTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(authorize -> authorize
-                        .antMatchers("/test/**").permitAll()
-                        .antMatchers("/auth/**").permitAll()
-                        .antMatchers("/post/**").permitAll()
-                        .antMatchers("/member/**").permitAll()
-                        .antMatchers("/profile").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 );
     }
 }
