@@ -41,7 +41,6 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final VerificationCodeRepository verificationCodeRepository;
     private final AuthenticationManager authenticationManager;
-
     @Transactional
     public ResponseEntity<EmailVerificationCodeResponseDto> emailVerificationCode(String email) throws MemberAlreadyExistException, MessagingException, MailAuthenticationException, MailSendException, MailException {
 

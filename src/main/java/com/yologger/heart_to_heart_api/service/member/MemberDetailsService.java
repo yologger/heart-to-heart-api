@@ -1,4 +1,4 @@
-package com.yologger.heart_to_heart_api.service.auth;
+package com.yologger.heart_to_heart_api.service.member;
 
 import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
