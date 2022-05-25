@@ -1,53 +1,39 @@
 package com.yologger.heart_to_heart_api.service.auth;
 
-import com.yologger.heart_to_heart_api.common.util.JwtUtil;
-import com.yologger.heart_to_heart_api.common.util.MailUtil;
 import com.yologger.heart_to_heart_api.controller.auth.exception.MemberAlreadyExistException;
 import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
-import com.yologger.heart_to_heart_api.repository.verification_code.VerificationCodeRepository;
 import com.yologger.heart_to_heart_api.service.auth.model.JoinRequestDto;
+import com.yologger.heart_to_heart_api.service.auth.model.JoinResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static com.google.common.truth.Truth.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    classes = {AuthService.class}
-)
+@ExtendWith(MockitoExtension.class)
 @DisplayName("AuthService 테스트")
 public class AuthServiceTest {
 
-    @MockBean
-    private MailUtil mailUtil;
-
-    @MockBean
-    private JwtUtil jwtUtil;
-
-    @MockBean
-    private PasswordEncoder passwordEncoder;
-
-    @MockBean
+    @Mock
     private MemberRepository memberRepository;
 
-    @MockBean
-    private VerificationCodeRepository verificationCodeRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
-    @MockBean
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
+    @InjectMocks
     private AuthService authService;
 
     @Nested
@@ -81,7 +67,34 @@ public class AuthServiceTest {
         @Test
         @DisplayName("사용자가 존재하지 않는 경우")
         void user_not_exist() {
+            // Given
 
+            when(memberRepository.findByEmail(any())).thenReturn(Optional.ofNullable(null));
+
+            String encryptedPassword = "fdsafdsa12!@321";
+            when(passwordEncoder.encode(any())).thenReturn(encryptedPassword);
+
+            MemberEntity member = MemberEntity.builder()
+                    .email("ronaldo@gmail.com")
+                    .name("Cristiano Ronaldo")
+                    .nickname("CR7")
+                    .password("1234Asdf!@")
+                    .build();
+
+            when(memberRepository.save(any())).thenReturn(member);
+
+            // When & Then
+            JoinRequestDto request = JoinRequestDto.builder()
+                    .email("ronaldo@gmail.com")
+                    .name("Cristiano Ronaldo")
+                    .nickname("CR7")
+                    .password("1234Asdf!@")
+                    .build();
+
+            assertThatNoException().isThrownBy(() -> {
+                ResponseEntity<JoinResponseDto> response = authService.join(request);
+                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+            });
         }
     }
 }
