@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Import;
 import java.util.List;
 import java.util.Optional;
 
-import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.*;
 
 @DataJpaTest
 @DisplayName("MemberRepository 테스트")
