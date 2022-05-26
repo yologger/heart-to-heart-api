@@ -4,7 +4,6 @@ import com.yologger.heart_to_heart_api.controller.auth.exception.*;
 import com.yologger.heart_to_heart_api.service.auth.AuthService;
 import com.yologger.heart_to_heart_api.service.auth.model.*;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@Log4j2
 public class AuthController {
 
     private final AuthService authService;
@@ -80,7 +78,6 @@ public class AuthController {
      */
     @PostMapping(value = "/reissueToken", consumes = "application/json", produces = "application/json")
     public ResponseEntity<ReissueTokenResponseDto> reissueToken(@Valid @RequestBody ReissueTokenRequestDto request) throws InvalidRefreshTokenException, ExpiredRefreshTokenException, MemberNotExistException {
-        log.info("Reissuing token succeeds");
         return authService.reissueToken(request);
     }
 
