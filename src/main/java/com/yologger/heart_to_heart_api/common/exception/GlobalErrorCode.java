@@ -22,9 +22,13 @@ public enum GlobalErrorCode {
     MISSING_AUTHORIZATION_HEADER(400, "GLOBAL_100", "'Authorization' header must not be empty"),
     BEARER_NOT_INCLUDED(400, "GLOBAL_101", "'Authorization' header must start with 'Bearer'"),
     ACCESS_TOKEN_EMPTY(400, "GLOBAL_102", "'Authorization' header does not include access token"),
-    INVALID_ACCESS_TOKEN(400, "GLOBAL_103", "Invalid Access Token"),
-    EXPIRED_ACCESS_TOKEN(400, "GLOBAL_104", "Expired Access token"),
+    INVALID_ACCESS_TOKEN(400, "GLOBAL_103", "Invalid access token"),
+    EXPIRED_ACCESS_TOKEN(400, "GLOBAL_104", "Expired access token"),
+
+    UNAUTHORIZED(403, "GLOBAL_105", "Unauthorized."),
     ;
+
+
 
 
     private final int status;

@@ -1,8 +1,10 @@
 package com.yologger.heart_to_heart_api.service.auth;
 
-import com.yologger.heart_to_heart_api.common.util.JwtUtil;
+import com.yologger.heart_to_heart_api.common.util.AccessTokenProvider;
 import com.yologger.heart_to_heart_api.common.util.MailUtil;
+import com.yologger.heart_to_heart_api.common.util.RefreshTokenProvider;
 import com.yologger.heart_to_heart_api.controller.auth.exception.*;
+import com.yologger.heart_to_heart_api.repository.member.AuthorityType;
 import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
 import com.yologger.heart_to_heart_api.repository.verification_code.VerificationCodeEntity;
@@ -19,6 +21,7 @@ import org.springframework.mail.MailSendException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,8 +38,9 @@ import java.util.Random;
 @Slf4j
 public class AuthService {
 
+    private final AccessTokenProvider accessTokenProvider;
+    private final RefreshTokenProvider refreshTokenProvider;
     private final MailUtil mailUtil;
-    private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final VerificationCodeRepository verificationCodeRepository;
@@ -102,7 +106,7 @@ public class AuthService {
     }
 
     private boolean emailAlreadyExist(String email) {
-        Optional<MemberEntity> result = memberRepository.findByEmail(email);
+        Optional<MemberEntity> result = memberRepository.findOneByEmail(email);
         return result.isPresent();
     }
 
@@ -135,7 +139,7 @@ public class AuthService {
     public ResponseEntity<JoinResponseDto> join(JoinRequestDto request) throws MemberAlreadyExistException {
 
         // Check If User already exists.
-        Optional<MemberEntity> result = memberRepository.findByEmail(request.getEmail());
+        Optional<MemberEntity> result = memberRepository.findOneByEmail(request.getEmail());
         if (result.isPresent()) throw new MemberAlreadyExistException("Member Already Exists.");
 
         String encryptedPassword = passwordEncoder.encode(request.getPassword());
@@ -143,6 +147,7 @@ public class AuthService {
                 .email(request.getEmail())
                 .password(encryptedPassword)
                 .nickname(request.getNickname())
+                .authority(AuthorityType.USER)
                 .name(request.getName())
                 .build();
 
@@ -158,24 +163,18 @@ public class AuthService {
     @Transactional
     public ResponseEntity<LoginResponseDto> login(LoginRequestDto request) throws MemberNotExistException, InvalidPasswordException {
 
-        // Check if member exists.
-        MemberEntity member = memberRepository.findByEmail(request.getEmail())
+        MemberEntity member = memberRepository.findOneByEmail(request.getEmail())
                 .orElseThrow(() -> new MemberNotExistException("Member does not exist."));
 
-        // Check if password correct.
-        if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
-            throw new InvalidPasswordException("Invalid password exception");
-        }
-
         // 인증 수행
-        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
-        // Principal(본인)
-        User me = (User) auth.getPrincipal();
+        // 인증정보 저장
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // 토큰 생성
-        String accessToken = jwtUtil.generateAccessToken(member.getId(), member.getEmail(), member.getName(), member.getNickname());
-        String refreshToken = jwtUtil.generateRefreshToken(member.getId(), member.getEmail(), member.getName(), member.getNickname());
+        String accessToken = accessTokenProvider.createToken(authentication);
+        String refreshToken = refreshTokenProvider.createToken(authentication);
 
         // DB 업데이트
         member.setAccessToken(accessToken);
@@ -208,12 +207,14 @@ public class AuthService {
 
         try {
             // Verify refresh token
-            jwtUtil.verifyRefreshToken(request.getRefreshToken());
+            refreshTokenProvider.validateToken(request.getRefreshToken());
+            Authentication authentication = refreshTokenProvider.getAuthentication(request.getRefreshToken());
 
             // Reissue access token, refresh token
+            String newAccessToken = accessTokenProvider.createToken(authentication);
+            String newRefreshToken = refreshTokenProvider.createToken(authentication);
+
             MemberEntity member = result.get();
-            String newAccessToken = jwtUtil.generateAccessToken(member.getId(), member.getEmail(), member.getName(), member.getNickname());
-            String newRefreshToken = jwtUtil.generateRefreshToken(member.getId(), member.getEmail(), member.getName(), member.getNickname());
 
             member.setAccessToken(newAccessToken);
             member.setRefreshToken(newRefreshToken);
@@ -230,10 +231,10 @@ public class AuthService {
             return ResponseEntity.ok(response);
 
         } catch (ExpiredJwtException e) {
-            log.info("Reissuing token fails.");
+            log.debug("Reissuing token fails.");
             throw new ExpiredRefreshTokenException("Expired refresh token");
         } catch (Exception e) {
-            log.info("Reissuing token fails.");
+            log.debug("Reissuing token fails.");
             throw new InvalidRefreshTokenException("Invalid refresh token");
         }
     }
@@ -245,10 +246,16 @@ public class AuthService {
         } else {
             try {
                 String accessToken = authHeader.substring(7);
-                Long memberId = jwtUtil.verifyAccessTokenAndGetMemberId(accessToken);
-                Optional<MemberEntity> result = memberRepository.findById(memberId);
-                if (!result.isPresent()) throw new InvalidAccessTokenException("Invalid refresh token.");
-                MemberEntity member = result.get();
+//                Long memberId = jwtUtil.verifyAccessTokenAndGetMemberId(accessToken);
+//                Optional<MemberEntity> result = memberRepository.findById(memberId);
+
+                accessTokenProvider.validateToken(accessToken);
+                Authentication authentication = accessTokenProvider.getAuthentication(accessToken);
+                User user = (User)authentication.getPrincipal();
+                String email = user.getUsername();
+                MemberEntity member = memberRepository.findOneByEmail(email)
+                        .orElseThrow(() -> new InvalidAccessTokenException("Invalid refresh token."));
+
                 member.clearAccessToken();
                 member.clearRefreshToken();
                 return ResponseEntity.ok(LogoutResponseDto.builder().message("Logged out ").build());

@@ -1,6 +1,5 @@
 package com.yologger.heart_to_heart_api.repository.member;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.google.common.truth.Truth.*;
+import static com.google.common.truth.Truth.assertThat;
 
 @DataJpaTest
 @DisplayName("MemberRepository 테스트")
@@ -21,45 +23,58 @@ class MemberRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @BeforeEach
-    void setUp() {
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    @AfterEach
-    public void tearDown() {
-        memberRepository.deleteAll();
+    @BeforeEach
+    public void setUp() {
+        AuthorityEntity adminAuthority = AuthorityEntity.builder()
+                .type(AuthorityType.ADMIN)
+                .build();
+
+        AuthorityEntity userAuthority = AuthorityEntity.builder()
+                .type(AuthorityType.USER)
+                .build();
+
+        entityManager.persist(adminAuthority);
+        entityManager.persist(userAuthority);
     }
 
     @Test
     @DisplayName("사용자 추가 및 전체 조회하기 테스트")
     public void test_queryMember() {
-
         // Given
+        AuthorityEntity authority = AuthorityEntity.builder()
+                .type(AuthorityType.ADMIN)
+                .build();
+
         String dummyEmail = "CR7@gmail.com";
         String dummyName = "Cristiano Ronaldo";
         String dummyPassword = "12341234";
         String dummyNickname = "CR7";
 
-        MemberEntity input = MemberEntity.builder()
+        MemberEntity newMember = MemberEntity.builder()
                 .email(dummyEmail)
                 .name(dummyName)
                 .password(dummyPassword)
                 .nickname(dummyNickname)
+                .authorities(Collections.singleton(authority))
                 .build();
 
-        memberRepository.save(input);
-
         // When
+        MemberEntity saved = memberRepository.save(newMember);
         List<MemberEntity> members = memberRepository.findAll();
 
         // Then
         assertThat(members.size()).isEqualTo(1);
+        assertThat(saved.getEmail()).isEqualTo(dummyEmail);
+        assertThat(saved.getAuthorities()).contains(authority);
     }
 
     @Test
     @DisplayName("이메일로 사용자 조회하기 테스트")
     public void test_findByEmail() {
-        // Given
+
         String email = "CR7@gmail.com";
         String name = "Cristiano Ronaldo";
         String password = "12341234";
@@ -70,12 +85,13 @@ class MemberRepositoryTest {
                 .name(name)
                 .password(password)
                 .nickname(nickname)
+                .authority(AuthorityType.USER)
                 .build();
 
         memberRepository.save(input);
 
         // When
-        Optional<MemberEntity> output = memberRepository.findByEmail(email);
+        Optional<MemberEntity> output = memberRepository.findOneByEmail(email);
 
         // Then
         assertThat(output.isPresent()).isTrue();
