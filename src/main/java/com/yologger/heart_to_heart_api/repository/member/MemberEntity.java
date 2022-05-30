@@ -35,14 +35,17 @@ public class MemberEntity extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column(length = 1000, nullable = true)
+    private String avatarUrl;
+
+    @Enumerated(EnumType.STRING)
+    private AuthorityType authority;
+
     @Column(length = 500, nullable = true)
     private String accessToken;
 
     @Column(length = 500, nullable = true)
     private String refreshToken;
-
-    @Column(length = 1000, nullable = true)
-    private String avatarUrl;
 
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PostEntity> posts = new ArrayList<>();
@@ -60,11 +63,12 @@ public class MemberEntity extends BaseEntity {
     private List<FollowEntity> followedBy = new ArrayList<>();
 
     @Builder
-    public MemberEntity(String email, String name, String nickname, String password) {
+    public MemberEntity(String email, String name, String nickname, String password, AuthorityType authority) {
         this.email = email;
         this.name = name;
         this.nickname = nickname;
         this.password = password;
+        this.authority = authority;
     }
 
     public void setAccessToken(String accessToken) {
