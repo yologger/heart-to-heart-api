@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Import;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,25 +27,13 @@ class MemberRepositoryTest {
 
     @BeforeEach
     public void setUp() {
-        AuthorityEntity adminAuthority = AuthorityEntity.builder()
-                .type(AuthorityType.ADMIN)
-                .build();
 
-        AuthorityEntity userAuthority = AuthorityEntity.builder()
-                .type(AuthorityType.USER)
-                .build();
-
-        entityManager.persist(adminAuthority);
-        entityManager.persist(userAuthority);
     }
 
     @Test
     @DisplayName("사용자 추가 및 전체 조회하기 테스트")
     public void test_queryMember() {
         // Given
-        AuthorityEntity authority = AuthorityEntity.builder()
-                .type(AuthorityType.ADMIN)
-                .build();
 
         String dummyEmail = "CR7@gmail.com";
         String dummyName = "Cristiano Ronaldo";
@@ -58,7 +45,7 @@ class MemberRepositoryTest {
                 .name(dummyName)
                 .password(dummyPassword)
                 .nickname(dummyNickname)
-                .authorities(Collections.singleton(authority))
+                .authority(AuthorityType.USER)
                 .build();
 
         // When
@@ -68,7 +55,7 @@ class MemberRepositoryTest {
         // Then
         assertThat(members.size()).isEqualTo(1);
         assertThat(saved.getEmail()).isEqualTo(dummyEmail);
-        assertThat(saved.getAuthorities()).contains(authority);
+        assertThat(saved.getAuthority()).isEqualTo(AuthorityType.USER);
     }
 
     @Test
