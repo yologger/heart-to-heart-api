@@ -1,21 +1,15 @@
 package com.yologger.heart_to_heart_api.service.auth;
 
 import com.yologger.heart_to_heart_api.config.TestAwsS3Config;
-import com.yologger.heart_to_heart_api.controller.auth.exception.MemberAlreadyExistException;
-import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
-import com.yologger.heart_to_heart_api.service.auth.model.JoinRequestDto;
 import io.findify.s3mock.S3Mock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -40,32 +34,32 @@ public class AuthServiceTest {
     @Nested
     @DisplayName("회원가입 테스트")
     class JoinTest {
-        @Test
-        @DisplayName("사용자가 이미 존재하는 경우")
-        void user_already_exist() {
-
-            // Given
-            MemberEntity member = MemberEntity.builder()
-                    .email("ronaldo@gmail.com")
-                    .email("ronaldo@gmail.com")
-                    .name("Cristiano Ronaldo")
-                    .nickname("CR7")
-                    .password("1234Asdf!@")
-                    .build();
-
-            memberRepository.save(member);
-
-            JoinRequestDto request = JoinRequestDto.builder()
-                    .email("ronaldo@gmail.com")
-                    .name("Cristiano Ronaldo")
-                    .nickname("CR7")
-                    .password("1234Asdf!@")
-                    .build();
-
-            // When & Then
-            assertThatThrownBy(() -> authService.join(request))
-                    .isInstanceOf(MemberAlreadyExistException.class);
-        }
+//        @Test
+//        @DisplayName("사용자가 이미 존재하는 경우")
+//        void user_already_exist() {
+//
+//            // Given
+//            MemberEntity member = MemberEntity.builder()
+//                    .email("ronaldo@gmail.com")
+//                    .email("ronaldo@gmail.com")
+//                    .name("Cristiano Ronaldo")
+//                    .nickname("CR7")
+//                    .password("1234Asdf!@")
+//                    .build();
+//
+//            memberRepository.save(member);
+//
+//            JoinRequestDto request = JoinRequestDto.builder()
+//                    .email("ronaldo@gmail.com")
+//                    .name("Cristiano Ronaldo")
+//                    .nickname("CR7")
+//                    .password("1234Asdf!@")
+//                    .build();
+//
+//            // When & Then
+//            assertThatThrownBy(() -> authService.join(request))
+//                    .isInstanceOf(MemberAlreadyExistException.class);
+//        }
 
 //        @Test
 //        @DisplayName("사용자가 존재하지 않는 경우")
