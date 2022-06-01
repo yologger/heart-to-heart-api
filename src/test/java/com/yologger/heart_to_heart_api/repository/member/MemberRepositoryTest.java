@@ -1,11 +1,11 @@
 package com.yologger.heart_to_heart_api.repository.member;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.jdbc.Sql;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,16 +25,10 @@ class MemberRepositoryTest {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @BeforeEach
-    public void setUp() {
-
-    }
-
     @Test
-    @DisplayName("사용자 추가 및 전체 조회하기 테스트")
+    @DisplayName("사용자 추가 테스트")
     public void test_queryMember() {
         // Given
-
         String dummyEmail = "CR7@gmail.com";
         String dummyName = "Cristiano Ronaldo";
         String dummyPassword = "12341234";
@@ -50,12 +44,18 @@ class MemberRepositoryTest {
 
         // When
         MemberEntity saved = memberRepository.save(newMember);
-        List<MemberEntity> members = memberRepository.findAll();
 
         // Then
-        assertThat(members.size()).isEqualTo(1);
         assertThat(saved.getEmail()).isEqualTo(dummyEmail);
         assertThat(saved.getAuthority()).isEqualTo(AuthorityType.USER);
+    }
+
+    @Test
+    @DisplayName("사용자 조회 테스트")
+    @Sql(scripts = {"classpath:sql/dummy_users.sql"})
+    public void test_queryMembers() {
+        List<MemberEntity> members = memberRepository.findAll();
+        assertThat(members.size()).isEqualTo(3);
     }
 
     @Test

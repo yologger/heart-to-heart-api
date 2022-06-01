@@ -1,11 +1,10 @@
 package com.yologger.heart_to_heart_api.repository.post;
 
 
+import com.yologger.heart_to_heart_api.repository.member.AuthorityType;
 import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
 import com.yologger.heart_to_heart_api.repository.post_image.PostImageEntity;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,19 +29,8 @@ class PostRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @BeforeEach
-    public void setUp() {
-
-    }
-
-    @AfterEach
-    public void tearDown() {
-        postRepository.deleteAll();
-        memberRepository.deleteAll();
-    }
-
     @Test
-    @DisplayName("새로운 포스트 작성 및 조회 테스트")
+    @DisplayName("새로운 포스트 작성 테스트")
     public void savePost() {
 
         // Given
@@ -55,6 +43,7 @@ class PostRepositoryTest {
                 .email(email)
                 .nickname(nickname)
                 .name(name)
+                .authority(AuthorityType.USER)
                 .password(password)
                 .build();
 
