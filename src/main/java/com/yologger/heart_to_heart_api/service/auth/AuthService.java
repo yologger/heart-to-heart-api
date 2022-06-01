@@ -246,8 +246,6 @@ public class AuthService {
         } else {
             try {
                 String accessToken = authHeader.substring(7);
-//                Long memberId = jwtUtil.verifyAccessTokenAndGetMemberId(accessToken);
-//                Optional<MemberEntity> result = memberRepository.findById(memberId);
 
                 accessTokenProvider.validateToken(accessToken);
                 Authentication authentication = accessTokenProvider.getAuthentication(accessToken);
