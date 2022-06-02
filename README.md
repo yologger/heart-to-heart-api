@@ -11,6 +11,7 @@
 - Spring Security
 - Spring Validation
 - Spring Mail
+- Swagger 2
 
 ### 운영 환경
 - AWS EC2
@@ -42,13 +43,15 @@ Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://git
 
 ## Todo List
 - [x] 회원가입 시 이메일 인증 구현
-- [x] `JWT` 기반 `OAuth2` 인증 구현
+- [x] `JWT` 기반 인증 구현
 - [ ] 업로드 이미지 리사이징 (AWS Lambda)
 - [x] `Refresh Token`을 통한 토큰 갱신 구현
 - [ ] `Gradle 멀티 모듈`기능을 사용하여 `Clean Architecture`로 리팩토링
 - [ ] `Domain Layer`를 추가하고 `비즈니스 로직`을 `Service Layer`로부터 분리하여 `Layered Architecuture`로 리팩토링
 - [ ] 팔로우, 팔로잉 기능 구현
 - [ ] 비밀번호 찾기, 변경 구현
+- [x] 사용자 차단 구현
+- [x] 사용자 신고 구현
 - [x] 글 삭제 구현
 - [x] 내 글 보기 구현
 - [x] CI/CD pipeline 구축
