@@ -136,7 +136,7 @@ public class AuthService {
     }
 
     @Transactional
-    public ResponseEntity<JoinResponseDto> join(JoinRequestDto request) throws MemberAlreadyExistException {
+    public JoinResponseDto join(JoinRequestDto request) throws MemberAlreadyExistException {
 
         // Check If User already exists.
         Optional<MemberEntity> result = memberRepository.findOneByEmail(request.getEmail());
@@ -157,7 +157,7 @@ public class AuthService {
                 .memberId(created.getId())
                 .build();
 
-        return ResponseEntity.created(null).body(response);
+        return response;
     }
 
     @Transactional

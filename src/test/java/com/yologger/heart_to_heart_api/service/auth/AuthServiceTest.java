@@ -14,8 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -52,7 +50,7 @@ public class AuthServiceTest {
     class JoinTest {
 
         @Test
-        @DisplayName("사용자가 이미 존재하는 경우")
+        @DisplayName("회원가입 실패 테스트 - 사용자가 이미 존재하는 경우")
         void user_already_exist() {
 
             // Given
@@ -61,7 +59,7 @@ public class AuthServiceTest {
                     .email("ronaldo@gmail.com")
                     .name("Cristiano Ronaldo")
                     .nickname("CR7")
-                    .password("1234Asdf!@")
+                    .password(passwordEncoder.encode("1234Asdf!@"))
                     .build();
 
             memberRepository.save(member);
@@ -79,7 +77,7 @@ public class AuthServiceTest {
         }
 
         @Test
-        @DisplayName("사용자가 존재하지 않는 경우")
+        @DisplayName("회원가입 성공 테스트 - 사용자가 존재하지 않는 경우")
         void user_not_exist() {
 
             // Given
@@ -96,10 +94,9 @@ public class AuthServiceTest {
                     .build();
 
             assertThatNoException().isThrownBy(() -> {
-                ResponseEntity<JoinResponseDto> response = authService.join(request);
-                assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+                JoinResponseDto response = authService.join(request);
+                assertThat(response.getMemberId()).isNotNull();
             });
-
         }
     }
 }

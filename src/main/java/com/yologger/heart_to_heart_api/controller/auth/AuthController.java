@@ -3,7 +3,9 @@ package com.yologger.heart_to_heart_api.controller.auth;
 import com.yologger.heart_to_heart_api.controller.auth.exception.*;
 import com.yologger.heart_to_heart_api.service.auth.AuthService;
 import com.yologger.heart_to_heart_api.service.auth.model.*;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
+@Api(tags = "인증 관련 엔드포인트")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -46,10 +49,14 @@ public class AuthController {
      * Join.
      * @throws MemberAlreadyExistException - In case given email already exists. (AUTH_000)
      */
-    @PostMapping
-    @RequestMapping(value = "/join", consumes = "application/json", produces = "application/json")
+    @ApiOperation(value = "회원가입")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "회원 가입 실패"),
+            @ApiResponse(code = 400, message = "중복된 이메일")
+    })
+    @PostMapping(value = "/join", consumes = "application/json", produces = "application/json")
     public ResponseEntity<JoinResponseDto> join(@Valid @RequestBody JoinRequestDto request) throws MemberAlreadyExistException {
-        return authService.join(request);
+        return new ResponseEntity<>(authService.join(request), HttpStatus.CREATED);
     }
 
     /**

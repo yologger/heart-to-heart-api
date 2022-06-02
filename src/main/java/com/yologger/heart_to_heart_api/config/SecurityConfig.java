@@ -44,6 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                     .accessDeniedHandler(jwtAccessDeniedHandler).and()
             .authorizeRequests(authorize -> authorize
+                    .antMatchers( "/v2/api-docs", "/swagger-resources/**", "/swagger-ui/index.html", "/swagger-ui.html","/webjars/**", "/swagger/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/auth/emailVerificationCode").permitAll()
                     .antMatchers(HttpMethod.POST, "/auth/confirmVerificationCode").permitAll()
                     .antMatchers(HttpMethod.POST, "/auth/join").permitAll()
