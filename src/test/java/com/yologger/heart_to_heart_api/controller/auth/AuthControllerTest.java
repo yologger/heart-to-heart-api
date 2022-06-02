@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yologger.heart_to_heart_api.config.SecurityConfig;
 import com.yologger.heart_to_heart_api.controller.auth.exception.MemberAlreadyExistException;
 import com.yologger.heart_to_heart_api.service.auth.AuthService;
+import com.yologger.heart_to_heart_api.service.auth.model.JoinResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -53,6 +54,12 @@ class AuthControllerTest {
         @Test
         @DisplayName("회원가입 실패 태스트 - 사용자가 이미 존재하는 경우")
         public void test_join_when_user_already_exists() throws Exception {
+
+            // Given
+            when(mockAuthService.join(any()))
+                    .thenThrow(new MemberAlreadyExistException("Member Already Exists."));
+
+            // When & Then
             String mockEmail = "smith@gmail.com";
             String mockName = "smith";
             String mockNickname = "smith";
@@ -64,9 +71,6 @@ class AuthControllerTest {
             body.put("nickname", mockNickname);
             body.put("password", mockPassword);
 
-            when(mockAuthService.join(any()))
-                    .thenThrow(new MemberAlreadyExistException("Member Already Exists."));
-
             mvc.perform(MockMvcRequestBuilders.post("/auth/join")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(body))
@@ -74,6 +78,41 @@ class AuthControllerTest {
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.code", is("AUTH_000")))
             .andDo(print());
+        }
+
+        @Test
+        @DisplayName("회원가입 성공 태스트")
+        public void test_join_success() throws Exception {
+
+            // Given
+            Long mockMemberId = 1L;
+
+            JoinResponseDto mockResponse = JoinResponseDto.builder()
+                    .memberId(mockMemberId)
+                    .build();
+
+            when(mockAuthService.join(any()))
+                    .thenReturn(mockResponse);
+
+            // When
+            String mockEmail = "smith@gmail.com";
+            String mockName = "smith";
+            String mockNickname = "smith";
+            String mockPassword = "1234Qwer56!";
+
+            Map<String, String> body = new HashMap<>();
+            body.put("email", mockEmail);
+            body.put("name", mockName);
+            body.put("nickname", mockNickname);
+            body.put("password", mockPassword);
+
+            mvc.perform(MockMvcRequestBuilders.post("/auth/join")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(body))
+            )
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.member_id").exists())
+                    .andDo(print());
         }
     }
 }

@@ -4,6 +4,7 @@ import com.yologger.heart_to_heart_api.controller.auth.exception.*;
 import com.yologger.heart_to_heart_api.service.auth.AuthService;
 import com.yologger.heart_to_heart_api.service.auth.model.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +50,7 @@ public class AuthController {
     @PostMapping
     @RequestMapping(value = "/join", consumes = "application/json", produces = "application/json")
     public ResponseEntity<JoinResponseDto> join(@Valid @RequestBody JoinRequestDto request) throws MemberAlreadyExistException {
-        return authService.join(request);
+        return new ResponseEntity<>(authService.join(request), HttpStatus.CREATED);
     }
 
     /**
