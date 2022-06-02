@@ -11,6 +11,9 @@
 - Spring Security
 - Spring Validation
 - Spring Mail
+- Spring Test
+- JUnit 5
+- Mockito
 - Swagger 2
 
 ### 운영 환경
