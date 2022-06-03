@@ -12,7 +12,6 @@ import com.yologger.heart_to_heart_api.repository.post_image.PostImageRepository
 import com.yologger.heart_to_heart_api.service.post.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,14 +31,10 @@ public class PostService {
     private final AwsS3Util awsS3Uploader;
 
     @Transactional
-    public ResponseEntity<RegisterPostResponseDto> registerPost(RegisterPostRequestDto request) throws InvalidWriterIdException, InvalidContentTypeException, FileUploadException {
+    public RegisterPostResponseDTO registerPost(RegisterPostRequestDTO request) throws InvalidWriterIdException, InvalidContentTypeException, FileUploadException {
         // Check if memberId is valid.
-        Optional<MemberEntity> result = memberRepository.findById(request.getMemberId());
-        if (!result.isPresent()) {
-            throw new InvalidWriterIdException("Invalid Member Id.");
-        }
-
-        MemberEntity writer = result.get();
+        MemberEntity writer = memberRepository.findById(request.getMemberId())
+                .orElseThrow(() -> new InvalidWriterIdException("Invalid Member Id."));
 
         // In case files do not exist.
         if (request.getFiles() == null || request.getFiles().length == 0) {
@@ -52,7 +46,7 @@ public class PostService {
 
             PostEntity saved = postRepository.save(newPost);
 
-            RegisterPostResponseDto response = RegisterPostResponseDto.builder()
+            RegisterPostResponseDTO response = RegisterPostResponseDTO.builder()
                     .postId(saved.getId())
                     .writerId(writer.getId())
                     .writerEmail(writer.getEmail())
@@ -64,7 +58,7 @@ public class PostService {
                     .updatedAt(writer.getUpdatedAt())
                     .build();
 
-            return ResponseEntity.created(null).body(response);
+            return response;
 
         // In case files exist.
         } else {
@@ -105,7 +99,7 @@ public class PostService {
                 }
             }
 
-            RegisterPostResponseDto response = RegisterPostResponseDto.builder()
+            RegisterPostResponseDTO response = RegisterPostResponseDTO.builder()
                     .postId(savedPost.getId())
                     .writerId(savedPost.getWriter().getId())
                     .writerEmail(savedPost.getWriter().getEmail())
@@ -117,22 +111,22 @@ public class PostService {
                     .updatedAt(savedPost.getUpdatedAt())
                     .build();
 
-            return ResponseEntity.created(null).body(response);
+            return response;
         }
     }
 
-    public ResponseEntity<GetPostsResponseDto> getAllPosts(Long memberId, Integer page, Integer size) throws NoPostsExistException {
+    public GetPostsResponseDTO getAllPosts(Long memberId, Integer page, Integer size) throws NoPostsExistException {
 
         List<PostEntity> postEntities = postRepository.findAllPostsOrderByCreatedAtDescExceptBlocking(memberId, page, size);
 
-        List<Post> posts = new ArrayList<Post>();
+        List<PostDTO> postDTOS = new ArrayList<PostDTO>();
 
         for (PostEntity postEntity: postEntities) {
             List<String> postImageUris = new ArrayList<String>();
             for (PostImageEntity postImageEntity: postEntity.getImageUrls()) {
                 postImageUris.add(postImageEntity.getImageUrl());
             }
-            Post post = Post.builder()
+            PostDTO postDTO = PostDTO.builder()
                     .id(postEntity.getId())
                     .writerId(postEntity.getWriter().getId())
                     .writerEmail(postEntity.getWriter().getEmail())
@@ -143,29 +137,29 @@ public class PostService {
                     .createdAt(postEntity.getCreatedAt())
                     .updatedAt(postEntity.getUpdatedAt())
                     .build();
-            posts.add(post);
+            postDTOS.add(postDTO);
         }
 
-        GetPostsResponseDto response = GetPostsResponseDto.builder()
-                .size(posts.size())
-                .posts(posts)
+        GetPostsResponseDTO response = GetPostsResponseDTO.builder()
+                .size(postDTOS.size())
+                .postDTOS(postDTOS)
                 .build();
 
-        return ResponseEntity.created(null).body(response);
+        return response;
     }
 
-    public ResponseEntity<GetPostsResponseDto> getPosts(Long memberId, Integer page, Integer size) {
+    public GetPostsResponseDTO getPosts(Long memberId, Integer page, Integer size) {
 
         List<PostEntity> postEntities = postRepository.findAllByWriterId(memberId, page, size);
 
-        List<Post> posts = new ArrayList<Post>();
+        List<PostDTO> postDTOS = new ArrayList<PostDTO>();
 
         for (PostEntity postEntity: postEntities) {
             List<String> postImageUris = new ArrayList<String>();
             for (PostImageEntity postImageEntity: postEntity.getImageUrls()) {
                 postImageUris.add(postImageEntity.getImageUrl());
             }
-            Post post = Post.builder()
+            PostDTO postDTO = PostDTO.builder()
                     .id(postEntity.getId())
                     .writerId(postEntity.getWriter().getId())
                     .writerEmail(postEntity.getWriter().getEmail())
@@ -176,19 +170,19 @@ public class PostService {
                     .createdAt(postEntity.getCreatedAt())
                     .updatedAt(postEntity.getUpdatedAt())
                     .build();
-            posts.add(post);
+            postDTOS.add(postDTO);
         }
 
-        GetPostsResponseDto response = GetPostsResponseDto.builder()
-                .size(posts.size())
-                .posts(posts)
+        GetPostsResponseDTO response = GetPostsResponseDTO.builder()
+                .size(postDTOS.size())
+                .postDTOS(postDTOS)
                 .build();
 
-        return ResponseEntity.created(null).body(response);
+        return response;
     }
 
     @Transactional
-    public ResponseEntity<DeletePostResponseDTO> deletePost(Long id) throws NoPostExistException, FileUploadException {
+    public DeletePostResponseDTO deletePost(Long id) throws NoPostExistException, FileUploadException {
 
         PostEntity post = postRepository.findById(id).orElseThrow(() -> new NoPostExistException("Invalid 'post_id'"));
 
@@ -198,7 +192,7 @@ public class PostService {
             DeletePostResponseDTO response = DeletePostResponseDTO.builder()
                     .message("deleted")
                     .build();
-            return ResponseEntity.ok(response);
+            return response;
         } catch (SdkClientException e) {
             log.error(e.getMessage());
             throw new FileUploadException(e.getMessage());

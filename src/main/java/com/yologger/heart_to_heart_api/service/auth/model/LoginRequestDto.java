@@ -1,6 +1,7 @@
 package com.yologger.heart_to_heart_api.service.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.Email;
@@ -8,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Getter
+@Builder
 public class LoginRequestDto {
 
     @NotBlank(message = "email must not be empty.")
