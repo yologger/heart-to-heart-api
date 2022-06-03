@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetPostsResponseDto {
+public class GetPostsResponseDTO {
     @JsonProperty("size") private Integer size;
-    @JsonProperty("posts") private List<Post> posts;
+    @JsonProperty("posts") private List<PostDTO> postDTOS;
 }

@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterPostRequestDto {
+public class RegisterPostRequestDTO {
     private MultipartFile[] files;
     private Long memberId;
     private String content;

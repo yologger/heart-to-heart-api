@@ -2,10 +2,14 @@ package com.yologger.heart_to_heart_api.service.auth;
 
 import com.yologger.heart_to_heart_api.config.TestAwsS3Config;
 import com.yologger.heart_to_heart_api.controller.auth.exception.MemberAlreadyExistException;
+import com.yologger.heart_to_heart_api.controller.auth.exception.MemberNotExistException;
+import com.yologger.heart_to_heart_api.repository.member.AuthorityType;
 import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
 import com.yologger.heart_to_heart_api.service.auth.model.JoinRequestDto;
 import com.yologger.heart_to_heart_api.service.auth.model.JoinResponseDto;
+import com.yologger.heart_to_heart_api.service.auth.model.LoginRequestDto;
+import com.yologger.heart_to_heart_api.service.auth.model.LoginResponseDto;
 import io.findify.s3mock.S3Mock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -99,4 +104,88 @@ public class AuthServiceTest {
             });
         }
     }
+
+    @Nested
+    @DisplayName("로그인 테스트")
+    class LoginTest {
+        @Test
+        @DisplayName("로그인 실패 테스트 - 사용자가 존재하지 않을 때")
+        public void test_login_failure_member_not_exist() {
+            String dummyEmail = "ronaldo@gmail.com";
+            String dummyPassword = "4321Fdsa@!";
+
+            LoginRequestDto request = LoginRequestDto.builder()
+                    .email(dummyEmail)
+                    .password(dummyPassword)
+                    .build();
+
+            assertThatThrownBy(() -> authService.login(request))
+                    .isInstanceOf(MemberNotExistException.class);
+        }
+
+        @Test
+        @DisplayName("로그인 실패 테스트 - 비밀번호가 틀렸을 때")
+        public void test_login_failure_wrong_password() {
+
+            // Given
+            String dummyEmail = "ronaldo@gmail.com";
+            String dummyName = "Cristiano Ronaldo";
+            String dummyNickname = "CR7";
+            String dummyPassword = "4321Fdsa@!";
+
+            MemberEntity member = MemberEntity.builder()
+                    .email(dummyEmail)
+                    .name(dummyName)
+                    .nickname(dummyNickname)
+                    .authority(AuthorityType.USER)
+                    .password(passwordEncoder.encode(dummyPassword))
+                    .build();
+
+            memberRepository.save(member);
+
+            String wrongPassword = "1234Fdsa@!";
+
+            LoginRequestDto request = LoginRequestDto.builder()
+                    .email(dummyEmail)
+                    .password(wrongPassword)
+                    .build();
+
+            // When, Then
+            assertThatThrownBy(() -> authService.login(request))
+                    .isInstanceOf(BadCredentialsException.class);
+        }
+
+        @Test
+        @DisplayName("로그인 성공 테스트 - 비밀번호")
+        public void test_login_success() {
+
+            // Given
+            String dummyEmail = "ronaldo@gmail.com";
+            String dummyName = "Cristiano Ronaldo";
+            String dummyNickname = "CR7";
+            String dummyPassword = "4321Fdsa@!";
+
+            MemberEntity member = MemberEntity.builder()
+                    .email(dummyEmail)
+                    .name(dummyName)
+                    .nickname(dummyNickname)
+                    .authority(AuthorityType.USER)
+                    .password(passwordEncoder.encode(dummyPassword))
+                    .build();
+
+            memberRepository.save(member);
+
+            LoginRequestDto request = LoginRequestDto.builder()
+                    .email(dummyEmail)
+                    .password(dummyPassword)
+                    .build();
+
+            assertThatNoException().isThrownBy(() -> {
+                LoginResponseDto response = authService.login(request);
+                assertThat(response.getAccessToken()).isNotBlank();
+                assertThat(response.getRefreshToken()).isNotBlank();
+            });
+        }
+    }
+
 }

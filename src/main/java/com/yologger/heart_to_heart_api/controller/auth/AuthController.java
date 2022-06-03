@@ -3,11 +3,15 @@ package com.yologger.heart_to_heart_api.controller.auth;
 import com.yologger.heart_to_heart_api.controller.auth.exception.*;
 import com.yologger.heart_to_heart_api.service.auth.AuthService;
 import com.yologger.heart_to_heart_api.service.auth.model.*;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
@@ -27,10 +31,9 @@ public class AuthController {
      * @throws MessagingException - In case an error has occurred in gmail system. (AUTH_001)
      * @throws MailException - In case an error has occurred in gmail system. (AUTH_001)
      */
-    @PostMapping
-    @RequestMapping(value = "/emailVerificationCode", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/emailVerificationCode", consumes = "application/json", produces = "application/json")
     ResponseEntity<EmailVerificationCodeResponseDto> emailVerificationCode(@Valid @RequestBody EmailVerificationCodeRequestDto request) throws MemberAlreadyExistException, MessagingException, MailException {
-        return authService.emailVerificationCode(request.getEmail());
+        return new ResponseEntity<>(authService.emailVerificationCode(request.getEmail()), HttpStatus.ACCEPTED);
     }
 
     /**
@@ -39,10 +42,9 @@ public class AuthController {
      * @throws InvalidVerificationCodeException - In case invalid verification code. (AUTH_003)
      * @throws ExpiredVerificationCodeException - In case expired verification code. (AUTH_004)
      */
-    @PostMapping
-    @RequestMapping(value = "/confirmVerificationCode", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/confirmVerificationCode", consumes = "application/json", produces = "application/json")
     ResponseEntity<ConfirmVerificationCodeResponseDto> confirmVerificationCode(@Valid @RequestBody ConfirmVerificationCodeRequestDto request) throws InvalidVerificationCodeException, InvalidEmailException, ExpiredVerificationCodeException {
-        return authService.confirmVerificationCode(request);
+        return new ResponseEntity<>(authService.confirmVerificationCode(request), HttpStatus.OK);
     }
 
     /**
@@ -65,8 +67,8 @@ public class AuthController {
      * @throws InvalidPasswordException - In case of invalid email. (AUTH_006)
      */
     @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request) throws MemberNotExistException, InvalidPasswordException {
-        return authService.login(request);
+    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request) throws MemberNotExistException, BadCredentialsException {
+        return new ResponseEntity<>(authService.login(request), HttpStatus.OK);
     }
 
     @GetMapping(value = "/verifyAccessToken")
@@ -74,7 +76,7 @@ public class AuthController {
         VerifyAccessTokenResponse response = VerifyAccessTokenResponse.builder()
                 .message("verified")
                 .build();
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /**
@@ -85,11 +87,11 @@ public class AuthController {
      */
     @PostMapping(value = "/reissueToken", consumes = "application/json", produces = "application/json")
     public ResponseEntity<ReissueTokenResponseDto> reissueToken(@Valid @RequestBody ReissueTokenRequestDto request) throws InvalidRefreshTokenException, ExpiredRefreshTokenException, MemberNotExistException {
-        return authService.reissueToken(request);
+        return new ResponseEntity<>(authService.reissueToken(request), HttpStatus.OK);
     }
 
     @PostMapping(value = "/logout")
     public ResponseEntity<LogoutResponseDto> logout(@Valid @RequestHeader(value = "Authorization", required = true) String authHeader) throws InvalidAccessTokenException, ExpiredAccessTokenException, BearerNotIncludedException {
-        return authService.logout(authHeader);
+        return new ResponseEntity<>(authService.logout(authHeader), HttpStatus.OK);
     }
 }

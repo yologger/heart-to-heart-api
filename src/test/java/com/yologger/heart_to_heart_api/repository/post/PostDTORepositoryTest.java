@@ -21,7 +21,7 @@ import static com.google.common.truth.Truth.assertThat;
 @DataJpaTest
 @DisplayName("PostRepository 테스트")
 @Import(PostRepositoryTestConfig.class)
-class PostRepositoryTest {
+class PostDTORepositoryTest {
 
     @Autowired
     private PostRepository postRepository;

@@ -44,7 +44,9 @@ public class AccessTokenProvider {
     }
 
     public void validateToken(String token) {
-        Jwts.parser().setSigningKey(secret.getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token);
+        Jwts.parser()
+                .setSigningKey(secret.getBytes(StandardCharsets.UTF_8))
+                .parseClaimsJws(token);
     }
 
     public Authentication getAuthentication(String token) {
