@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class Member {
+public class MemberDTO {
     @JsonProperty("id") private Long id;
     @JsonProperty("email") private String email;
     @JsonProperty("nickname") private String nickname;

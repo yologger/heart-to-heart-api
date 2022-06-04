@@ -14,5 +14,5 @@ import java.util.List;
 @NoArgsConstructor
 public class GetBlockingMembersResponseDTO {
     @JsonProperty("size") private Integer size;
-    @JsonProperty("members") private List<Member> members;
+    @JsonProperty("members") private List<MemberDTO> memberDTOS;
 }

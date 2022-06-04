@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 
 @Builder
-public class ReissueTokenResponseDto {
+public class ReissueTokenResponseDTO {
     @JsonProperty("member_id") private Long memberId;
     @JsonProperty("access_token") private String accessToken;
     @JsonProperty("refresh_token") private String refreshToken;

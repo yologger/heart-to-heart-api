@@ -95,7 +95,7 @@ public class MemberService {
     @Transactional
     public ResponseEntity<GetBlockingMembersResponseDTO> getBlockingMember(Long memberId) throws InvalidMemberIdException {
         MemberEntity member = memberRepository.findById(memberId).orElseThrow(() -> new InvalidMemberIdException("Invalid 'member_id'"));
-        List<Member> blockingMembers = member.getBlocking().stream().map((blockEntity) -> Member.builder()
+        List<MemberDTO> blockingMemberDTOS = member.getBlocking().stream().map((blockEntity) -> MemberDTO.builder()
                 .id(blockEntity.getBlocking().getId())
                 .email(blockEntity.getBlocking().getEmail())
                 .name(blockEntity.getBlocking().getName())
@@ -104,8 +104,8 @@ public class MemberService {
                 .build()).collect(Collectors.toList());
 
         GetBlockingMembersResponseDTO response = GetBlockingMembersResponseDTO.builder()
-                .size(blockingMembers.size())
-                .members(blockingMembers)
+                .size(blockingMemberDTOS.size())
+                .memberDTOS(blockingMemberDTOS)
                 .build();
 
         return ResponseEntity.ok(response);

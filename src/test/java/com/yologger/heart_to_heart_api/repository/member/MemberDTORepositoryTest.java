@@ -17,7 +17,7 @@ import static com.google.common.truth.Truth.assertThat;
 @DataJpaTest
 @DisplayName("MemberRepository 테스트")
 @Import(MemberRepositoryTestConfig.class)
-class MemberRepositoryTest {
+class MemberDTORepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;

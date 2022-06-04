@@ -6,10 +6,10 @@ import com.yologger.heart_to_heart_api.controller.auth.exception.MemberNotExistE
 import com.yologger.heart_to_heart_api.repository.member.AuthorityType;
 import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
-import com.yologger.heart_to_heart_api.service.auth.model.JoinRequestDto;
-import com.yologger.heart_to_heart_api.service.auth.model.JoinResponseDto;
-import com.yologger.heart_to_heart_api.service.auth.model.LoginRequestDto;
-import com.yologger.heart_to_heart_api.service.auth.model.LoginResponseDto;
+import com.yologger.heart_to_heart_api.service.auth.model.JoinRequestDTO;
+import com.yologger.heart_to_heart_api.service.auth.model.JoinResponseDTO;
+import com.yologger.heart_to_heart_api.service.auth.model.LoginRequestDTO;
+import com.yologger.heart_to_heart_api.service.auth.model.LoginResponseDTO;
 import io.findify.s3mock.S3Mock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -69,7 +69,7 @@ public class AuthServiceTest {
 
             memberRepository.save(member);
 
-            JoinRequestDto request = JoinRequestDto.builder()
+            JoinRequestDTO request = JoinRequestDTO.builder()
                     .email("ronaldo@gmail.com")
                     .name("Cristiano Ronaldo")
                     .nickname("CR7")
@@ -91,7 +91,7 @@ public class AuthServiceTest {
             String nickname = "CR7";
             String password = "4321Fdsa@!";
 
-            JoinRequestDto request = JoinRequestDto.builder()
+            JoinRequestDTO request = JoinRequestDTO.builder()
                     .email(dummyEmail)
                     .name(name)
                     .nickname(nickname)
@@ -99,7 +99,7 @@ public class AuthServiceTest {
                     .build();
 
             assertThatNoException().isThrownBy(() -> {
-                JoinResponseDto response = authService.join(request);
+                JoinResponseDTO response = authService.join(request);
                 assertThat(response.getMemberId()).isNotNull();
             });
         }
@@ -114,7 +114,7 @@ public class AuthServiceTest {
             String dummyEmail = "ronaldo@gmail.com";
             String dummyPassword = "4321Fdsa@!";
 
-            LoginRequestDto request = LoginRequestDto.builder()
+            LoginRequestDTO request = LoginRequestDTO.builder()
                     .email(dummyEmail)
                     .password(dummyPassword)
                     .build();
@@ -145,7 +145,7 @@ public class AuthServiceTest {
 
             String wrongPassword = "1234Fdsa@!";
 
-            LoginRequestDto request = LoginRequestDto.builder()
+            LoginRequestDTO request = LoginRequestDTO.builder()
                     .email(dummyEmail)
                     .password(wrongPassword)
                     .build();
@@ -175,13 +175,13 @@ public class AuthServiceTest {
 
             memberRepository.save(member);
 
-            LoginRequestDto request = LoginRequestDto.builder()
+            LoginRequestDTO request = LoginRequestDTO.builder()
                     .email(dummyEmail)
                     .password(dummyPassword)
                     .build();
 
             assertThatNoException().isThrownBy(() -> {
-                LoginResponseDto response = authService.login(request);
+                LoginResponseDTO response = authService.login(request);
                 assertThat(response.getAccessToken()).isNotBlank();
                 assertThat(response.getRefreshToken()).isNotBlank();
             });

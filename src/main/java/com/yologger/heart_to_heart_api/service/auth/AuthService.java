@@ -46,7 +46,7 @@ public class AuthService {
     private final VerificationCodeRepository verificationCodeRepository;
     private final AuthenticationManager authenticationManager;
     @Transactional
-    public EmailVerificationCodeResponseDto emailVerificationCode(String email) throws MemberAlreadyExistException, MessagingException, MailAuthenticationException, MailSendException, MailException {
+    public EmailVerificationCodeResponseDTO emailVerificationCode(String email) throws MemberAlreadyExistException, MessagingException, MailAuthenticationException, MailSendException, MailException {
 
         if (emailAlreadyExist(email)) {
             throw new MemberAlreadyExistException("Member Already Exists.");
@@ -77,7 +77,7 @@ public class AuthService {
 
             mailUtil.sendEmail(title, content.toString(), email);
 
-            EmailVerificationCodeResponseDto response = EmailVerificationCodeResponseDto.builder()
+            EmailVerificationCodeResponseDTO response = EmailVerificationCodeResponseDTO.builder()
                     .message("Email sent.")
                     .build();
 
@@ -85,7 +85,7 @@ public class AuthService {
         }
     }
 
-    public ConfirmVerificationCodeResponseDto confirmVerificationCode(@NotNull ConfirmVerificationCodeRequestDto request) throws InvalidEmailException, InvalidVerificationCodeException, ExpiredVerificationCodeException {
+    public ConfirmVerificationCodeResponseDTO confirmVerificationCode(@NotNull ConfirmVerificationCodeRequestDTO request) throws InvalidEmailException, InvalidVerificationCodeException, ExpiredVerificationCodeException {
         Optional<VerificationCodeEntity> result = verificationCodeRepository.findByEmail(request.getEmail());
         if (!result.isPresent()) {
             throw new InvalidEmailException("Invalid Email.");
@@ -94,7 +94,7 @@ public class AuthService {
                 if (result.get().getUpdatedAt().plusMinutes(5).isBefore(LocalDateTime.now())) {
                     throw new ExpiredVerificationCodeException("Expired Verification code");
                 } else {
-                    ConfirmVerificationCodeResponseDto response = ConfirmVerificationCodeResponseDto.builder()
+                    ConfirmVerificationCodeResponseDTO response = ConfirmVerificationCodeResponseDTO.builder()
                             .message("Valid Verification Code.")
                             .build();
                     return response;
@@ -136,7 +136,7 @@ public class AuthService {
     }
 
     @Transactional
-    public JoinResponseDto join(JoinRequestDto request) throws MemberAlreadyExistException {
+    public JoinResponseDTO join(JoinRequestDTO request) throws MemberAlreadyExistException {
 
         // Check If User already exists.
         Optional<MemberEntity> result = memberRepository.findOneByEmail(request.getEmail());
@@ -153,7 +153,7 @@ public class AuthService {
 
         MemberEntity created = memberRepository.save(newMember);
 
-        JoinResponseDto response = JoinResponseDto.builder()
+        JoinResponseDTO response = JoinResponseDTO.builder()
                 .memberId(created.getId())
                 .build();
 
@@ -161,7 +161,7 @@ public class AuthService {
     }
 
     @Transactional
-    public LoginResponseDto login(LoginRequestDto request) throws MemberNotExistException, BadCredentialsException {
+    public LoginResponseDTO login(LoginRequestDTO request) throws MemberNotExistException, BadCredentialsException {
 
         MemberEntity member = memberRepository.findOneByEmail(request.getEmail())
                 .orElseThrow(() -> new MemberNotExistException("Member does not exist."));
@@ -180,7 +180,7 @@ public class AuthService {
         member.setAccessToken(accessToken);
         member.setRefreshToken(refreshToken);
 
-        LoginResponseDto response = LoginResponseDto.builder()
+        LoginResponseDTO response = LoginResponseDTO.builder()
                 .memberId(member.getId())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
@@ -192,16 +192,14 @@ public class AuthService {
     }
 
     @Transactional
-    public ReissueTokenResponseDto reissueToken(ReissueTokenRequestDto request) throws ExpiredRefreshTokenException, InvalidRefreshTokenException, MemberNotExistException {
+    public ReissueTokenResponseDTO reissueToken(ReissueTokenRequestDTO request) throws ExpiredRefreshTokenException, InvalidRefreshTokenException {
+
         // Compare with ex-refresh token
-        Optional<MemberEntity> result = memberRepository.findById(request.getMemberId());
-        if (!result.isPresent()) {
-            log.info("Reissuing token fails.");
-            throw new InvalidRefreshTokenException("Member does not exist");
-            // throw new MemberNotExistException("Member does not exist");
-        }
-        if (!(result.get().getRefreshToken().equals(request.getRefreshToken()))) {
-            log.info("Reissuing token fails.");
+        MemberEntity member = memberRepository.findById(request.getMemberId())
+                .orElseThrow(() -> new InvalidRefreshTokenException("Member does not exist"));
+
+        if (!(member.getRefreshToken().equals(request.getRefreshToken()))) {
+            log.info("잘못된 REFRESH TOKEN 토큰입니다.");
             throw new InvalidRefreshTokenException("Invalid refresh token");
         }
 
@@ -209,17 +207,16 @@ public class AuthService {
             // Verify refresh token
             refreshTokenProvider.validateToken(request.getRefreshToken());
             Authentication authentication = refreshTokenProvider.getAuthentication(request.getRefreshToken());
+            log.info("유효한 REFRESH TOKEN 입니다. 토큰이 새로 발행됩니다.");
 
             // Reissue access token, refresh token
             String newAccessToken = accessTokenProvider.createToken(authentication);
             String newRefreshToken = refreshTokenProvider.createToken(authentication);
 
-            MemberEntity member = result.get();
-
             member.setAccessToken(newAccessToken);
             member.setRefreshToken(newRefreshToken);
 
-            ReissueTokenResponseDto response = ReissueTokenResponseDto.builder()
+            return ReissueTokenResponseDTO.builder()
                     .accessToken(newAccessToken)
                     .refreshToken(newRefreshToken)
                     .name(member.getName())
@@ -228,39 +225,29 @@ public class AuthService {
                     .email(member.getEmail())
                     .build();
 
-            return response;
-
         } catch (ExpiredJwtException e) {
-            log.debug("Reissuing token fails.");
+            log.info("만료된 REFRESH TOKEN 토큰입니다.");
             throw new ExpiredRefreshTokenException("Expired refresh token");
         } catch (Exception e) {
-            log.debug("Reissuing token fails.");
+            log.info("잘못된 REFRESH TOKEN 토큰입니다.");
             throw new InvalidRefreshTokenException("Invalid refresh token");
         }
     }
 
     @Transactional
-    public LogoutResponseDto logout(String authHeader) throws BearerNotIncludedException, ExpiredAccessTokenException, InvalidAccessTokenException {
-        if (!authHeader.startsWith("Bearer")) {
-            throw new BearerNotIncludedException("Authorization does not include 'bearer'.");
-        } else {
-            try {
-                String accessToken = authHeader.substring(7);
-                accessTokenProvider.validateToken(accessToken);
-                Authentication authentication = accessTokenProvider.getAuthentication(accessToken);
-                User user = (User)authentication.getPrincipal();
-                String email = user.getUsername();
-                MemberEntity member = memberRepository.findOneByEmail(email)
-                        .orElseThrow(() -> new InvalidAccessTokenException("Invalid access token."));
-                member.clearAccessToken();
-                member.clearRefreshToken();
-                LogoutResponseDto response = LogoutResponseDto.builder().message("Logged out ").build();
-                return response;
-            } catch (ExpiredJwtException e) {
-                throw new ExpiredAccessTokenException("Expired access token");
-            } catch (Exception e) {
-                throw new InvalidAccessTokenException("Invalid refresh token.");
-            }
-        }
+    public LogoutResponseDTO logout(String authHeader) throws InvalidAccessTokenException {
+        String accessToken = authHeader.substring(7);
+        accessTokenProvider.validateToken(accessToken);
+        Authentication authentication = accessTokenProvider.getAuthentication(accessToken);
+        User user = (User)authentication.getPrincipal();
+        String email = user.getUsername();
+        MemberEntity member = memberRepository.findOneByEmail(email)
+                .orElseThrow(() -> new InvalidAccessTokenException("Invalid access token."));
+        member.clearAccessToken();
+        member.clearRefreshToken();
+        log.info("로그아웃 합니다.");
+        return LogoutResponseDTO.builder()
+                .message("Logged out ")
+                .build();
     }
 }
