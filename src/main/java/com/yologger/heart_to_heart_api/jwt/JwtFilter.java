@@ -37,23 +37,22 @@ public class JwtFilter extends OncePerRequestFilter {
                 accessTokenProvider.validateToken(jwt);
                 Authentication authentication = accessTokenProvider.getAuthentication(jwt);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.debug("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
+                log.info("유효한 ACCESS TOKEN 입니다. SecurityContext에 '{}' 인증 정보를 저장합니다, uri: {}", authentication.getName(), requestURI);
             } catch (ExpiredJwtException e) {
-                log.info("만료된 JWT 토큰입니다.");
+                log.info("만료된 ACCESS TOKEN 토큰입니다.");
                 response.setStatus(GlobalErrorCode.EXPIRED_ACCESS_TOKEN.getStatus());
                 response.setContentType("application/json;charset=utf-8");
                 JSONObject body = new JSONObject();
                 body.put("status", GlobalErrorCode.EXPIRED_ACCESS_TOKEN.getStatus());
                 body.put("code", GlobalErrorCode.EXPIRED_ACCESS_TOKEN.getCode());
-                body.put("message", GlobalErrorCode.EXPIRED_ACCESS_TOKEN.getMessage());
-                log.info("INVALID ACCESS TOKEN: " + GlobalErrorCode.EXPIRED_ACCESS_TOKEN.getMessage());
+                body.put("message", GlobalErrorCode.EXPIRED_ACCESS_TOKEN.getMessage());;
                 response.getWriter().print(body);
                 return;
             } catch (Exception e) {
-                log.info("잘못된 JWT 토큰입니다.");
+                log.info("잘못된 ACCESS TOKEN 토큰입니다.");
             }
         } else {
-            log.debug("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
+            log.info("'Authorization' 헤더에 유효한 ACCESS TOKEN 토큰이 없습니다, uri: {}", requestURI);
         }
         filterChain.doFilter(request, response);
     }

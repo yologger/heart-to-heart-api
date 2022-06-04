@@ -4,6 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 
 @Builder
-public class EmailVerificationCodeResponseDto {
+public class EmailVerificationCodeResponseDTO {
     @JsonProperty("message") private String message;
 }

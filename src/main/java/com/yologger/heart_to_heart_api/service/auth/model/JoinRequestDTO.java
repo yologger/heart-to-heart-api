@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
@@ -14,14 +14,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Builder
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @ApiModel(
         value = "회원가입요청 모델",
         description = "email, name, nickname, password를 포함하는 회원가입요청 모델"
 )
-public class JoinRequestDto {
+public class JoinRequestDTO {
 
     @NotBlank(message = "email must not be empty.")
     @Email(message = "email must be in email format.")
@@ -45,7 +45,7 @@ public class JoinRequestDto {
             message = "'password must contain at least one uppercase letter, lowercase letter, and special character, and can have a minimum of 8 characters and a maximum of 20 characters."
     )
     @JsonProperty(value = "password")
-    @ApiModelProperty(value = "패스워드", example = "4321Fdsa12!", notes = "'password must contain at least one uppercase letter, lowercase letter, and special character, and can have a minimum of 8 characters and a maximum of 20 characters.")
+    @ApiModelProperty(value = "패스워드", example = "1234Qwer56!", notes = "'password must contain at least one uppercase letter, lowercase letter, and special character, and can have a minimum of 8 characters and a maximum of 20 characters.")
     private String password;
 
     public MemberEntity toEntity() {

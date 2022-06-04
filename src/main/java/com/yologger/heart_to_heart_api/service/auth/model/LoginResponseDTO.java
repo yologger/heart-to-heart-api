@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Builder
-public class LoginResponseDto {
+public class LoginResponseDTO {
     @JsonProperty("member_id") private Long memberId;
     @Getter @JsonProperty("access_token") private String accessToken;
     @Getter @JsonProperty("refresh_token") private String refreshToken;

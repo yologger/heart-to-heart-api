@@ -3,23 +3,19 @@ package com.yologger.heart_to_heart_api.service.auth.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Builder
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReissueTokenRequestDto {
-
-    @JsonProperty(value = "member_id")
-    @NotNull(message = "email must not be empty.")
-    private Long memberId;
-
-    @JsonProperty(value = "refresh_token")
+@Getter
+public class EmailVerificationCodeRequestDTO {
     @NotBlank(message = "email must not be empty.")
-    private String refreshToken;
+    @Email(message = "email must be in email format.")
+    @JsonProperty(value = "email")
+    private String email;
 }
