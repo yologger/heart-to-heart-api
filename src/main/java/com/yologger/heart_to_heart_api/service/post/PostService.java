@@ -115,7 +115,7 @@ public class PostService {
         }
     }
 
-    public GetPostsResponseDTO getAllPosts(Long memberId, Integer page, Integer size) throws NoPostsExistException {
+    public GetPostsResponseDTO getAllPosts(Long memberId, Integer page, Integer size) {
 
         List<PostEntity> postEntities = postRepository.findAllPostsOrderByCreatedAtDescExceptBlocking(memberId, page, size);
 

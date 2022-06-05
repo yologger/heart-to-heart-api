@@ -10,6 +10,7 @@ import com.yologger.heart_to_heart_api.service.post.model.ReportRequestDTO;
 import com.yologger.heart_to_heart_api.service.post.model.ReportResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,31 +38,31 @@ public class MemberController {
                 .file(file)
                 .build();
 
-        return memberService.uploadAvatar(request);
+        return new ResponseEntity<>(memberService.uploadAvatar(request), HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/block")
     public ResponseEntity<BlockMemberResponseDTO> blockMember(@Valid @RequestBody BlockMemberRequestDTO request) throws InvalidMemberIdException, DataIntegrityViolationException {
-        return memberService.block(request);
+        return new ResponseEntity<>(memberService.block(request), HttpStatus.OK);
     }
 
     @PostMapping(value = "/unblock")
     public ResponseEntity<UnblockMemberResponseDTO> unblockMember(@Valid @RequestBody UnblockMemberRequestDTO request) throws InvalidMemberIdException {
-        return memberService.unblock(request);
+        return new ResponseEntity<>(memberService.unblock(request), HttpStatus.OK);
     }
 
     @GetMapping(value = "/getBlockingMembers")
     public ResponseEntity<GetBlockingMembersResponseDTO> getBlockingMembers(
             @Valid @NotNull @RequestParam(value = "member_id", required = true) Long memberId
     ) throws InvalidMemberIdException {
-        return memberService.getBlockingMember(memberId);
+        return new ResponseEntity<>(memberService.getBlockingMember(memberId), HttpStatus.OK);
     }
 
     @GetMapping(value = "/profile")
     public ResponseEntity<GetMemberInfoResponseDTO> getProfile(
             @Valid @NotNull @RequestParam(value = "member_id", required = true) Long memberId
     ) throws InvalidMemberIdException {
-        return memberService.getMemberInfo(memberId);
+        return new ResponseEntity<>(memberService.getMemberInfo(memberId), HttpStatus.OK);
     }
 
     @PostMapping(value = "/report")
@@ -75,6 +76,6 @@ public class MemberController {
 
     @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<DeleteAccountResponseDTO> deleteMember(@Valid @NotNull @PathVariable Long id) throws InvalidMemberIdException, AwsS3Exception {
-        return memberService.deleteAccount(id);
+        return new ResponseEntity<>(memberService.deleteAccount(id), HttpStatus.NO_CONTENT);
     }
 }
