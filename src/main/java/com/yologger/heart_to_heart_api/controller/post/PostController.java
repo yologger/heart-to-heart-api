@@ -35,7 +35,7 @@ public class PostController {
                 .memberId(memberId)
                 .content(content)
                 .build();
-        return ResponseEntity.created(null).body(postService.registerPost(request));
+        return new ResponseEntity<>(postService.registerPost(request), HttpStatus.CREATED);
     }
 
     @GetMapping("/posts")

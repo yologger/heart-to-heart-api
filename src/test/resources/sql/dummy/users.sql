@@ -1,0 +1,3 @@
+INSERT INTO member(id, email, name, nickname, password, authority) VALUES(0, 'ronaldo@gmail.com', 'Cristiano Ronaldo', 'CR7', 1234, 'USER');
+INSERT INTO member(id, email, name, nickname, password, authority) VALUES(1, 'messi@gmail.com', 'Leonel Messi', 'MESSI10', 1234, 'USER');
+INSERT INTO member(id, email, name, nickname, password, authority) VALUES(2, 'son@gmail.com', 'Heung-min Son', 'sonny7', 1234, 'USER');

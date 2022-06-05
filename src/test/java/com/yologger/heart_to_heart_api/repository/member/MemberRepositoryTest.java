@@ -7,8 +7,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,13 +15,10 @@ import static com.google.common.truth.Truth.assertThat;
 @DataJpaTest
 @DisplayName("MemberRepository 테스트")
 @Import(MemberRepositoryTestConfig.class)
-class MemberDTORepositoryTest {
+class MemberRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Test
     @DisplayName("사용자 추가 테스트")
@@ -52,7 +47,7 @@ class MemberDTORepositoryTest {
 
     @Test
     @DisplayName("사용자 조회 테스트")
-    @Sql(scripts = {"classpath:sql/dummy_users.sql"})
+    @Sql(scripts = {"classpath:sql/dummy/users.sql"})
     public void test_queryMembers() {
         List<MemberEntity> members = memberRepository.findAll();
         assertThat(members.size()).isEqualTo(3);
