@@ -10,6 +10,7 @@ import com.yologger.heart_to_heart_api.service.post.model.RegisterPostResponseDT
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,6 +40,7 @@ public class PostController {
     }
 
     @GetMapping("/posts")
+    @PreAuthorize("hasAnyAuthority('USER')")
     public ResponseEntity<GetPostsResponseDTO> getAllPosts(
             @Valid @NotNull @RequestParam(value = "member_id", required = true) Long memberId,
             @Valid @NotNull @RequestParam(value = "page", required = true) Integer page,
