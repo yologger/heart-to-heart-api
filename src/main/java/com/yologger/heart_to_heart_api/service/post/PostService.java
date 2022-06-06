@@ -142,7 +142,7 @@ public class PostService {
 
         GetPostsResponseDTO response = GetPostsResponseDTO.builder()
                 .size(postDTOS.size())
-                .postDTOS(postDTOS)
+                .posts(postDTOS)
                 .build();
 
         return response;
@@ -152,7 +152,7 @@ public class PostService {
 
         List<PostEntity> postEntities = postRepository.findAllByWriterId(memberId, page, size);
 
-        List<PostDTO> postDTOS = new ArrayList<PostDTO>();
+        List<PostDTO> postDTOs = new ArrayList<PostDTO>();
 
         for (PostEntity postEntity: postEntities) {
             List<String> postImageUris = new ArrayList<String>();
@@ -170,12 +170,12 @@ public class PostService {
                     .createdAt(postEntity.getCreatedAt())
                     .updatedAt(postEntity.getUpdatedAt())
                     .build();
-            postDTOS.add(postDTO);
+            postDTOs.add(postDTO);
         }
 
         GetPostsResponseDTO response = GetPostsResponseDTO.builder()
-                .size(postDTOS.size())
-                .postDTOS(postDTOS)
+                .size(postDTOs.size())
+                .posts(postDTOs)
                 .build();
 
         return response;

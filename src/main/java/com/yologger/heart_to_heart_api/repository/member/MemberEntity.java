@@ -63,7 +63,8 @@ public class MemberEntity extends BaseEntity {
     private List<FollowEntity> followedBy = new ArrayList<>();
 
     @Builder
-    public MemberEntity(String email, String name, String nickname, String password, AuthorityType authority) {
+    public MemberEntity(Long id, String email, String name, String nickname, String password, AuthorityType authority) {
+        this.id = id;
         this.email = email;
         this.name = name;
         this.nickname = nickname;
