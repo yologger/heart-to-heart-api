@@ -26,32 +26,27 @@ public class AuthController {
 
     private final AuthService authService;
 
-    /**
-     * Email verification code.
-     * @throws MemberAlreadyExistException - In case member already exists. (AUTH_000)
-     * @throws MessagingException - In case an error has occurred in gmail system. (AUTH_001)
-     * @throws MailException - In case an error has occurred in gmail system. (AUTH_001)
-     */
+    @ApiOperation(value = "이메일 인증코드 전송")
+    @ApiResponses({
+            @ApiResponse(code = 202, message = "이메일 인증코드 전송 성공"),
+            @ApiResponse(code = 400, message = "중복된 이메일")
+    })
     @PostMapping(value = "/emailVerificationCode", consumes = "application/json", produces = "application/json")
     ResponseEntity<EmailVerificationCodeResponseDTO> emailVerificationCode(@Valid @RequestBody EmailVerificationCodeRequestDTO request) throws MemberAlreadyExistException, MessagingException, MailException {
         return new ResponseEntity<>(authService.emailVerificationCode(request.getEmail()), HttpStatus.ACCEPTED);
     }
 
-    /**
-     * Confirm verification code.
-     * @throws InvalidEmailException - In case expired verification code. (AUTH_002)
-     * @throws InvalidVerificationCodeException - In case invalid verification code. (AUTH_003)
-     * @throws ExpiredVerificationCodeException - In case expired verification code. (AUTH_004)
-     */
+    @ApiOperation(value = "이메일 인증코드 확인")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "이메일 인증 성공"),
+            @ApiResponse(code = 400, message = "잘못된 이메일"),
+            @ApiResponse(code = 401, message = "잘못되거나 만료된 인증 코드")
+    })
     @PostMapping(value = "/confirmVerificationCode", consumes = "application/json", produces = "application/json")
     ResponseEntity<ConfirmVerificationCodeResponseDTO> confirmVerificationCode(@Valid @RequestBody ConfirmVerificationCodeRequestDTO request) throws InvalidVerificationCodeException, InvalidEmailException, ExpiredVerificationCodeException {
         return new ResponseEntity<>(authService.confirmVerificationCode(request), HttpStatus.OK);
     }
 
-    /**
-     * Join.
-     * @throws MemberAlreadyExistException - In case given email already exists. (AUTH_000)
-     */
     @ApiOperation(value = "회원가입")
     @ApiResponses({
             @ApiResponse(code = 201, message = "회원 가입 실패"),
@@ -62,11 +57,6 @@ public class AuthController {
         return new ResponseEntity<>(authService.join(request), HttpStatus.CREATED);
     }
 
-    /**
-     * Log in.
-     * @throws MemberNotExistException - In case member already exists. (AUTH_005)
-     * @throws InvalidPasswordException - In case of invalid email. (AUTH_006)
-     */
     @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
     public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) throws MemberNotExistException, BadCredentialsException {
         return new ResponseEntity<>(authService.login(request), HttpStatus.OK);
@@ -80,12 +70,6 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    /**
-     * Reissue access token, refresh token.
-     * @throws InvalidRefreshTokenException - In case invalid refresh token (AUTH_007)
-     * @throws ExpiredRefreshTokenException - In case expired refresh token (AUTH_008)
-     * @throws MemberNotExistException - In case invalid refresh token (AUTH_005)
-     */
     @PostMapping(value = "/reissueToken", consumes = "application/json", produces = "application/json")
     public ResponseEntity<ReissueTokenResponseDTO> reissueToken(@Valid @RequestBody ReissueTokenRequestDTO request) throws InvalidRefreshTokenException, ExpiredRefreshTokenException, MemberNotExistException {
         return new ResponseEntity<>(authService.reissueToken(request), HttpStatus.OK);
