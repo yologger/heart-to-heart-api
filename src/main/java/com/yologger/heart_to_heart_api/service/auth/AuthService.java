@@ -45,6 +45,13 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final VerificationCodeRepository verificationCodeRepository;
     private final AuthenticationManager authenticationManager;
+
+    /**
+     * Email verification code.
+     * @throws MemberAlreadyExistException - In case member already exists. (AUTH_000)
+     * @throws MessagingException - In case an error has occurred in gmail system. (AUTH_001)
+     * @throws MailException - In case an error has occurred in gmail system. (AUTH_001)
+     */
     @Transactional
     public EmailVerificationCodeResponseDTO emailVerificationCode(String email) throws MemberAlreadyExistException, MessagingException, MailAuthenticationException, MailSendException, MailException {
 
@@ -85,6 +92,12 @@ public class AuthService {
         }
     }
 
+    /**
+     * Confirm verification code.
+     * @throws InvalidEmailException - In case expired verification code. (AUTH_002)
+     * @throws InvalidVerificationCodeException - In case invalid verification code. (AUTH_003)
+     * @throws ExpiredVerificationCodeException - In case expired verification code. (AUTH_004)
+     */
     public ConfirmVerificationCodeResponseDTO confirmVerificationCode(@NotNull ConfirmVerificationCodeRequestDTO request) throws InvalidEmailException, InvalidVerificationCodeException, ExpiredVerificationCodeException {
         Optional<VerificationCodeEntity> result = verificationCodeRepository.findByEmail(request.getEmail());
         if (!result.isPresent()) {
@@ -135,6 +148,10 @@ public class AuthService {
         return key.toString();
     }
 
+    /**
+     * Join.
+     * @throws MemberAlreadyExistException - In case given email already exists. (AUTH_000)
+     */
     @Transactional
     public JoinResponseDTO join(JoinRequestDTO request) throws MemberAlreadyExistException {
 
@@ -160,6 +177,11 @@ public class AuthService {
         return response;
     }
 
+    /**
+     * Log in.
+     * @throws MemberNotExistException - In case member already exists. (AUTH_005)
+     * @throws InvalidPasswordException - In case of invalid email. (AUTH_006)
+     */
     @Transactional
     public LoginResponseDTO login(LoginRequestDTO request) throws MemberNotExistException, BadCredentialsException {
 
@@ -191,6 +213,12 @@ public class AuthService {
         return response;
     }
 
+    /**
+     * Reissue access token, refresh token.
+     * @throws InvalidRefreshTokenException - In case invalid refresh token (AUTH_007)
+     * @throws ExpiredRefreshTokenException - In case expired refresh token (AUTH_008)
+     * @throws MemberNotExistException - In case invalid refresh token (AUTH_005)
+     */
     @Transactional
     public ReissueTokenResponseDTO reissueToken(ReissueTokenRequestDTO request) throws ExpiredRefreshTokenException, InvalidRefreshTokenException {
 
