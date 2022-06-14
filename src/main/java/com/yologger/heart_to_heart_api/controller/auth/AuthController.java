@@ -57,6 +57,7 @@ public class AuthController {
         return new ResponseEntity<>(authService.join(request), HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "로그인")
     @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
     public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) throws MemberNotExistException, BadCredentialsException {
         return new ResponseEntity<>(authService.login(request), HttpStatus.OK);
