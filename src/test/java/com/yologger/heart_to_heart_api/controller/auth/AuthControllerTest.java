@@ -2,8 +2,10 @@ package com.yologger.heart_to_heart_api.controller.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yologger.heart_to_heart_api.config.SecurityConfig;
+import com.yologger.heart_to_heart_api.controller.auth.exception.InvalidRefreshTokenException;
 import com.yologger.heart_to_heart_api.controller.auth.exception.MemberAlreadyExistException;
 import com.yologger.heart_to_heart_api.controller.auth.exception.MemberNotExistException;
+import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
 import com.yologger.heart_to_heart_api.service.auth.AuthService;
 import com.yologger.heart_to_heart_api.service.auth.model.JoinResponseDTO;
 import com.yologger.heart_to_heart_api.service.auth.model.LoginResponseDTO;
@@ -46,6 +48,9 @@ class AuthControllerTest {
 
     @MockBean
     private AuthService mockAuthService;
+
+    @MockBean
+    private MemberRepository memberRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -210,6 +215,32 @@ class AuthControllerTest {
                     .andExpect(jsonPath("$.nickname", is(mockNickname)))
                     .andExpect(jsonPath("$.access_token").exists())
                     .andExpect(jsonPath("$.refresh_token").exists())
+                    .andDo(print());
+        }
+    }
+
+    @Nested
+    @DisplayName("토큰 갱신 테스트")
+    class ReissueTokenTest {
+        @Test
+        @DisplayName("실패 - 사용자가 존재하지 않을 때")
+        public void reissueTokenFailure_whenUserNotExist() throws Exception {
+            when(mockAuthService.reissueToken(any()))
+                    .thenThrow(InvalidRefreshTokenException.class);
+
+            String dummyMemberId = "1";
+            String dummyRefreshToken = "2131233h23kj12h3kjhkjdksaksjh2k31!";
+
+            Map<String, String> body = new HashMap<>();
+            body.put("member_id", dummyMemberId);
+            body.put("refresh_token", dummyRefreshToken);
+
+            mvc.perform(MockMvcRequestBuilders.post("/auth/reissueToken")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(body))
+                    )
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.code", is("AUTH_007")))
                     .andDo(print());
         }
     }

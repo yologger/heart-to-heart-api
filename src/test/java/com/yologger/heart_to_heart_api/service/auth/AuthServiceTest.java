@@ -1,15 +1,13 @@
 package com.yologger.heart_to_heart_api.service.auth;
 
 import com.yologger.heart_to_heart_api.config.TestAwsS3Config;
+import com.yologger.heart_to_heart_api.controller.auth.exception.InvalidRefreshTokenException;
 import com.yologger.heart_to_heart_api.controller.auth.exception.MemberAlreadyExistException;
 import com.yologger.heart_to_heart_api.controller.auth.exception.MemberNotExistException;
 import com.yologger.heart_to_heart_api.repository.member.AuthorityType;
 import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import com.yologger.heart_to_heart_api.repository.member.MemberRepository;
-import com.yologger.heart_to_heart_api.service.auth.model.JoinRequestDTO;
-import com.yologger.heart_to_heart_api.service.auth.model.JoinResponseDTO;
-import com.yologger.heart_to_heart_api.service.auth.model.LoginRequestDTO;
-import com.yologger.heart_to_heart_api.service.auth.model.LoginResponseDTO;
+import com.yologger.heart_to_heart_api.service.auth.model.*;
 import io.findify.s3mock.S3Mock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -60,7 +58,6 @@ public class AuthServiceTest {
 
             // Given
             MemberEntity member = MemberEntity.builder()
-                    .email("ronaldo@gmail.com")
                     .email("ronaldo@gmail.com")
                     .name("Cristiano Ronaldo")
                     .nickname("CR7")
@@ -184,6 +181,63 @@ public class AuthServiceTest {
                 LoginResponseDTO response = authService.login(request);
                 assertThat(response.getAccessToken()).isNotBlank();
                 assertThat(response.getRefreshToken()).isNotBlank();
+            });
+        }
+    }
+
+    @Nested
+    @DisplayName("토큰 갱신 테스트")
+    class ReissueTokenTest {
+        @Test
+        @DisplayName("실패 - 사용자가 존재하지 않을 때")
+        public void reissueTokenFail_whenUserNotExist() {
+            ReissueTokenRequestDTO request = ReissueTokenRequestDTO.builder()
+                    .memberId(1L)
+                    .refreshToken("dummy_refresh_token")
+                    .build();
+
+            assertThatThrownBy(() -> {
+                authService.reissueToken(request);
+            }).isInstanceOf(InvalidRefreshTokenException.class);
+        }
+
+        @Test
+        @DisplayName("성공 - 사용자가 존재하고 유효한 토큰일 때")
+        public void reissueTokenSuccess() {
+            // Given
+            String dummyEmail = "ronaldo@gmail.com";
+            String dummyName = "Cristiano Ronaldo";
+            String dummyNickname = "CR7";
+            String dummyPassword = "4321Fdsa@!";
+
+            MemberEntity member = MemberEntity.builder()
+                    .email(dummyEmail)
+                    .name(dummyName)
+                    .nickname(dummyNickname)
+                    .authority(AuthorityType.USER)
+                    .password(passwordEncoder.encode(dummyPassword))
+                    .build();
+
+            memberRepository.save(member);
+
+            LoginRequestDTO loginRequest = LoginRequestDTO.builder()
+                    .email(dummyEmail)
+                    .password(dummyPassword)
+                    .build();
+
+            assertThatNoException().isThrownBy(() -> {
+                LoginResponseDTO loginResponse = authService.login(loginRequest);
+                assertThat(loginResponse.getAccessToken()).isNotBlank();
+                assertThat(loginResponse.getRefreshToken()).isNotBlank();
+
+                ReissueTokenRequestDTO reissueTokenRequest = ReissueTokenRequestDTO.builder()
+                        .memberId(loginResponse.getMemberId())
+                        .refreshToken(loginResponse.getRefreshToken())
+                        .build();
+
+                ReissueTokenResponseDTO reissueTokenResponse = authService.reissueToken(reissueTokenRequest);
+                assertThat(reissueTokenResponse.getAccessToken()).isNotBlank();
+                assertThat(reissueTokenResponse.getRefreshToken()).isNotBlank();
             });
         }
     }
