@@ -71,6 +71,7 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "토큰 갱신")
     @PostMapping(value = "/reissueToken", consumes = "application/json", produces = "application/json")
     public ResponseEntity<ReissueTokenResponseDTO> reissueToken(@Valid @RequestBody ReissueTokenRequestDTO request) throws InvalidRefreshTokenException, ExpiredRefreshTokenException, MemberNotExistException {
         return new ResponseEntity<>(authService.reissueToken(request), HttpStatus.OK);
