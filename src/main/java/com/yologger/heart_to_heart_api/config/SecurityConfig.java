@@ -42,23 +42,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .httpBasic().disable()
-                .csrf().disable()
-                .cors().disable()
-                .formLogin().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
+            .httpBasic().disable()
+            .csrf().disable()
+            .cors().disable()
+            .formLogin().disable()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+            .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler).and()
-                .authorizeRequests(authorize -> authorize
-                        .antMatchers(HttpMethod.POST, "/auth/emailVerificationCode").permitAll()
-                        .antMatchers(HttpMethod.POST, "/auth/confirmVerificationCode").permitAll()
-                        .antMatchers(HttpMethod.POST, "/auth/join").permitAll()
-                        .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .antMatchers(HttpMethod.POST, "/auth/reissueToken").permitAll()
-                        .anyRequest().authenticated()
-                );
+            .authorizeRequests(authorize -> authorize
+                .antMatchers(HttpMethod.POST, "/auth/emailVerificationCode").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth/confirmVerificationCode").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth/join").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth/reissueToken").permitAll()
+                .anyRequest().authenticated()
+            );
     }
 
     @Bean

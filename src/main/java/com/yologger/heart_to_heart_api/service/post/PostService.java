@@ -30,7 +30,7 @@ public class PostService {
     private final PostImageRepository postImageRepository;
     private final AwsS3Util awsS3Uploader;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public RegisterPostResponseDTO registerPost(RegisterPostRequestDTO request) throws InvalidWriterIdException, InvalidContentTypeException, FileUploadException {
         // Check if memberId is valid.
         MemberEntity writer = memberRepository.findById(request.getMemberId())
@@ -115,6 +115,7 @@ public class PostService {
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public GetPostsResponseDTO getAllPosts(Long memberId, Integer page, Integer size) {
 
         List<PostEntity> postEntities = postRepository.findAllPostsOrderByCreatedAtDescExceptBlocking(memberId, page, size);
@@ -148,6 +149,7 @@ public class PostService {
         return response;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public GetPostsResponseDTO getPosts(Long memberId, Integer page, Integer size) {
 
         List<PostEntity> postEntities = postRepository.findAllByWriterId(memberId, page, size);
@@ -181,7 +183,7 @@ public class PostService {
         return response;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public DeletePostResponseDTO deletePost(Long id) throws NoPostExistException, FileUploadException {
 
         PostEntity post = postRepository.findById(id).orElseThrow(() -> new NoPostExistException("Invalid 'post_id'"));

@@ -241,4 +241,15 @@ public class AuthServiceTest {
             });
         }
     }
+
+    @Nested
+    @DisplayName("로그아웃 테스트")
+    class LogoutTest {
+
+        @Test
+        @DisplayName("실패 - 헤더에 토큰이 포함되어있지 않았을 때")
+        public void failure_whenTokenNotIncluded() {
+
+        }
+    }
 }

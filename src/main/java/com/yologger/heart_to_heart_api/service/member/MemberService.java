@@ -31,7 +31,7 @@ public class MemberService {
     private final BlockRepository blockRepository;
     private final AwsS3Util awsS3Uploader;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public UploadAvatarResponseDTO uploadAvatar(UploadAvatarRequestDTO request) throws IOException, SdkClientException, EntityNotFoundException, InvalidContentTypeException {
 
         Long memberId = request.getMemberId();
@@ -51,7 +51,7 @@ public class MemberService {
                 .build();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public BlockMemberResponseDTO block(BlockMemberRequestDTO request) throws InvalidMemberIdException, DataIntegrityViolationException {
         MemberEntity member = memberRepository.findById(request.getMemberId()).orElseThrow(() -> new InvalidMemberIdException("Invalid 'member_id'"));
         MemberEntity target = memberRepository.findById(request.getTargetId()).orElseThrow(() -> new InvalidMemberIdException("Invalid 'target_id'"));
@@ -68,7 +68,7 @@ public class MemberService {
                 .build();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public UnblockMemberResponseDTO unblock(UnblockMemberRequestDTO request) throws InvalidMemberIdException {
         MemberEntity member = memberRepository.findById(request.getMemberId()).orElseThrow(() -> new InvalidMemberIdException("Invalid 'member_id'"));
         MemberEntity target = memberRepository.findById(request.getTargetId()).orElseThrow(() -> new InvalidMemberIdException("Invalid 'target_id'"));
@@ -81,7 +81,7 @@ public class MemberService {
                 .build();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public GetBlockingMembersResponseDTO getBlockingMember(Long memberId) throws InvalidMemberIdException {
         MemberEntity member = memberRepository.findById(memberId).orElseThrow(() -> new InvalidMemberIdException("Invalid 'member_id'"));
         List<MemberDTO> blockingMemberDTOS = member.getBlocking().stream().map((blockEntity) -> MemberDTO.builder()
@@ -98,7 +98,7 @@ public class MemberService {
                 .build();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public GetMemberInfoResponseDTO getMemberInfo(Long memberId) throws InvalidMemberIdException {
 
         MemberEntity member = memberRepository.findById(memberId).orElseThrow(() -> new InvalidMemberIdException("Invalid 'member_id'"));
@@ -115,7 +115,7 @@ public class MemberService {
                 .build();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public DeleteAccountResponseDTO deleteAccount(Long memberId) throws InvalidMemberIdException, AwsS3Exception {
 
         MemberEntity member = memberRepository.findById(memberId).orElseThrow(() -> new InvalidMemberIdException("Invalid 'member_id'"));
