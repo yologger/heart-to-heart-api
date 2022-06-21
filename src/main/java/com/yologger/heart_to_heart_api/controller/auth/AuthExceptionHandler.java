@@ -16,7 +16,7 @@ import javax.mail.MessagingException;
 public class AuthExceptionHandler {
 
     @ExceptionHandler(value = MemberAlreadyExistException.class)
-    public ResponseEntity<ErrorResponseDto> handleMemberAlreadyExistException(MemberAlreadyExistException _) {
+    public ResponseEntity<ErrorResponseDto> handleMemberAlreadyExistException(MemberAlreadyExistException e) {
         final ErrorResponseDto response = ErrorResponseDto.builder()
                 .code(AuthErrorCode.MEMBER_ALREADY_EXIST.getCode())
                 .message(AuthErrorCode.MEMBER_ALREADY_EXIST.getMessage())
