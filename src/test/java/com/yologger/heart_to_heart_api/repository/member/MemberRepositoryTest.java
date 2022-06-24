@@ -50,7 +50,7 @@ class MemberRepositoryTest {
     @Sql(scripts = {"classpath:sql/dummy/users.sql"})
     public void test_queryMembers() {
         List<MemberEntity> members = memberRepository.findAll();
-        assertThat(members.size()).isEqualTo(3);
+        assertThat(members).isNotEmpty();
     }
 
     @Test

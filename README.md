@@ -42,7 +42,7 @@
 ![](imgs/architecture.png)
 
 ## Legacy
-Nodejs 기반의 레거시 프로젝트의 소스코드는 [이 곳](https://github.com/yologger/heart-to-heart-nodejs)에서 확인할 수 있습니다.
+Nodejs 기반의 레거시 프로젝트는 [이 곳](https://github.com/yologger/heart-to-heart-nodejs)에서 확인할 수 있습니다.
 
 ## Todo List
 - [x] 회원가입 시 이메일 인증 구현
