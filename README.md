@@ -1,6 +1,36 @@
 # Heart to Heart API Server
 이 프로젝트는 `Heart to Heart` 어플리케이션을 위한 API 서버입니다. `Heart to Heart` 안드로이드 어플리케이션은 [이 곳](https://github.com/yologger/heart-to-heart-android)에서 확인할 수 있습니다.
 
+## 기능 구현
+- [x] Gmail을 통한 이메일 코드 전송 및 인증 (`Spring Email`)
+- [x] 회원 가입
+- [x] 토큰 기반 로그인 구현 및 권한 부여 (`JWT`, `Spring Security`)
+- [x] 토큰 갱신 구현 (`JWT`, `Spring Security`)
+- [x] 로그아웃 구현
+- [x] 회원 탈퇴 구현 
+- [x] 아바타 이미지 업로드 (`AWS S3`)
+- [x] 사용자 차단 및 해제 구현 (`Spring Data JPA`)
+- [x] 사용자 신고 구현
+- [x] API 입력값 인증 구현 (`Spring Validation`)
+- [x] 게시글 작성 구현
+- [x] 게시글 조회 구현 (`Query DSL`)
+- [x] 게시글 삭제 구현
+- [x] `ControllerAdvice`를 통한 에러 처리
+- [x] `JUnit 5`, `Truth`, `Assertion`, `Mockito`, `H2`를 사용한 단위테스트, 통합테스트 구현
+- [x] `Swagger 2`를 사용한 문서화
+- [x] 테스트 환경 구축
+  - [x] ~~Heroku, Jaws DB(MySQL)을 통한 테스트 환경 구축~~ (Deprecated)
+  - [x] AWS EC2, S3, RDS를 통한 테스트 환경 구축
+  - [x] Git/GitHub, GitHub Actions, AWS CodeDeploy, S3를 통한 CI/CD 구축
+  - [x] Nginx를 통한 무중단 배포 구축
+- [x] 운영 환경 구축
+  - [x] Docker, Kubernetes를 통한 운영 환경 구축
+  - [x] Kustomize, GitHub, AWS ECR, Argo CD를 통한 Pull-based GitOps 구축
+  - [x] Git Flow를 통한 깃 브랜치 전략 도입
+  - [x] Kubernetes Replicset을 통한 셀프 힐링 구축
+  - [x] Kubernetes Deployment를 통한 무중단 배포, 롤백 기능 구축
+  - [x] Kubernetes Service를 통한 로드 밸런싱 구축
+
 ## 기술 스택
 
 ### 공통
@@ -12,53 +42,34 @@
 - Spring Validation
 - Spring Mail
 - Spring Test
+- Lombok
 - JUnit 5
 - Mockito
+- AWS S3 Mock
 - Swagger 2
-
-### 운영 환경
 - AWS EC2
 - AWS S3
 - AWS RDS (Maria DB)
-- AWS ECR
-- Github Actions
-- Docker
-- Kubernetes Cluster (with 3 EC2 instances, No EKS)
-- Kustomize
-- Argo CD
-
-![](imgs/2.png)
 
 ### 테스트 환경
 - ~~Heroku SaaS~~ (Deprecated)
 - ~~Heroku MySQL~~ (Deprecated)
-- AWS EC2
+- GitHub Actions
 - AWS S3
-- AWS RDS (Maria DB)
 - AWS CodeDeploy
-- Github Actions
 - Nginx
 
 ![](imgs/architecture.png)
 
+### 운영 환경
+- GitHub Actions
+- Docker
+- AWS ECR
+- Kustomize
+- Kubernetes (Pod, ReplicaSet, Deployment, Service, Ingress)
+- Argo CD
+
+![](imgs/2.png)
+
 ## Legacy
 Nodejs 기반의 레거시 프로젝트는 [이 곳](https://github.com/yologger/heart-to-heart-nodejs)에서 확인할 수 있습니다.
-
-## Todo List
-- [x] 회원가입 시 이메일 인증 구현
-- [x] `JWT` 기반 인증 구현
-- [ ] 업로드 이미지 리사이징 (AWS Lambda)
-- [x] `Refresh Token`을 통한 토큰 갱신 구현
-- [ ] `Gradle 멀티 모듈`기능을 사용하여 `Clean Architecture`로 리팩토링
-- [ ] `Domain Layer`를 추가하고 `비즈니스 로직`을 `Service Layer`로부터 분리하여 `Layered Architecuture`로 리팩토링
-- [ ] 팔로우, 팔로잉 기능 구현
-- [ ] 비밀번호 찾기, 변경 구현
-- [x] 사용자 차단 구현
-- [x] 사용자 신고 구현
-- [x] 글 삭제 구현
-- [x] 내 글 보기 구현
-- [x] CI/CD pipeline 구축
-- [x] 깃 브랜치 전략 도입(`git-flow`)
-- [x] 테스트 환경 - `Heroku`, `Jaws DB(MySQL)` 환경에서 `AWS EC2`, `AWS RDS(Maria DB)`로 마이그레이션
-- [x] 테스트 환경 - `NGINX`를 통한 무중단 배포 구현
-- [x] 운영 환경 - Pull-based GitOps 적용
