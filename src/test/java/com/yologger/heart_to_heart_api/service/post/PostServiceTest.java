@@ -2,6 +2,8 @@ package com.yologger.heart_to_heart_api.service.post;
 
 import com.yologger.heart_to_heart_api.config.TestAwsS3Config;
 import com.yologger.heart_to_heart_api.controller.post.exception.InvalidWriterIdException;
+import com.yologger.heart_to_heart_api.controller.post.exception.NoPostExistException;
+import com.yologger.heart_to_heart_api.service.post.model.DeletePostResponseDTO;
 import com.yologger.heart_to_heart_api.service.post.model.GetPostsResponseDTO;
 import com.yologger.heart_to_heart_api.service.post.model.RegisterPostRequestDTO;
 import com.yologger.heart_to_heart_api.service.post.model.RegisterPostResponseDTO;
@@ -127,6 +129,35 @@ class PostServiceTest {
             GetPostsResponseDTO response = postService.getAllPosts(dummyMemberId, dummyPage, dummySize);
 
             assertThat(response.getSize()).isNotZero();
+        }
+    }
+
+    @Nested
+    @DisplayName("글 삭제 테스트")
+    class DeletePostTest {
+        @Test
+        @DisplayName("글 삭제 성공 테스트")
+        void deletePost_success() {
+            // Given
+            Long postId = 5L;
+
+            // When & Then
+            assertThatNoException().isThrownBy(() -> {
+                DeletePostResponseDTO response = postService.deletePost(postId);
+                assertThat(response.getMessage()).isEqualTo("deleted");
+            });
+        }
+
+        @Test
+        @DisplayName("글 삭제 실패 테스트 - 글 id가 존재하지 않을 때")
+        void deletePost_failure_whenIdNotExist() {
+            // Given
+            Long postId = 20L;
+
+            // When & Then
+            assertThatThrownBy(() -> {
+                postService.deletePost(postId);
+            }).isInstanceOf(NoPostExistException.class);
         }
     }
 }
