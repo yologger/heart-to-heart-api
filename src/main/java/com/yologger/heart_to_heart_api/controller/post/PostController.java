@@ -61,6 +61,7 @@ public class PostController {
     }
 
     @GetMapping("/posts/{id}")
+    @PreAuthorize("hasAnyAuthority('USER')")
     public ResponseEntity<GetPostsResponseDTO>  getPosts(
             @Valid @NotNull @PathVariable(required = true) Long id,
             @Valid @NotNull @RequestParam(value = "page", required = true) Integer page,
@@ -70,6 +71,7 @@ public class PostController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAnyAuthority('USER')")
     public ResponseEntity<DeletePostResponseDTO> deletePost(@Valid @NotNull @PathVariable(required = true) Long id) throws NoPostExistException, FileUploadException {
         return new ResponseEntity<>(postService.deletePost(id), HttpStatus.NO_CONTENT);
     }
