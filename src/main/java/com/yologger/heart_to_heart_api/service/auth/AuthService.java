@@ -267,7 +267,6 @@ public class AuthService {
     @Transactional(rollbackFor = Exception.class)
     public LogoutResponseDTO logout(String authHeader) throws InvalidAccessTokenException {
         String accessToken = authHeader.substring(7);
-        // accessTokenProvider.validateToken(accessToken);
         Authentication authentication = accessTokenProvider.getAuthentication(accessToken);
         User user = (User)authentication.getPrincipal();
         String email = user.getUsername();
