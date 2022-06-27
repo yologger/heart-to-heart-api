@@ -6,6 +6,7 @@ import com.yologger.heart_to_heart_api.controller.post.exception.NoPostExistExce
 import com.yologger.heart_to_heart_api.repository.member.AuthorityType;
 import com.yologger.heart_to_heart_api.repository.member.MemberEntity;
 import com.yologger.heart_to_heart_api.service.post.PostService;
+import com.yologger.heart_to_heart_api.service.post.model.DeletePostResponseDTO;
 import com.yologger.heart_to_heart_api.service.post.model.GetPostsResponseDTO;
 import com.yologger.heart_to_heart_api.service.post.model.PostDTO;
 import org.junit.jupiter.api.DisplayName;
@@ -123,13 +124,28 @@ class PostControllerTest {
     public class DeletePost {
         @Test
         @DisplayName("글 삭제 실패 테스트 - 게시글이 존재하지 않을 때")
-        public void deletePost() throws Exception {
+        public void deletePost_failure_whenPostNotExist() throws Exception {
             Long notExistId = 1L;
             when(mockPostService.deletePost(anyLong())).thenThrow(NoPostExistException.class);
 
             mvc.perform(MockMvcRequestBuilders.delete("/post/delete/" + notExistId))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code", is("POST_004")))
+                    .andDo(print());
+        }
+
+        @Test
+        @DisplayName("글 삭제 성공 테스트")
+        public void deletePost_success() throws Exception {
+            Long dummyId = 1L;
+            DeletePostResponseDTO dummyResponse = DeletePostResponseDTO.builder()
+                    .message("deleted")
+                    .build();
+            when(mockPostService.deletePost(anyLong())).thenReturn(dummyResponse);
+
+            mvc.perform(MockMvcRequestBuilders.delete("/post/delete/" + dummyId))
+                    .andExpect(status().isNoContent())
+                    .andExpect(jsonPath("$.message", is("deleted")))
                     .andDo(print());
         }
     }
