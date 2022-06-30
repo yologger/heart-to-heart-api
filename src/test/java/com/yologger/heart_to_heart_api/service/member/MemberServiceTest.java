@@ -1,6 +1,7 @@
 package com.yologger.heart_to_heart_api.service.member;
 
 import com.yologger.heart_to_heart_api.config.TestAwsS3Config;
+import com.yologger.heart_to_heart_api.controller.member.exception.InvalidMemberIdException;
 import com.yologger.heart_to_heart_api.service.member.model.DeleteAccountResponseDTO;
 import io.findify.s3mock.S3Mock;
 import org.junit.jupiter.api.AfterEach;
@@ -18,8 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -46,17 +46,26 @@ class MemberServiceTest {
     }
 
     @DisplayName("회원 탈퇴 테스트")
-    @Sql(scripts = "classpath:sql/dummy/users.sql")
     @Nested
     public class DeleteAccountTest {
         @Test
         @DisplayName("회원 탈퇴 성공 테스트")
+        @Sql(scripts = "classpath:sql/dummy/users.sql")
         public void deleteAccount_success() {
             Long targetId = 1L;
             assertThatNoException().isThrownBy(() -> {
                 DeleteAccountResponseDTO response = memberService.deleteAccount(targetId);
                 assertThat(response.getMessage()).isEqualTo("deleted.");
             });
+        }
+
+        @Test
+        @DisplayName("회원 탈퇴 실패 테스트 - 잘못된 사용자 ID")
+        public void deleteAccount_failure_whenMemberIdNotExist() {
+            Long targetId = 1L;
+            assertThatThrownBy(() -> {
+                memberService.deleteAccount(targetId);
+            }).isInstanceOf(InvalidMemberIdException.class);
         }
     }
 }
