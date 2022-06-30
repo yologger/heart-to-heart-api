@@ -45,6 +45,19 @@ class MemberServiceTest {
         s3Mock.stop();
     }
 
+    @DisplayName("사용자 정보 조회 테스트")
+    @Nested
+    public class getMemberInfoTest {
+        @Test
+        @DisplayName("사용자 정보 조회 실패 - 사용자가 존재하지 않을 때")
+        public void getMemberInfo_success() {
+            Long targetId = 1L;
+            assertThatThrownBy(() -> {
+                memberService.getMemberInfo(targetId);
+            }).isInstanceOf(InvalidMemberIdException.class);
+        }
+    }
+
     @DisplayName("회원 탈퇴 테스트")
     @Nested
     public class DeleteAccountTest {
