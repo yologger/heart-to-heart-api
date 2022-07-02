@@ -2,6 +2,7 @@ package com.yologger.heart_to_heart_api.service.member;
 
 import com.yologger.heart_to_heart_api.config.TestAwsS3Config;
 import com.yologger.heart_to_heart_api.controller.member.exception.InvalidMemberIdException;
+import com.yologger.heart_to_heart_api.service.member.model.BlockMemberRequestDTO;
 import com.yologger.heart_to_heart_api.service.member.model.DeleteAccountResponseDTO;
 import com.yologger.heart_to_heart_api.service.member.model.GetMemberInfoResponseDTO;
 import io.findify.s3mock.S3Mock;
@@ -95,6 +96,23 @@ class MemberServiceTest {
             Long targetId = 1L;
             assertThatThrownBy(() -> {
                 memberService.deleteAccount(targetId);
+            }).isInstanceOf(InvalidMemberIdException.class);
+        }
+    }
+
+    @DisplayName("사용자 차단 테스트")
+    @Nested
+    public class BlockTest {
+        @Test
+        @DisplayName("사용자 차단 실패 테스트 - 사용자가 존재하지 않을 때")
+        public void block_failure_whenUserNotExist() {
+            BlockMemberRequestDTO request = BlockMemberRequestDTO.builder()
+                    .memberId(1L)
+                    .targetId(2L)
+                    .build();
+
+            assertThatThrownBy(() -> {
+                memberService.block(request);
             }).isInstanceOf(InvalidMemberIdException.class);
         }
     }
