@@ -3,6 +3,7 @@ package com.yologger.heart_to_heart_api.service.member;
 import com.yologger.heart_to_heart_api.config.TestAwsS3Config;
 import com.yologger.heart_to_heart_api.controller.member.exception.InvalidMemberIdException;
 import com.yologger.heart_to_heart_api.service.member.model.DeleteAccountResponseDTO;
+import com.yologger.heart_to_heart_api.service.member.model.GetMemberInfoResponseDTO;
 import io.findify.s3mock.S3Mock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -50,11 +51,27 @@ class MemberServiceTest {
     public class getMemberInfoTest {
         @Test
         @DisplayName("사용자 정보 조회 실패 - 사용자가 존재하지 않을 때")
-        public void getMemberInfo_success() {
+        public void getMemberInfo_failure_whenUserNotExist() {
             Long targetId = 1L;
             assertThatThrownBy(() -> {
                 memberService.getMemberInfo(targetId);
             }).isInstanceOf(InvalidMemberIdException.class);
+        }
+
+        @Test
+        @DisplayName("사용자 정보 조회 성공")
+        @Sql(scripts = {
+            "classpath:sql/dummy/users.sql",
+            "classpath:sql/dummy/posts.sql",
+            "classpath:sql/dummy/post_images.sql"
+        })
+        public void getMemberInfo_success() {
+            Long targetId = 1L;
+            assertThatNoException().isThrownBy(() -> {
+                GetMemberInfoResponseDTO response = memberService.getMemberInfo(targetId);
+                assertThat(response.getMemberId()).isEqualTo(targetId);
+                assertThat(response.getPostSize()).isEqualTo(2);
+            });
         }
     }
 
