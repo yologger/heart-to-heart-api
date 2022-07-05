@@ -2,10 +2,7 @@ package com.yologger.heart_to_heart_api.service.member;
 
 import com.yologger.heart_to_heart_api.config.TestAwsS3Config;
 import com.yologger.heart_to_heart_api.controller.member.exception.InvalidMemberIdException;
-import com.yologger.heart_to_heart_api.service.member.model.BlockMemberRequestDTO;
-import com.yologger.heart_to_heart_api.service.member.model.BlockMemberResponseDTO;
-import com.yologger.heart_to_heart_api.service.member.model.DeleteAccountResponseDTO;
-import com.yologger.heart_to_heart_api.service.member.model.GetMemberInfoResponseDTO;
+import com.yologger.heart_to_heart_api.service.member.model.*;
 import io.findify.s3mock.S3Mock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -134,6 +131,26 @@ class MemberServiceTest {
                 assertThat(response.getMemberId()).isEqualTo(memberId);
                 assertThat(response.getTargetId()).isEqualTo(targetId);
             });
+        }
+    }
+
+    @Nested
+    @DisplayName("사용자 차단 해제 테스트")
+    class UnblockTest {
+        @Test
+        @DisplayName("사용자 차단 실패 테스트 - 사용자 ID가 존재하지 않을 때")
+        public void unblock_failure_whenUserNotExist() {
+            Long memberId = 1L;
+            Long targetId = 2L;
+
+            UnblockMemberRequestDTO request = UnblockMemberRequestDTO.builder()
+                    .memberId(memberId)
+                    .targetId(targetId)
+                    .build();
+
+            assertThatThrownBy(() -> {
+                memberService.unblock(request);
+            }).isInstanceOf(InvalidMemberIdException.class);
         }
     }
 }
