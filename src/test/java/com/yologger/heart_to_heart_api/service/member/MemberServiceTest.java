@@ -41,7 +41,7 @@ class MemberServiceTest {
     S3Mock s3Mock;
 
     @AfterEach
-    public void shutdownMockS3(){
+    public void shutdownMockS3() {
         s3Mock.stop();
     }
 
@@ -60,9 +60,9 @@ class MemberServiceTest {
         @Test
         @DisplayName("사용자 정보 조회 성공")
         @Sql(scripts = {
-            "classpath:sql/dummy/users.sql",
-            "classpath:sql/dummy/posts.sql",
-            "classpath:sql/dummy/post_images.sql"
+                "classpath:sql/dummy/users.sql",
+                "classpath:sql/dummy/posts.sql",
+                "classpath:sql/dummy/post_images.sql"
         })
         public void getMemberInfo_success() {
             Long targetId = 1L;
@@ -138,7 +138,7 @@ class MemberServiceTest {
     @DisplayName("사용자 차단 해제 테스트")
     class UnblockTest {
         @Test
-        @DisplayName("사용자 차단 실패 테스트 - 사용자 ID가 존재하지 않을 때")
+        @DisplayName("사용자 차단 해제 실패 테스트 - 사용자 ID가 존재하지 않을 때")
         public void unblock_failure_whenUserNotExist() {
             Long memberId = 1L;
             Long targetId = 2L;
@@ -154,7 +154,7 @@ class MemberServiceTest {
         }
 
         @Test
-        @DisplayName("사용자 차단 성공 테스트")
+        @DisplayName("사용자 차단 해제 성공 테스트")
         @Sql(scripts = "classpath:sql/dummy/users.sql")
         public void unblock_success() {
             Long memberId = 1L;
@@ -170,6 +170,20 @@ class MemberServiceTest {
                 assertThat(response.getMemberId()).isEqualTo(memberId);
                 assertThat(response.getTargetId()).isEqualTo(targetId);
             });
+        }
+    }
+
+    @Nested
+    @DisplayName("차단 사용자 목록 조회 테스트")
+    public class getBlockingMemberTest {
+
+        @Test
+        @DisplayName("차단 사용자 목록 조회 실패 테스트 - 사용자가 존재하지 않을 때")
+        void getBlockingMember_failure_whenUserNotExist() {
+            Long memberId = 1L;
+            assertThatThrownBy(() -> {
+                memberService.getBlockingMember(memberId);
+            }).isInstanceOf(InvalidMemberIdException.class);
         }
     }
 }
