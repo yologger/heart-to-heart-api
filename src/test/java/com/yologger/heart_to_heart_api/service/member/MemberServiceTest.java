@@ -152,5 +152,24 @@ class MemberServiceTest {
                 memberService.unblock(request);
             }).isInstanceOf(InvalidMemberIdException.class);
         }
+
+        @Test
+        @DisplayName("사용자 차단 성공 테스트")
+        @Sql(scripts = "classpath:sql/dummy/users.sql")
+        public void unblock_success() {
+            Long memberId = 1L;
+            Long targetId = 2L;
+
+            UnblockMemberRequestDTO request = UnblockMemberRequestDTO.builder()
+                    .memberId(memberId)
+                    .targetId(targetId)
+                    .build();
+
+            assertThatNoException().isThrownBy(() -> {
+                UnblockMemberResponseDTO response = memberService.unblock(request);
+                assertThat(response.getMemberId()).isEqualTo(memberId);
+                assertThat(response.getTargetId()).isEqualTo(targetId);
+            });
+        }
     }
 }
