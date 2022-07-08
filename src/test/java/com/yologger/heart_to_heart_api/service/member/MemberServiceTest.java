@@ -176,7 +176,6 @@ class MemberServiceTest {
     @Nested
     @DisplayName("차단 사용자 목록 조회 테스트")
     public class getBlockingMemberTest {
-
         @Test
         @DisplayName("차단 사용자 목록 조회 실패 테스트 - 사용자가 존재하지 않을 때")
         void getBlockingMember_failure_whenUserNotExist() {
@@ -184,6 +183,30 @@ class MemberServiceTest {
             assertThatThrownBy(() -> {
                 memberService.getBlockingMember(memberId);
             }).isInstanceOf(InvalidMemberIdException.class);
+        }
+
+        @Test
+        @DisplayName("차단 사용자 목록 조회 성공 테스트")
+        @Sql(scripts = "classpath:sql/dummy/users.sql")
+        void getBlockingMember_success() {
+            Long memberId = 1L;
+            Long targetId = 2L;
+
+            BlockMemberRequestDTO request = BlockMemberRequestDTO.builder()
+                    .memberId(memberId)
+                    .targetId(targetId)
+                    .build();
+
+            assertThatNoException().isThrownBy(() -> {
+                BlockMemberResponseDTO response = memberService.block(request);
+                assertThat(response.getMemberId()).isEqualTo(memberId);
+                assertThat(response.getTargetId()).isEqualTo(targetId);
+            });
+
+            assertThatNoException().isThrownBy(() -> {
+                GetBlockingMembersResponseDTO response = memberService.getBlockingMember(memberId);
+                assertThat(response.getSize()).isEqualTo(1);
+            });
         }
     }
 }
