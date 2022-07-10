@@ -49,7 +49,7 @@ class MemberControllerTest {
     class BlockMemberTest {
         @Test
         @DisplayName("사용자 차단 실패 테스트")
-        public void blockMember_success() throws Exception {
+        public void blockMember_failure() throws Exception {
             when(mockMemberService.block(any()))
                     .thenThrow(new InvalidMemberIdException("Invalid 'member_id'"));
 
@@ -64,6 +64,31 @@ class MemberControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(body))
             )
+                    .andExpect(status().isBadRequest())
+                    .andDo(print());
+        }
+    }
+
+    @Nested
+    @DisplayName("사용자 차단 해제 테스트")
+    class UnblockMemberTest {
+        @Test
+        @DisplayName("사용자 차단 해제 실패 테스트")
+        public void unblockMember_success() throws Exception {
+            when(mockMemberService.unblock(any()))
+                    .thenThrow(new InvalidMemberIdException("Invalid 'member_id'"));
+
+            Long memberId = 1L;
+            Long targetId = 2L;
+
+            Map<String, String> body = new HashMap<>();
+            body.put("member_id", memberId.toString());
+            body.put("target_id", targetId.toString());
+
+            mvc.perform(MockMvcRequestBuilders.post("/member/unblock")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(body))
+                    )
                     .andExpect(status().isBadRequest())
                     .andDo(print());
         }
