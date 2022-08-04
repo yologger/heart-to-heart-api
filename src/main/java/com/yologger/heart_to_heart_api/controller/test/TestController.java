@@ -10,10 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/test")
 @RequiredArgsConstructor
 public class TestController {
-
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    
     @GetMapping("/test1")
     public String test1() {
         return "test1";
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @GetMapping("/test2")
+    public String test2() {
+        return "test2";
     }
 }

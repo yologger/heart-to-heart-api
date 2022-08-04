@@ -57,6 +57,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/auth/join").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/reissueToken").permitAll()
+                .antMatchers("/profile").permitAll()
+                .antMatchers("/test/**").permitAll()
                 .anyRequest().authenticated()
             );
     }
