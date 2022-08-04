@@ -37,9 +37,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 accessTokenProvider.validateToken(jwt);
                 Authentication authentication = accessTokenProvider.getAuthentication(jwt);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.info("유효한 ACCESS TOKEN 입니다. SecurityContext에 '{}' 인증 정보를 저장합니다, uri: {}", authentication.getName(), requestURI);
+                log.info("[JwtFilter] VALID ACCESS TOKEN, Authorization Info has been saved in 'SecurityContext' (URL: " + requestURI + ")");
             } catch (ExpiredJwtException e) {
-                log.info("만료된 ACCESS TOKEN 토큰입니다.");
+                log.info("[JwtFilter] Expired Access Token");
                 response.setStatus(GlobalErrorCode.EXPIRED_ACCESS_TOKEN.getStatus());
                 response.setContentType("application/json;charset=utf-8");
                 JSONObject body = new JSONObject();
@@ -49,10 +49,10 @@ public class JwtFilter extends OncePerRequestFilter {
                 response.getWriter().print(body);
                 return;
             } catch (Exception e) {
-                log.info("잘못된 ACCESS TOKEN 토큰입니다.");
+                log.info("[JwtFilter] Invalid Access Token");
             }
         } else {
-            log.info("'Authorization' 헤더에 유효한 ACCESS TOKEN 토큰이 없습니다, uri: {}", requestURI);
+            log.info("[JwtFilter] No Access Token in Header 'Authorization' (URL: " + requestURI + ")");
         }
         filterChain.doFilter(request, response);
     }

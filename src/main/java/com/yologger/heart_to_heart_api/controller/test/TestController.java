@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TestController {
 
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/test1")
     public String test1() {
         return "test1";
