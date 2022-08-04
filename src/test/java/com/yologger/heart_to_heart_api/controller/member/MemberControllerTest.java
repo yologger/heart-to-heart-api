@@ -74,7 +74,7 @@ class MemberControllerTest {
     class UnblockMemberTest {
         @Test
         @DisplayName("사용자 차단 해제 실패 테스트")
-        public void unblockMember_success() throws Exception {
+        public void unblockMember_failure() throws Exception {
             when(mockMemberService.unblock(any()))
                     .thenThrow(new InvalidMemberIdException("Invalid 'member_id'"));
 
