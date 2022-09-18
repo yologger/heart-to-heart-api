@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yologger.heart_to_heart_api.config.SecurityConfig;
 import com.yologger.heart_to_heart_api.controller.member.exception.InvalidMemberIdException;
 import com.yologger.heart_to_heart_api.service.member.MemberService;
+import com.yologger.heart_to_heart_api.service.member.model.BlockMemberResponseDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -47,6 +48,31 @@ class MemberControllerTest {
     @Nested
     @DisplayName("사용자 차단 테스트")
     class BlockMemberTest {
+
+        @Test
+        @DisplayName("사용자 차단 성공 테스트")
+        public void blockMember_success() throws Exception {
+            Long memberId = 1L;
+            Long targetId = 2L;
+            BlockMemberResponseDTO dummyResponse = BlockMemberResponseDTO.builder()
+                    .memberId(memberId)
+                    .targetId(targetId)
+                    .build();
+            when(mockMemberService.block(any()))
+                    .thenReturn(dummyResponse);
+
+            Map<String, String> body = new HashMap<>();
+            body.put("member_id", memberId.toString());
+            body.put("target_id", targetId.toString());
+
+            mvc.perform(MockMvcRequestBuilders.post("/member/block")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(body))
+                    )
+                    .andExpect(status().isOk())
+                    .andDo(print());
+        }
+
         @Test
         @DisplayName("사용자 차단 실패 테스트")
         public void blockMember_failure() throws Exception {
