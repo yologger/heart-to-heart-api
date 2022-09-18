@@ -85,14 +85,47 @@ class PostRepositoryTest {
     }
 
     @Nested
-    @DisplayName("글 조회 테스트")
+    @DisplayName("작성자 ID로 게시글 조회 테스트")
     public class GetAllPostsTest {
         @Test
-        @DisplayName("글 조회 성공 테스트")
-        public void getAllPosts_success() {
+        @DisplayName("작성자 ID로 게시글 조회 성공 테스트 - 게시글이 없을 때")
+        public void getAllPosts_success_whenPostsNotExists() {
             Long notExistMemberId = 30L;
             List<PostEntity> posts = postRepository.findAllByWriterId(notExistMemberId, 0, 10);
             assertThat(posts.size()).isEqualTo(0);
+        }
+
+        @Test
+        @DisplayName("작성자 ID로 게시글 조회 성공 테스트 - 게시글이 있을 때")
+        public void findAllByWriterId_success_whenPostExist() {
+
+            // Given
+            String email = "yologger1013@gmail.com";
+            String name = "yologger";
+            String nickname = "yologger";
+            String password = "1234Qwer!";
+
+            MemberEntity writer = MemberEntity.builder()
+                    .email(email)
+                    .nickname(nickname)
+                    .name(name)
+                    .authority(AuthorityType.USER)
+                    .password(password)
+                    .build();
+
+            MemberEntity savedWriter = memberRepository.save(writer);
+
+            String content = "content";
+
+            PostEntity newPost = PostEntity.builder()
+                    .content(content)
+                    .writer(savedWriter)
+                    .build();
+
+            postRepository.save(newPost);
+
+            List<PostEntity> posts = postRepository.findAllByWriterId(savedWriter.getId(), 0, 10);
+            assertThat(posts.size()).isEqualTo(1);
         }
     }
 }
