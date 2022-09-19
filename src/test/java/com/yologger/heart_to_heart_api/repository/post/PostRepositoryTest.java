@@ -84,6 +84,48 @@ class PostRepositoryTest {
         }
     }
 
+    @Test
+    @DisplayName("모든 게시글 조회 테스트")
+    public void findAll_success() {
+
+        // Given
+        String email = "yologger1013@gmail.com";
+        String name = "yologger";
+        String nickname = "yologger";
+        String password = "1234Qwer!";
+
+        MemberEntity writer = MemberEntity.builder()
+                .email(email)
+                .nickname(nickname)
+                .name(name)
+                .authority(AuthorityType.USER)
+                .password(password)
+                .build();
+
+        MemberEntity savedWriter = memberRepository.save(writer);
+
+        String content1 = "content1";
+
+        PostEntity newPost1 = PostEntity.builder()
+                .content(content1)
+                .writer(savedWriter)
+                .build();
+
+        postRepository.save(newPost1);
+
+        String content2 = "content2";
+
+        PostEntity newPost2 = PostEntity.builder()
+                .content(content2)
+                .writer(savedWriter)
+                .build();
+
+        postRepository.save(newPost2);
+
+        List<PostEntity> posts = postRepository.findAll();
+        assertThat(posts.size()).isEqualTo(2);
+    }
+
     @Nested
     @DisplayName("작성자 ID로 게시글 조회 테스트")
     public class GetAllPostsTest {
