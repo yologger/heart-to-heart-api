@@ -45,10 +45,10 @@
 - Lombok
 - JUnit 5
 - Mockito
-- AWS S3 Mock
 - Swagger 2
 - AWS EC2
 - AWS S3
+- AWS S3 Mock
 - AWS RDS (Maria DB)
 
 ### 테스트 환경
