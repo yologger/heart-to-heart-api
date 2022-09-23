@@ -50,6 +50,9 @@ dependencies {
     // AWS S3
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.5.RELEASE'
 
+    // AWS S3 Mock
+    implementation 'io.findify:s3mock_2.13:0.2.6'
+
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -81,9 +84,6 @@ dependencies {
     // Swagger 2
     implementation 'io.springfox:springfox-swagger2:2.9.2'
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
-
-    // AWS S3 Mock
-    testImplementation 'io.findify:s3mock_2.13:0.2.6'
 }
 
 test {

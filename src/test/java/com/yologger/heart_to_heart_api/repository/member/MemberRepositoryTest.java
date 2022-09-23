@@ -1,5 +1,6 @@
 package com.yologger.heart_to_heart_api.repository.member;
 
+import com.yologger.heart_to_heart_api.config.TestQueryDslConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 @DataJpaTest
 @DisplayName("MemberRepository 테스트")
-@Import(MemberRepositoryTestConfig.class)
+@Import(TestQueryDslConfig.class)
 class MemberRepositoryTest {
 
     @Autowired
