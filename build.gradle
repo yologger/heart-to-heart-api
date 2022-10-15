@@ -4,6 +4,7 @@ plugins {
     id 'org.springframework.boot' version '2.5.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+    id "jacoco"
 }
 
 group = 'com.yologger'
@@ -58,7 +59,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     // H2
-    testImplementation 'com.h2database:h2'
+    implementation 'com.h2database:h2'
 
     // Slf4j
     testImplementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'

@@ -1,6 +1,7 @@
 package com.yologger.heart_to_heart_api.repository.member;
 
 import com.yologger.heart_to_heart_api.config.TestQueryDslConfig;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,11 @@ class MemberRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @AfterEach
+    public void tearDown() {
+        memberRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("사용자 추가 테스트")
