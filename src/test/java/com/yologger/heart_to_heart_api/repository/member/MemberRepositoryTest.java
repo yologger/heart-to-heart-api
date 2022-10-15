@@ -80,7 +80,7 @@ class MemberRepositoryTest {
         memberRepository.save(input);
 
         // When
-        Optional<MemberEntity> output = memberRepository.findOneByEmail(email);
+        Optional<MemberEntity> output = memberRepository.findMemberByEmail(email);
 
         // Then
         assertThat(output.isPresent()).isTrue();

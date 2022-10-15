@@ -17,7 +17,7 @@ public class MemberDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        MemberEntity member = memberRepository.findOneByEmail(username)
+        MemberEntity member = memberRepository.findMemberByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username Not Found."));
 
         return org.springframework.security.core.userdetails.User.builder()
