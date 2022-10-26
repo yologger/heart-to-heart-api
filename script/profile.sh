@@ -3,7 +3,7 @@ function find_idle_profile()
 {
     echo "2: $DEPLOYMENT_GROUP_NAME"
     ## 개발 환경일 경우
-    if [ "$DEPLOYMENT_GROUP_NAME" == "h2h-code-deploy-group-dev" ]
+    if [ "$DEPLOYMENT_GROUP_NAME" == "deploygroup-h2h-api-alpha" ]
     then
         echo "- 개발 환경에 배포를 시도합니다."
         RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/profile)
@@ -26,7 +26,7 @@ function find_idle_profile()
     fi
 
     ## 운영 환경일 경우
-    if [ "$DEPLOYMENT_GROUP_NAME" == "h2h-code-deploy-group-prod" ]
+    if [ "$DEPLOYMENT_GROUP_NAME" == "deploygroup-h2h-api-prod" ]
     then
         echo "- 운영 환경에 배포를 시도합니다."
         RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/profile)

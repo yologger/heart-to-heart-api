@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ## 개발 환경인 경우
-if [ "$DEPLOYMENT_GROUP_NAME" == "h2h-code-deploy-group-dev" ]
+if [ "$DEPLOYMENT_GROUP_NAME" == "deploygroup-h2h-api-alpha" ]
 then
     RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/profile)
 
@@ -21,7 +21,7 @@ then
 fi
 
 ## 운영 환경인 경우
-if [ "$DEPLOYMENT_GROUP_NAME" == "h2h-code-deploy-group-prod" ]
+if [ "$DEPLOYMENT_GROUP_NAME" == "deploygroup-h2h-api-prod" ]
 then
     RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/profile)
 
