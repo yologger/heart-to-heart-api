@@ -41,22 +41,18 @@ public class PostImageRepositoryTest {
     public void addPostTest() {
 
         // Add Post
-        Long dummyPostId = 1L;
         String content = "content";
 
         PostEntity newPost = PostEntity.builder()
-                .id(dummyPostId)
                 .content(content)
                 .build();
 
         postRepository.save(newPost);
 
         // Add PostImage
-        Long dummyPostImage = 1L;
         String dummyImageUrl = "https://dummy.dummy/dummy.png";
 
         PostImageEntity postImage = PostImageEntity.builder()
-                .id(dummyPostImage)
                 .imageUrl(dummyImageUrl)
                 .post(newPost)
                 .build();
