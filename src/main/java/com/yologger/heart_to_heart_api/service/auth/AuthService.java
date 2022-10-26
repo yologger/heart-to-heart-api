@@ -121,7 +121,7 @@ public class AuthService {
     }
 
     private boolean emailAlreadyExist(String email) {
-        Optional<MemberEntity> result = memberRepository.findOneByEmail(email);
+        Optional<MemberEntity> result = memberRepository.findMemberByEmail(email);
         return result.isPresent();
     }
 
@@ -158,7 +158,7 @@ public class AuthService {
     public JoinResponseDTO join(JoinRequestDTO request) throws MemberAlreadyExistException {
 
         // Check If User already exists.
-        Optional<MemberEntity> result = memberRepository.findOneByEmail(request.getEmail());
+        Optional<MemberEntity> result = memberRepository.findMemberByEmail(request.getEmail());
         if (result.isPresent()) throw new MemberAlreadyExistException("Member Already Exists.");
 
         String encryptedPassword = passwordEncoder.encode(request.getPassword());
@@ -187,7 +187,7 @@ public class AuthService {
     @Transactional(rollbackFor = Exception.class)
     public LoginResponseDTO login(LoginRequestDTO request) throws MemberNotExistException, BadCredentialsException {
 
-        MemberEntity member = memberRepository.findOneByEmail(request.getEmail())
+        MemberEntity member = memberRepository.findMemberByEmail(request.getEmail())
                 .orElseThrow(() -> new MemberNotExistException("Member does not exist."));
 
         // 인증 수행
@@ -270,7 +270,7 @@ public class AuthService {
         Authentication authentication = accessTokenProvider.getAuthentication(accessToken);
         User user = (User)authentication.getPrincipal();
         String email = user.getUsername();
-        MemberEntity member = memberRepository.findOneByEmail(email)
+        MemberEntity member = memberRepository.findMemberByEmail(email)
                 .orElseThrow(() -> new InvalidAccessTokenException("Invalid access token."));
         member.clearAccessToken();
         member.clearRefreshToken();

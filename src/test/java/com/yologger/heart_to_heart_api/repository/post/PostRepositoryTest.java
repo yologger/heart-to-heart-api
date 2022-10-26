@@ -43,7 +43,6 @@ class PostRepositoryTest {
         public void savePost() {
 
             // Given
-
             // Create Member
             String email = "yologger1013@gmail.com";
             String name = "yologger";

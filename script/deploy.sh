@@ -25,12 +25,12 @@ JAR_NAME=$(ls -tr $REPOSITORY/ | grep jar | tail -n 1)
 
 chmod +x $REPOSITORY/$JAR_NAME
 
-if [ "$DEPLOYMENT_GROUP_NAME" == "h2h-code-deploy-group-dev" ]
+if [ "$DEPLOYMENT_GROUP_NAME" == "deploygroup-h2h-api-alpha" ]
 then
     nohup java -Dspring.config.location=/home/ec2-user/app/heart-to-heart-api/application-dev.properties -Dspring.profiles.active=dev -jar $REPOSITORY/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
 fi
 
-if [ "$DEPLOYMENT_GROUP_NAME" == "h2h-code-deploy-group-prod" ]
+if [ "$DEPLOYMENT_GROUP_NAME" == "deploygroup-h2h-api-prod" ]
 then
     nohup java -Dspring.config.location=/home/ec2-user/app/heart-to-heart-api/application-prod.properties -Dspring.profiles.active=prod -jar $REPOSITORY/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
 fi
