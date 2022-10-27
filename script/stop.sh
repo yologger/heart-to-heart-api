@@ -1,46 +1,23 @@
 #!/usr/bin/env bash
 
 ## 개발 환경인 경우
-if [ "$DEPLOYMENT_GROUP_NAME" == "deploygroup-h2h-api-alpha" ]
+echo " - 개발 환경입니다."
+RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/profile)
+
+if [ ${RESPONSE_CODE} -ge 400 ] # 400 ~ 500 에러
 then
-    echo " - 개발 환경입니다."
-    RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/profile)
-
-    if [ ${RESPONSE_CODE} -ge 400 ] # 400 ~ 500 에러
-    then
-        CURRENT_PROFILE=dev2
-    else
-        CURRENT_PROFILE=$(curl -s http://localhost/profile)
-    fi
-
-    if [ ${CURRENT_PROFILE} == dev1 ]
-    then
-      IDLE_PROFILE=dev2
-    else
-      IDLE_PROFILE=dev1
-    fi
+    CURRENT_PROFILE=dev2
+else
+    CURRENT_PROFILE=$(curl -s http://localhost/profile)
 fi
 
-## 운영 환경인 경우
-if [ "$DEPLOYMENT_GROUP_NAME" == "deploygroup-h2h-api-prod" ]
+if [ ${CURRENT_PROFILE} == dev1 ]
 then
-    echo " - 운영 환경입니다."
-    RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/profile)
-
-    if [ ${RESPONSE_CODE} -ge 400 ] # 400 ~ 500 에러
-    then
-        CURRENT_PROFILE=prod2
-    else
-        CURRENT_PROFILE=$(curl -s http://localhost/profile)
-    fi
-
-    if [ ${CURRENT_PROFILE} == prod1 ]
-    then
-      IDLE_PROFILE=prod2
-    else
-      IDLE_PROFILE=prod1
-    fi
+  IDLE_PROFILE=dev2
+else
+  IDLE_PROFILE=dev1
 fi
+
 
 echo " - IDLE PROFILE: ${IDLE_PROFILE}"
 
