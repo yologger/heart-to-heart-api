@@ -1,8 +1,8 @@
 name: CI
 
 on:
-  push:
-    branches: [ develop ]
+  pull_request:
+    branches: [ alpha ]
 
   workflow_dispatch:
 

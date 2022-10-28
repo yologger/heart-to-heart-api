@@ -18,16 +18,10 @@ public class ProfileController {
     public String profile() {
         List<String> profiles = Arrays.asList(env.getActiveProfiles());
 
-        if (profiles.contains("dev1")) {
-            return "dev1";
-        } else if (profiles.contains("dev2")) {
-            return "dev2";
-        } else if (profiles.contains("prod1")) {
-            return "prod1";
-        } else if (profiles.contains("prod2")) {
-            return "prod2";
-        } else if (profiles.contains("local")) {
-            return "local";
+        if (profiles.contains("alpha1")) {
+            return "alpha1";
+        } else if (profiles.contains("alpha2")) {
+            return "alpha2";
         } else {
             return "default";
         }
