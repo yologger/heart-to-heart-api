@@ -5,19 +5,19 @@ RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/profile)
 # 400 ~ 500 에러
 if [ ${RESPONSE_CODE} -ge 400 ]
 then
-    CURRENT_PROFILE=dev2
+    CURRENT_PROFILE=alpha2
 else
     CURRENT_PROFILE=$(curl -s http://localhost/profile)
 fi
 
-if [ ${CURRENT_PROFILE} == dev1 ]
+if [ ${CURRENT_PROFILE} == alpha1 ]
 then
-  IDLE_PROFILE=dev2
+  IDLE_PROFILE=alpha2
 else
-  IDLE_PROFILE=dev1
+  IDLE_PROFILE=alpha1
 fi
 
-if [ "${IDLE_PROFILE}" == dev1 ]; then
+if [ "${IDLE_PROFILE}" == alpha1 ]; then
   IDLE_PORT="8081"
 else
   IDLE_PORT="8082"
@@ -31,7 +31,7 @@ for RETRY_COUNT in {1..10}
 do
   RESPONSE=$(curl -s http://localhost:${IDLE_PORT}/profile)
 
-  UP_COUNT=$(echo ${RESPONSE} | grep 'dev' | wc -l)
+  UP_COUNT=$(echo ${RESPONSE} | grep 'alpha' | wc -l)
 
   if [ ${UP_COUNT} -ge 1 ]
   then # $up_count >= 1 ("real" 문자열이 있는지 검증)
