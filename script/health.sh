@@ -34,7 +34,7 @@ do
   UP_COUNT=$(echo ${RESPONSE} | grep 'alpha' | wc -l)
 
   if [ ${UP_COUNT} -ge 1 ]
-  then # $up_count >= 1 ("real" 문자열이 있는지 검증)
+  then
       echo " - Health check 성공"
       echo " - Port를 전환합니다."
       echo " - 전환할 Port: $IDLE_PORT"
