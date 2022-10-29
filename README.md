@@ -5,29 +5,30 @@
 - [x] 이메일 인증 (`Spring Email`)
 - [x] 회원 가입
 - [x] 토큰 기반 로그인 구현 및 권한 부여 (`JWT`, `Spring Security`)
-- [x] 토큰 갱신 구현 (`JWT`, `Spring Security`)
+- [x] 토큰 갱신 구현
 - [x] 로그아웃 구현
 - [x] 회원 탈퇴 구현 
 - [x] 아바타 이미지 업로드 (`AWS S3`)
 - [x] 사용자 차단 및 해제 구현 (`Spring Data JPA`)
 - [x] 사용자 신고 구현
 - [x] API 입력값 인증 구현 (`Spring Validation`)
-- [x] 게시글 작성 구현
-- [x] 게시글 조회 구현 (`Query DSL`)
+- [x] 게시글 작성 및 이미지 업로드 구현
+- [x] 게시글 조회 및 페이징 구현 (`Query DSL`)
 - [x] 게시글 삭제 구현
-- [x] `ControllerAdvice`를 통한 에러 처리
+- [x] `ControllerAdvice`를 통한 에러 처리 구현
 - [x] `JUnit 5`, `Truth`, `Assertion`, `Mockito`, `H2`를 사용한 단위테스트, 통합테스트 구현
 - [x] `Swagger 2`를 사용한 문서화
 - [x] 테스트 환경 구축
   - [x] ~~Heroku, Jaws DB(MySQL)을 통한 테스트 환경 구축~~ (Deprecated)
-  - [x] AWS EC2, S3, RDS를 통한 테스트 환경 구축
+  - [x] AWS EC2, S3, RDS으로 테스트 환경 마이그레이션
   - [x] Git/GitHub, GitHub Actions, AWS CodeDeploy, S3를 통한 CI/CD 구축
   - [x] Nginx를 통한 무중단 배포 구축
 - [x] 운영 환경 구축
-  - [x] Docker, Kubernetes를 통한 운영 환경 구축
+  - [x] Docker, Kubernetes(AWS ELK)를 통한 운영 환경 구축
   - [x] Kustomize, GitHub, AWS ECR, Argo CD를 통한 Pull-based GitOps 구축
-  - [x] Git Flow를 통한 깃 브랜치 전략 도입
-  - [x] Kubernetes Replicset을 통한 셀프 힐링 구축
+  - [x] GitHub Actions, Slack 메시징 연동
+  - [x] Git Flow를 통한 깃 브랜치 전략 도입 (master, alpha, develop)
+  - [x] Kubernetes Replicset을 통한 스케일 아웃, 셀프 힐링 구축
   - [x] Kubernetes Deployment를 통한 무중단 배포, 롤백 기능 구축
   - [x] Kubernetes Service를 통한 로드 밸런싱 구축
 
@@ -66,7 +67,7 @@
 - Docker
 - AWS ECR
 - Kustomize
-- Kubernetes (Pod, ReplicaSet, Deployment, Service, Ingress)
+- Kubernetes(AWS ELK)
 - Argo CD
 
 ![](imgs/2.png)
