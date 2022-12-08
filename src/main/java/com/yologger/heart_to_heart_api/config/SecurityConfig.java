@@ -6,7 +6,6 @@ import com.yologger.heart_to_heart_api.jwt.JwtAuthenticationEntryPoint;
 import com.yologger.heart_to_heart_api.jwt.JwtFilter;
 import com.yologger.heart_to_heart_api.service.member.MemberDetailsService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -26,18 +25,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
-@Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final MemberDetailsService memberDetailsService;
     private final AccessTokenProvider accessTokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**");
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -61,6 +54,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/test/**").permitAll()
                 .anyRequest().authenticated()
             );
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**");
     }
 
     @Bean

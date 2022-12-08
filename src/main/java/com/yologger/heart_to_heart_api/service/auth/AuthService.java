@@ -191,7 +191,8 @@ public class AuthService {
                 .orElseThrow(() -> new MemberNotExistException("Member does not exist."));
 
         // 인증 수행
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        Authentication authentication
+                = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
         // 인증정보 저장
         SecurityContextHolder.getContext().setAuthentication(authentication);
