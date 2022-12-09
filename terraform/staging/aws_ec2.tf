@@ -54,6 +54,7 @@ resource "aws_instance" "h2h-api-ec2" {
   tags = {
     name = "h2h-api"
   }
+  iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
 }
 
 resource "aws_eip" "elastic_ip" {
