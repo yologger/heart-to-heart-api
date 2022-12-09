@@ -17,10 +17,10 @@ public class ProfileController {
     public String profile() {
         List<String> profiles = Arrays.asList(env.getActiveProfiles());
 
-        if (profiles.contains("alpha1")) {
-            return "alpha1";
-        } else if (profiles.contains("alpha2")) {
-            return "alpha2";
+        if (profiles.contains("staging1")) {
+            return "staging1";
+        } else if (profiles.contains("staging2")) {
+            return "staging2";
         } else {
             return "default";
         }
