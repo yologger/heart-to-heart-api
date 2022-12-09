@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile({"dev", "prod"})
+@Profile({"dev", "staging", "prod"})
 @Slf4j
 public class AwsS3Config {
 

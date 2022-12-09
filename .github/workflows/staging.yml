@@ -45,11 +45,11 @@ jobs:
           --region ${{ secrets.STAGING_AWS_S3_REGION }}
 
       # Slack
-#      - name: build result to slack
-#        uses: 8398a7/action-slack@v3
-#        with:
-#          status: ${{job.status}}
-#          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-#          author_name: Geerio CI
-#        env:
-#          SLACK_WEBHOOK_URL: ${{ secrets.ALPHA_SLACK_WEBHOOK_URL }}
+      - name: build result to slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{job.status}}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          author_name: Geerio CI
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.STAGING_SLACK_WEBHOOK_URL }}

@@ -4,21 +4,21 @@ RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/profile)
 
 if [ ${RESPONSE_CODE} -ge 400 ] # 400 ~ 500 에러
 then
-    CURRENT_PROFILE=alpha2
+    CURRENT_PROFILE=staging2
 else
     CURRENT_PROFILE=$(curl -s http://localhost/profile)
 fi
 
-if [ ${CURRENT_PROFILE} == alpha1 ]
+if [ ${CURRENT_PROFILE} == staging1 ]
 then
-  IDLE_PROFILE=alpha2
+  IDLE_PROFILE=staging2
 else
-  IDLE_PROFILE=alpha1
+  IDLE_PROFILE=staging1
 fi
 
 echo " - IDLE PROFILE: ${IDLE_PROFILE}"
 
-if [ "${IDLE_PROFILE}" == alpha1 ]; then
+if [ "${IDLE_PROFILE}" == staging1 ]; then
   IDLE_PORT="8081"
 else
   IDLE_PORT="8082"
