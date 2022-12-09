@@ -1,5 +1,5 @@
-resource "aws_security_group" "security_group" {
-  name = "security_group"
+resource "aws_security_group" "ec2_security_group" {
+  name = "ec2_security_group"
   description = "Allow SSH port from all"
   ingress {
     from_port = 22
@@ -46,10 +46,13 @@ resource "aws_instance" "h2h-api-ec2" {
   instance_type = "t2.micro"
   key_name = aws_key_pair.key_pair.key_name
   vpc_security_group_ids = [
-    aws_security_group.security_group.id,
+    aws_security_group.ec2_security_group.id,
   ]
   root_block_device {
     volume_size = 30
+  }
+  tags = {
+    name = "h2h-api"
   }
 }
 
