@@ -13,6 +13,7 @@ build/
 !**/src/test/**/build/
 
 ### AWS ###
+aws/
 aws_key/
 
 ### STS ###
