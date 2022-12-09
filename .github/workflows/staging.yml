@@ -2,7 +2,7 @@ name: CI
 
 on:
   pull_request:
-    branches: [ alpha ]
+    branches: [ staging ]
 
   workflow_dispatch:
 
