@@ -23,7 +23,7 @@ resource "aws_s3_bucket" "h2h-api-build-result" {
 }
 
 ## S3 Bucket Public Access Block
-resource "aws_s3_bucket_public_access_block" "example" {
+resource "aws_s3_bucket_public_access_block" "aws_s3_bucket_public_access_block" {
   bucket = aws_s3_bucket.h2h-api-build-result.id
 
   block_public_acls       = true
