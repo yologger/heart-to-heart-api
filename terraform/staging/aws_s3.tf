@@ -1,47 +1,43 @@
-resource "aws_iam_user" "github_actions_uploader" {
+# IAM USER
+resource "aws_iam_user" "github_actions" {
   name = "github-actions-uploader"
 }
 
+# Access Key for IAM USER
 resource "aws_iam_access_key" "github_actions_uploader_access_key" {
-  user = aws_iam_user.github_actions_uploader.name
+  user = aws_iam_user.github_actions.name
 }
 
+# Policy for IAM USER
+data "aws_iam_policy" "amazon_S3_full_access" {
+  arn  = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
+resource "aws_iam_user_policy_attachment" "amazon_S3_full_access_attach" {
+  user       = aws_iam_user.github_actions.name
+  policy_arn = data.aws_iam_policy.amazon_S3_full_access.arn
+}
+
+## AWS S3 Bucket
+resource "aws_s3_bucket" "h2h-api-build-result" {
+  bucket = "h2h-api-build-result"
+}
+
+## S3 Bucket Public Access Block
+resource "aws_s3_bucket_public_access_block" "example" {
+  bucket = aws_s3_bucket.h2h-api-build-result.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+## IAM USER Access Key
 output "access_key" {
   value = aws_iam_access_key.github_actions_uploader_access_key.id
 }
 
+## IAM USER Secret Key
 output "secret_key" {
   value = nonsensitive(aws_iam_access_key.github_actions_uploader_access_key.secret)
-}
-
-resource "aws_iam_user_policy" "github_actions_uploader_policy" {
-  name = "github_actions_uploader_policy"
-  user = aws_iam_user.github_actions_uploader.name
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": ["s3:ListBucket"],
-      "Resource": ["arn:aws:s3:::h2h-api-build-result"]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:GetObject",
-        "s3:DeleteObject"
-      ],
-      "Resource": ["arn:aws:s3:::test/*"]
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_s3_bucket" "h2h-api-build-result" {
-  bucket = "h2h-api-build-result"
-  force_destroy = true
 }
