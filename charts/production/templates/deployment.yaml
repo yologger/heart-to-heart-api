@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: h2h-api-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: h2h-api
+  template:
+    metadata:
+      labels:
+        app: h2h-api
+    spec:
+      containers:
+        - name: h2h-api
+          image: "{{ .Values.image.repository }}:{{ .Values.image.version }}"
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: 1
+            requests:
+              memory: "128Mi"
+              cpu: 0.5
