@@ -68,6 +68,11 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+      - name: Update Helm Chart
+        run: |
+          VERSION=$(cat ./charts/production/values.yaml | grep version: | awk '{print $2}')
+          sed -i "s/${{ steps.image.outputs.version }}/${{ steps.image.outputs.version }}/" ./charts/production/values.yaml
+
 #      - name: Setup Kustomize
 #        uses: imranismail/setup-kustomize@v1
 #
@@ -96,11 +101,12 @@ jobs:
 #          git commit -am "Update image tag"
 #          git push -u origin main
 
-#      - name: Send result to slack
-#        uses: 8398a7/action-slack@v3
-#        with:
-#          status: ${{job.status}}
-#          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-#          author_name: Geerio CI
-#        env:
-#          SLACK_WEBHOOK_URL: ${{ secrets.PROD_SLACK_WEBHOOK_URL }}
+      # Slack Message
+      - name: Send result to slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{job.status}}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          author_name: Geerio CI
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.PROD_SLACK_WEBHOOK_URL }}
