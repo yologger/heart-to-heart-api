@@ -1,7 +1,4 @@
-locals {
-  cluster_name = "k8s-cluster"
-}
-
+# VPC
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
   name = "k8s-vpc"

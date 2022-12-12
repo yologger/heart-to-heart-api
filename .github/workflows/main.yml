@@ -55,7 +55,7 @@ jobs:
           echo VERSION=$VERSION
           echo "::set-output name=version::$VERSION"
 
-      # 도커 이미지 빌드 & AWS ECR에 푸시
+      # Build Docker images, Push AWS ECR
       - name: Build and Push images to AWS ECR
         id: build-image
         env:
@@ -68,39 +68,39 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-      - name: Setup Kustomize
-        uses: imranismail/setup-kustomize@v1
+#      - name: Setup Kustomize
+#        uses: imranismail/setup-kustomize@v1
+#
+#      - name: Checkout kustomize repository
+#        uses: actions/checkout@v2
+#        with:
+#          repository: yologger/heart-to-heart-api-manifest
+#          ref: main
+#          token: ${{ secrets.PROD_MANIFEST_REPO_TOKEN }}
+#          path: heart-to-heart-api-manifest
+#
+#      - name: Update Kubernetes resources
+#        run: |
+#          echo ${{ steps.login-ecr.outputs.registry }}
+#          echo ${{ steps.build-image.outputs.ecr_repository }}
+#          echo ${{ steps.build-image.outputs.image_tag }}
+#          cd heart-to-heart-api-manifest/overlays/prod/
+#          kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.build-image.outputs.ecr_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.build-image.outputs.ecr_repository }}:${{ steps.build-image.outputs.image_tag }}
+#          cat kustomization.yml
+#
+#      - name: Commit files
+#        run: |
+#          cd heart-to-heart-api-manifest
+#          git config --global user.email "yologger1013@gmail.com"
+#          git config --global user.name "yologger1013"
+#          git commit -am "Update image tag"
+#          git push -u origin main
 
-      - name: Checkout kustomize repository
-        uses: actions/checkout@v2
-        with:
-          repository: yologger/heart-to-heart-api-manifest
-          ref: main
-          token: ${{ secrets.PROD_MANIFEST_REPO_TOKEN }}
-          path: heart-to-heart-api-manifest
-
-      - name: Update Kubernetes resources
-        run: |
-          echo ${{ steps.login-ecr.outputs.registry }}
-          echo ${{ steps.build-image.outputs.ecr_repository }}
-          echo ${{ steps.build-image.outputs.image_tag }}
-          cd heart-to-heart-api-manifest/overlays/prod/
-          kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.build-image.outputs.ecr_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.build-image.outputs.ecr_repository }}:${{ steps.build-image.outputs.image_tag }}
-          cat kustomization.yml
-
-      - name: Commit files
-        run: |
-          cd heart-to-heart-api-manifest
-          git config --global user.email "yologger1013@gmail.com"
-          git config --global user.name "yologger1013"
-          git commit -am "Update image tag"
-          git push -u origin main
-
-      - name: Send result to slack
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{job.status}}
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-          author_name: Geerio CI
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.PROD_SLACK_WEBHOOK_URL }}
+#      - name: Send result to slack
+#        uses: 8398a7/action-slack@v3
+#        with:
+#          status: ${{job.status}}
+#          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+#          author_name: Geerio CI
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.PROD_SLACK_WEBHOOK_URL }}

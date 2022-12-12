@@ -1,3 +1,7 @@
+locals {
+  cluster_name = "k8s-cluster"
+}
+
 module "eks" {
   source = "terraform-aws-modules/eks/aws"
 
@@ -11,7 +15,7 @@ module "eks" {
       resolve_conflicts = "OVERWRITE"
     }
     kube-proxy = {}
-    vpc-cni = {
+    vpc-cni    = {
       resolve_conflicts = "OVERWRITE"
     }
   }
@@ -21,7 +25,7 @@ module "eks" {
 
   // Node Group의 EC2 설정
   eks_managed_node_group_defaults = {
-    disk_size      = 50
+    disk_size      = 20
     instance_types = ["t3.large"]
   }
 
@@ -29,15 +33,15 @@ module "eks" {
   eks_managed_node_groups = {
     ("${local.cluster_name}-node-group") = {
       // Node Group Auto Scaling 옵션
-      min_size     = 1  ## 최소
-      max_size     = 10 ## 최대
-      desired_size = 2  ## 기본
-
+      min_size       = 1  ## 최소
+      max_size       = 10 ## 최대
+      desired_size   = 1  ## 기본
       instance_types = ["t3.xlarge"]
       capacity_type  = "SPOT"
     }
   }
 
+  // 각 Node(EC2)에 적용할 Security Group 설정
   node_security_group_additional_rules = {
     // Node Group에 AWS Load Balancer Controller를 위한 Security Group 추가
     ingress_allow_access_from_control_plane = {
@@ -56,6 +60,15 @@ module "eks" {
       to_port                       = 10250
       source_cluster_security_group = true
       description                   = "Cluster API to Nodegroup for metrics server"
+    }
+    allow_all_outbound_traffic = {
+      type                          = "egress"
+      protocol                      = "-1"
+      from_port                     = 0
+      to_port                       = 0
+      # source_cluster_security_group = true
+      cidr_blocks = ["0.0.0.0/0"]
+      description                   = "Allow all outbound traffic"
     }
   }
 }
