@@ -10,10 +10,10 @@ import static com.google.common.truth.Truth.assertThat;
 class ProfileControllerTest {
 
     @Test
-    @DisplayName("현재 활성화된 Profile이 alpha1일 때, alpha1이 조회된다.")
+    @DisplayName("현재 활성화된 Profile이 staging1일 때, staging1이 조회된다.")
     public void when_active_profile_is_alpha1() {
         // Given
-        String expectedProfile = "alpha1";
+        String expectedProfile = "staging1";
 
         MockEnvironment env = new MockEnvironment();
         env.addActiveProfile(expectedProfile);

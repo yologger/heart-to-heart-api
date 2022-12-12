@@ -8,16 +8,16 @@ function find_idle_profile()
 
     if [ ${RESPONSE_CODE} -ge 400 ] # 400 ~ 500 에러
     then
-        CURRENT_PROFILE=alpha2
+        CURRENT_PROFILE=staging2
     else
         CURRENT_PROFILE=$(curl -s http://localhost/profile)
     fi
 
-    if [ ${CURRENT_PROFILE} == alpha1 ]
+    if [ ${CURRENT_PROFILE} == staging1 ]
     then
-      IDLE_PROFILE=alpha2
+      IDLE_PROFILE=staging2
     else
-      IDLE_PROFILE=alpha1
+      IDLE_PROFILE=staging1
     fi
 
     echo "${IDLE_PROFILE}"
@@ -27,7 +27,7 @@ function find_idle_port()
 {
     IDLE_PROFILE=$(find_idle_profile)
 
-    if [ "${IDLE_PROFILE}" == alpha1 ]; then
+    if [ "${IDLE_PROFILE}" == staging1 ]; then
       echo "8081"
     else
       echo "8082"

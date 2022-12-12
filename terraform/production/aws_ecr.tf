@@ -1,5 +1,5 @@
 locals {
-  app_name = "test_app"
+  app_name = "heart-to-heart-api"
 }
 
 ## ECR Repository

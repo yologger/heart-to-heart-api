@@ -1,7 +1,5 @@
-name: CI
-
 on:
-  pull_request:
+  push:
     branches: [ staging ]
 
   workflow_dispatch:
@@ -37,21 +35,21 @@ jobs:
       - name: Upload to S3 Bucket
         run: aws s3 cp --region ${{ secrets.STAGING_AWS_S3_REGION }} ./heart-to-heart-api.zip s3://${{ secrets.STAGING_AWS_S3_BUCKET_NAME }}/heart-to-heart-api.zip
 
-#      - name: Deploy
-#        run: |
-#          aws deploy create-deployment \
-#          --application-name ${{ secrets.ALPHA_AWS_CODEDEPLOY_APP_NAME }} \
-#          --deployment-group-name ${{ secrets.ALPHA_AWS_CODEDEPLOY_DEPLOYGROUP_NAME }} \
-#          --deployment-config-name CodeDeployDefault.AllAtOnce \
-#          --s3-location bucket=${{ secrets.ALPHA_AWS_S3_BUCKET_NAME }},bundleType=zip,key=heart-to-heart-api.zip \
-#          --region ${{ secrets.ALPHA_AWS_S3_REGION }}
+      - name: Deploy
+        run: |
+          aws deploy create-deployment \
+          --application-name ${{ secrets.STAGING_AWS_CODEDEPLOY_APP_NAME }} \
+          --deployment-group-name ${{ secrets.STAGING_AWS_CODEDEPLOY_DEPLOYGROUP_NAME }} \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --s3-location bucket=${{ secrets.STAGING_AWS_S3_BUCKET_NAME }},bundleType=zip,key=heart-to-heart-api.zip \
+          --region ${{ secrets.STAGING_AWS_S3_REGION }}
 
       # Slack
-#      - name: build result to slack
-#        uses: 8398a7/action-slack@v3
-#        with:
-#          status: ${{job.status}}
-#          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-#          author_name: Geerio CI
-#        env:
-#          SLACK_WEBHOOK_URL: ${{ secrets.ALPHA_SLACK_WEBHOOK_URL }}
+      - name: build result to slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{job.status}}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          author_name: Geerio CI
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.STAGING_SLACK_WEBHOOK_URL }}
