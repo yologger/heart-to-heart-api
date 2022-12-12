@@ -71,7 +71,7 @@ jobs:
       - name: Update Helm Chart
         run: |
           VERSION=$(cat ./charts/production/values.yaml | grep version: | awk '{print $2}')
-          sed -i "s/${{ steps.image.outputs.version }}/${{ steps.image.outputs.version }}/" ./charts/production/values.yaml
+          sed -i "s/$VERSION/${{ steps.image.outputs.version }}/" ./charts/production/values.yaml
 
       - name: Commit and push changes
         uses: devops-infra/action-commit-push@v0.3
