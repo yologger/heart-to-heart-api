@@ -19,3 +19,16 @@ variable "rds_username" {
 variable "rds_password" {
   type = string
 }
+
+# Argo CD
+variable "argocd_server" {
+  type = string
+}
+
+variable "argocd_username" {
+  type = string
+}
+
+variable "argocd_password" {
+  type = string
+}
