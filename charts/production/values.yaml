@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   pullPolicy: IfNotPresent
   repository: 353548708283.dkr.ecr.ap-northeast-2.amazonaws.com/heart-to-heart-api
-  version: "023e987a"
+  version: 023e987a
 
 imagePullSecrets: []
 nameOverride: ""
