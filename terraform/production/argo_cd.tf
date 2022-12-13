@@ -17,18 +17,3 @@ resource "helm_release" "argocd" {
     value = "LoadBalancer"
   }
 }
-
-terraform {
-  required_providers {
-    argocd = {
-      source = "oboukili/argocd"
-      version = "0.4.7"
-    }
-  }
-}
-
-provider "argocd" {
-  server_addr = var.argocd_server
-  username = var.argocd_username
-  password = var.argocd_password
-}
