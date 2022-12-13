@@ -1,6 +1,7 @@
 resource "aws_db_subnet_group" "rds_subnet_group" {
   name       = "rds_subnet_group"
   subnet_ids = concat(module.vpc.public_subnets, module.vpc.private_subnets)
+  # subnet_ids = module.vpc.private_subnets
   tags       = {
     Name = "rds_subnet_group"
   }
@@ -10,6 +11,9 @@ resource "aws_security_group" "rds_security_group" {
   name        = "rds_security_group"
   description = "rds_security_group"
   vpc_id      = module.vpc.vpc_id
+  tags        = {
+    Name = "rds_security_group"
+  }
 
   ingress {
     from_port   = 3306
@@ -34,6 +38,7 @@ resource "aws_security_group" "rds_security_group" {
 }
 
 resource "aws_db_instance" "rds_db" {
+  depends_on             = [aws_security_group.rds_security_group]
   identifier             = "h2h-db"
   db_name                = "h2h_db"
   allocated_storage      = 20

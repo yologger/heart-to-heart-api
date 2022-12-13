@@ -10,6 +10,7 @@ data "aws_iam_policy" "amazon_S3_full_access" {
 ## AWS S3 Bucket
 resource "aws_s3_bucket" "h2h-images" {
   bucket = "h2h-api-post-images"
+  force_destroy = true
 }
 
 resource "aws_s3_bucket_public_access_block" "image_uploader_aws_s3_bucket_public_access_block" {
