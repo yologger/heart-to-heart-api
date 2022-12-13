@@ -1,6 +1,6 @@
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
-  name = "k8s-vpc"
+  name = "h2h-vpc"
   cidr = "10.194.0.0/16"
 
   azs             = ["ap-northeast-2a", "ap-northeast-2c"]
