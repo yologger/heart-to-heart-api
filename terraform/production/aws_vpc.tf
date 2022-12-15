@@ -1,7 +1,6 @@
-# VPC
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
-  name = "k8s-vpc"
+  name = "h2h-vpc"
   cidr = "10.194.0.0/16"
 
   azs             = ["ap-northeast-2a", "ap-northeast-2c"]
@@ -13,12 +12,12 @@ module "vpc" {
   enable_dns_hostnames = true
 
   public_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
     "kubernetes.io/role/elb"                      = "1"
   }
 
   private_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
     "kubernetes.io/role/internal-elb"             = "1"
   }
 }
