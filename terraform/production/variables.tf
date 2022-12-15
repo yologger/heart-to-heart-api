@@ -24,3 +24,13 @@ variable "rds_username" {
 variable "rds_password" {
   type = string
 }
+
+# Argo CD
+variable "argocd_password" {
+  type = string
+}
+
+# Grafana
+variable "grafana_password" {
+  type = string
+}

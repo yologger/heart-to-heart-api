@@ -28,42 +28,32 @@ module "eks" {
   // Cluster Auto Scaling
   eks_managed_node_groups = {
     ("${var.cluster_name}-node-group") = {
+      ## Cluster Auto Scaler Group
       min_size       = 1  ## 최소
-      max_size       = 10 ## 최대
-      desired_size   = 1  ## 기본
+      max_size       = 5  ## 최대
+      desired_size   = 2  ## 기본
       instance_types = ["t3.xlarge"]
       capacity_type  = "SPOT"
+      update_config  = {
+        max_unavailable_percentage = 50
+      }
+      tags = {
+        "k8s.io/cluster-autoscaler/${var.cluster_name}" : "owned"
+        "k8s.io/cluster-autoscaler/enabled" : "true"
+      }
     }
   }
 
   // Security Group applied to each worker node
   node_security_group_additional_rules = {
-    #    // Node Group에 AWS Load Balancer Controller를 위한 Security Group 추가
-    #    ingress_allow_access_from_control_plane = {
-    #      type                          = "ingress"
-    #      protocol                      = "tcp"
-    #      from_port                     = 9443
-    #      to_port                       = 9443
-    #      source_cluster_security_group = true
-    #      description                   = "Allow access from control plane to webhook port of AWS load balancer controller"
-    #    },
-    #    // Metrics API와 Node Group간 통신
+    // Metrics Server API를 위한 Ingress 허용
     ingress_metrics_server = {
-      type                          = "ingress"
-      protocol                      = "-1"
-      from_port                     = 10250
-      to_port                       = 10250
-      source_cluster_security_group = true
-      description                   = "Ingress for metrics server"
+      type        = "ingress"
+      protocol    = "-1"
+      from_port   = 10250
+      to_port     = 10250
+      cidr_blocks = ["0.0.0.0/0"]
+      description = "Ingress for metrics server"
     }
-    #    allow_all_outbound_traffic = {
-    #      type                          = "egress"
-    #      protocol                      = "-1"
-    #      from_port                     = 0
-    #      to_port                       = 0
-    #      # source_cluster_security_group = true
-    #      cidr_blocks = ["0.0.0.0/0"]
-    #      description                   = "Allow all outbound traffic"
-    #    }
   }
 }
