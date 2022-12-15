@@ -1,4 +1,5 @@
 resource "kubernetes_namespace" "argocd" {
+  depends_on = [module.eks]
   metadata {
     name = "argocd"
   }

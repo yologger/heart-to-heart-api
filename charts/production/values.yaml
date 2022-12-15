@@ -5,6 +5,12 @@ image:
   repository: 353548708283.dkr.ecr.ap-northeast-2.amazonaws.com/heart-to-heart-api
   version: ee72283a
 
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -37,12 +43,6 @@ ingress:
   tls: []
 
 resources: {}
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
 
 nodeSelector: {}
 
